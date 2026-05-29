@@ -1,0 +1,2119 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { Course } from "../types";
+
+const staticCoursesData: Course[] = [
+  {
+    id: "pa_elite_candlestick_physics_mastery",
+    title_en: "The Master Guide to Institutional Candlestick Physics & Liquidity Analysis",
+    title_zu: "Incwadi Engezamabhange Emakethe Nomthetho Wentengo Wamakhandlela",
+    category_en: "Candlesticks & Technical Analysis",
+    category_zu: "Ukuhlelwa Kwamakhandlela Nomthetho Wentengo",
+    difficulty_en: "Advanced to Expert",
+    difficulty_zu: "Izinga Eliphezulu",
+    duration_en: "18 Hours",
+    duration_zu: "Amahora angu-18",
+    description_en: "Master the physics of Open, High, Low, and Close (OHLC). Learn key strategies to decode candle wicks, identify multi-timeframe liquidity sweep zones, and execute with minimum drawdown.",
+    description_zu: "Funda imisila nokuvaleka kwamakhandlela emakethe (OHLC). Thola indlela amabhange anyakazisa ngayo intengo ukushaqisa abathengisi basebenzisa ama-order books.",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 4.98,
+    studentsCount: 3120,
+    modules: [
+      {
+        id: "pa_mod_candlestick_1",
+        title_en: "Module 1: Candlestick Mechanics & Liquidity Hunt Identification",
+        title_zu: "Isifundo 1: Imisila Yezimakethe Nomthetho Wentengo",
+        lessons: [
+          {
+            id: "pa_lesson_candlestick_1",
+            title_en: "Class 1: Decoding Candle Wicks, Liquidity Purges, & Entry Formulations",
+            title_zu: "Isigaba 1: Imisila Yezimakethe, Ukusheshiswa nokuvaleka kwentengo",
+            duration: "1 Hour 45 Mins",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+            content_en: "In this comprehensive session, we dissect candlestick physics. Standard retail books teach you to sell a double top or buy a double bottom immediately. In contrast, institutional algorithms hunt these exact retail clusters to capture resting liquidity. We explain how a massive wick sweep traps breakout traders and clears trailing stop losses, paving the way for low-drawdown entries at established Fair Value Gaps.",
+            content_zu: "Kulesi sigaba esinzulu, sihlola physics yekhandlela. Izincwadi eziningi zokuhweba zifundisa ukuthi i-double top iyindawo evikelekile. Kodwa amabhange amakhulu ashayela lezo zindawo ukususa bonke abathengisi basebenzisa amakhandlela anemisila emide (rejection wicks). Gada isinyathelo ngesinyathelo indlela yokufaka i-trade kwi-Fair Value Gap evulekileyo.",
+            resources: [
+              {
+                name_en: "ELITE-EDU_Institutional_Candlestick_Wick_Physics_Manual.pdf",
+                name_zu: "Incwadi_Ye-Mechanics_Yemakethe_Nomisila_Yamakhandlela.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   ELITE COURSES FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: THE SYSTEMIC PHYSICS OF INSTITUTIONAL CANDLESTICKS (OHLC)
+   LICENSED FOR THE STUDENTS OF ELITE COURSES ACADEMY
+==================================================================
+
+1. THE OHLC AUCTION PRINCIPLE
+- OPEN: The point where the session's trading limit begins.
+- HIGH & LOW: Extreme boundary targets where resting retail orders accumulate.
+- CLOSE: The confirmed terminal value.
+
+2. SHIFTING FORMULA: EXTREME CANDLE WICKS
+When a candlestick pierces past a clean Daily High or Low and leaves a long wick comprising over 70% of the candle range, it signals an institutional liquidity sweep. 
+Major banks intentionally create this spike to consume resting pending orders (buy stops/sell stops) and trigger retail stop-losses. This injection of capital fuel provides the required counterparty liquidity for major banking orders before price direction is aggressively reversed.
+
+3. STRATEGICAL GUIDELINE
+- Never buy immediately upon a resistance break.
+- Wait for the wick sweep on the 4-Hour chart.
+- Transition to the 5-Minute timeframe to confirm a Break of Structure.
+- Plot your limit entry inside the newly created 15-Minute Fair Value Gap.
+- Anchor your Stop Loss cushion exactly 2 pips beyond the sweep peak.`,
+                pdfContent_zu: `==================================================================
+   ELITE COURSES FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: ULWAZI OMUNYE WAMAKHANDLELA OKUHLAZIYA EMTSETFOMBILI
+   IMITHETHO EBHALELWE ABANTWANA BE-ELITE COURSES ACADEMY
+==================================================================
+
+1. SAKHIWO SE-OHLC (Open-High-Low-Close)
+- OPEN: Isiqalo sentengo kulelo rhafu we-session.
+- HIGH & LOW: Imingcele lapho kulindwe khona imali eningi labahwebi.
+- CLOSE: Isiphetho noqiniseko lokugcina lwentengo.
+
+2. UMTHETHO WOMSILA OMUDE (WICK SWEEPS)
+Lapho ikhandlela lidlula kakhulu ulayini wentengo (Daily High kungenjalo Low) bese lishiya umsila ongaphezu kuka 70% waso sonke isidumbu, kusuke kushanelwe imali (liquidity sweep).
+Amabhange amakhulu ashayela lezi zindawo ukuqoqa ama-buy stops noma ama-sell stops ukuvula izikhundla zawo ezinkulu ngaphambi kokushintsha imakethe ngamandla.
+
+3. INDLELA YOKULANDELA
+- Musa ukuthenga ngqo uma intengo idlula ulayini.
+- Linda imisila kwi-4-Hour chart kuqala.
+- Shintshela kwi-5-Minute chart ukuqinisekisa indlela.
+- Beka i-limit order yakho phakathi kwe-Fair Value Gap kwi-15-Minute chart.
+- Misa i-Stop Loss yakho phesheya kwaleyo ndawo ukugwema drawdown.`
+              }
+            ],
+            quiz: {
+              id: "pa_candlestick_quiz_1",
+              title_en: "Institutional Candlestick Mechanics & Wick Sweeps",
+              title_zu: "Ukuhlaziywa Kwekhandlela Nomthetho Wentengo",
+              questions: [
+                {
+                  id: "pa_q_candlestick_1",
+                  question_en: "What does a long upper candle wick piercing a major key Daily High indicate?",
+                  question_zu: "Kusho ukuthini uma ikhandlela linomsila omude phezulu okungena phesheya kuka Daily High?",
+                  options_en: [
+                    "A liquidity sweep where bank orders absorbed retail breakout buys and reversed price",
+                    "A technical server error inside the MT5 terminal connectivity suite",
+                    "A sign that you should immediately open a maximum lot buy trade with a broker-bonus",
+                    "An indication that supply has been completely deleted from interbank books indefinitely"
+                  ],
+                  options_zu: [
+                    "Ukushanelwa kwama-orders (liquidity sweep) lapho amabhange eqoqela khona imali ebuyisele intengo phansi",
+                    "Umsila lowo uchaza ukuthi kunesiphazamiso kuseva ye-MT5 terminal",
+                    "Uphawu lokuthi kumele uvule i-order enkulu yokuthenga usebenzisa ibonasi yama-broker",
+                    "Kusho ukuthi wonke amatshali-mali ashiye emakethe kuze kube nini nini"
+                  ],
+                  correctAnswerIndex: 0
+                },
+                {
+                  id: "pa_q_candlestick_2",
+                  question_en: "What minimum candle wick-to-body ratio is considered indicating strong institutional rejection?",
+                  question_zu: "Yisiphi isilinganiso esincane somsila wekhandlela (wick-to-body ratio) esikhombisa ukwenqaba kwemakethe?",
+                  options_en: [
+                    "Greater than 70% relative to the total candlestick range",
+                    "Exactly 10% indicating tight horizontal consolidation",
+                    "50% but only when trading minor currency indices in the Far East",
+                    "Around 5% indicating high momentum trend expansion parameters"
+                  ],
+                  options_zu: [
+                    "Ngaphezu kuka-70% wesidumbu nengxenye yonke yekhandlela",
+                    "Isilinganiso sika-10% esikhombisa ukuthi intengo imile endaweni eyodwa",
+                    "Isilinganiso sika-50% kuphela uma uhweba izinhlamvu zezimali ezincane",
+                    "Esingaba ngu-5% esitshengisa ukuthi imakethe inomnyakazo osheshayo"
+                  ],
+                  correctAnswerIndex: 0
+                },
+                {
+                  id: "pa_q_candlestick_3",
+                  question_en: "Why is it highly recommended to shift to a lower execution timeframe (like 5m) after a high-timeframe sweep?",
+                  question_zu: "Kungani kunconywa kakhulu ukushintshela kwi-timeframe encane (fana ne-5m) ngemuva kokuvela kuka-sweep phezulu?",
+                  options_en: [
+                    "To confirm a displacement breaks structure (MSS) and identify elegant entry gaps",
+                    "To generate a higher volume of transaction fees for broker rebates",
+                    "To change the color theme of the chart dashboard faster",
+                    "To program an automated trading bot dynamically using central servers"
+                  ],
+                  options_zu: [
+                    "Ukuze uqinisekise ushintsho lomgqa wentengo (MSS) uthole i-Fair Value Gap ekahle",
+                    "Ukuze unikeze i-broker yakho imali eningi yama-spreads nemali eyengeziwe",
+                    "Ukuze ushintshe imibala yethemba leshadi lomehluko ngokushesha",
+                    "Ukuze uhlele i-robot yokuhweba isebenze yodwa kwiseva"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_forex_elite_pathway",
+    title_en: "The Master Trader Pathway: Beginner-to-Expert Institutional Strategy",
+    title_zu: "Ukuphumela Kwezohwebo: Isinyathelo Ngesinyathelo Kusukela Kwabaqalayo kuye Kubachwepheshe",
+    category_en: "Core Currency & Multi-Asset Systems",
+    category_zu: "Izinhlelo Zezimali Semakethe",
+    difficulty_en: "Beginner to Professional",
+    difficulty_zu: "Osaqala kuye kuNgcweti",
+    duration_en: "40 Hours",
+    duration_zu: "Amahora angu-40",
+    description_en: "A comprehensive, realistic, and highly detailed masterclass. Learn mechanics without indicators, master institutional order books, manage risk like an investment bank, and establish realistic yield targets.",
+    description_zu: "I-masterclass ephelele, enembile nene-maths. Funda ama-mechanics, lula ukufunda amashadi, lawula ubungozi, futhi uhlale kude nokukhohliswa mayelana ne-forex.",
+    thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Thabiso Khumalo & Sarah Mthembu",
+    rating: 5.0,
+    studentsCount: 4210,
+    modules: [
+      {
+        id: "elite_m1",
+        title_en: "Module 1: Market Mechanics & Interbank Price Delivery (Foundations)",
+        title_zu: "Isifundo 1: I-Mechanics Yemakethe Nemali Ehanjiswayo (Izisekelo)",
+        lessons: [
+          {
+            id: "elite_l1",
+            title_en: "Class 1: Market Participants, Spreads, Liquidity Pools & Order Books",
+            title_zu: "Isigaba 1: Abadlali Bemakethe, Ama-Spreads, Nomthetho Wentengo",
+            duration: "1 Hour 15 Mins",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 1. Trading involves serious financial risk; therefore, we build our foundations on structural truth rather than internet hype. In this class, we explain exactly what happens when you enter a buy or sell request on EURUSD or GBPUSD. You are not buying physical paper. You are interacting with global liquidity providers (commercial banks like JPMorgan, HSBC, and Deutsche Bank). Learn about bid-ask differentials, electronic communication networks (ECNs), why retail brokerage market-makers run spreads to consume stop losses, and how order matching engines execute transactions step-by-step.",
+            content_zu: "Siyakwamukela kwiSifundo 1. Ukuhweba kubandakanya ubungozi obukhulu bezezimali. Kulesi sigaba, sichaza kahle ukuthi kukhona ntoni uma uchofoza inkinobho yokuthenga noma yokuthengisa ku-GBPUSD noma i-EURUSD. Ufunda ngokwahlukana kwamanani okuthenga nokuthengisa (spreads), amanethiwekhi edatha ye-ECN, nezinjini zokufanisa ezihlanganisa abahwebi.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Market_Mechanics_and_Brokers_Manual.pdf",
+                name_zu: "Incwadi_Ye-Mechanics_Yemakethe_Nokukhetha_i_Broker.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: MARKET PARTICIPANTS, ORDER BOOKS & THE BROKER SCAPE
+==================================================================
+
+1. THE LIQUIDITY CONTEXT
+Retail traders make up less than 6% of daily forex transaction volume. The remaining 94% is managed by Tier-1 commercial banks, central banks, hedge funds, and mega-corporations.
+When you enter a trade of 0.10 lots, you are buying 10,000 units of currency. This order goes through:
+- A Liquidity Network (ECN / STP)
+- An Order Matching Engine
+- Direct Market Makers
+
+2. HOW SPREAD WORKS
+The 'Spread' is the difference between the Bid price (the price you can sell at) and the Ask price (the price you can buy at).
+- Ask Price - Bid Price = Spread.
+In times of major news announcements, liquidity is removed from the book, causing spreads to expand instantly.
+
+3. THE RETAIL TRAP: B-BOOK BROKERS
+A B-Book broker does not transmit your order to the interbank market; instead, they take the opposite side of your trade. Since 90% of retail traders lose money within 90 days, B-Booking is extremely profitable for bad brokers. They utilize spread expansion and technical slippage to force stop-out reactions.
+Your Action Plan: Select only regulated A-Book brokers aligned with institutional execution.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: ABADLALI BEMAKETHE, UHLELO LWAMA-ORDER BOOKS & NEZOBROKER
+==================================================================
+
+1. UMSEBENZI WE-LIQUIDITY
+Abahwebi abancane (retail traders) benza ngaphansi kuka-6% wokuhweba kwansuku zonke. U-94% osele ulawulwa amabhange amakhulu (Tier-1), ama-hedge funds, kanye nezinkampani ezinkulu.
+Uma ufaka oda ka-0.10 lots, uthenga amayunithi angu-10,000 wemali.
+
+2. INDLELA OKUSEBENZA NGAYO I-SPREAD
+I-Spread ngumehluko phakathi kwentengo ye-Bid (entengwini ongazithengela ngayo) nentengo ye-Ask (oyithengayo).
+- Intengo Ye-Ask - Intengo Ye-Bid = Spread.
+Ngezikhathi zezindaba ezibalulekile, i-liquidity iyasuswa emgqeni, okwenza i-spread sikhule ngokuphazima kweso.
+
+3. IBhuku Lesibili (B-Book Brokers)
+Lama-broker awathumeli i-order yakho emakethe yangempela; kunalokho, adlala nawe aphikisane nawe ohwebeni. Ngoba u-90% wabahwebi ulahlekelwa yimali ezinsukwini ezingu-90 zokuqala, lokhu kubakhokhela kakhulu ama-broker amabi.`
+              }
+            ],
+            quiz: {
+              id: "elite_q1",
+              title_en: "Interbank Mechanics & Spread Operations",
+              title_zu: "Ukuhlolwa kwe-Mechanics nemigqa ye-Spread",
+              questions: [
+                {
+                  id: "sov_q1_q1",
+                  question_en: "Why do B-Book brokers often benefit from retail traders losing accounts?",
+                  question_zu: "Kungani ama-broker we-B-Book ezuza kakhulu uma abahwebi bengahwebi kahle balahlekelwe imali?",
+                  options_en: [
+                    "They act as the counterparty, meaning the client's loss is the broker's direct profit",
+                    "They charge high administrative fees on student accounts with low spreads",
+                    "They receive physical gold shipments directly from central banks to store in vaults",
+                    "They are funded exclusively by AI systems in developers' server networks"
+                  ],
+                  options_zu: [
+                    "Ubambisene nabo uhlangothi oluphambene, okusho ukuthi ukulahlekelwa kwakho kuyinzuzo eqondile kwi-broker",
+                    "Bakhokhisa imali eningi yokuphatha kuma-akhawunti anama-spreads aphansi",
+                    "Bathola izinto zegolide ezicwengekileyo ngqo emabhange amakhulu we-central",
+                    "Baxhaswa kuphela amashini e-AI emithonjeni yemishini yabathuthukisi"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          },
+          {
+            id: "elite_l2",
+            title_en: "Class 2: Candlestick Physics & OHLC Physics (Not Card Patterns)",
+            title_zu: "Isigaba 2: Ukuhlaziywa Kwekhandlela Ngokwemakethe (I-OHLC)",
+            duration: "55 Mins",
+            videoUrl: "https://www.w3schools.com/html/movie.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 2. In this class, we move away from memorizing patterns with childish names like 'three black crows' or 'morning stars'. Instead, we analyze candlesticks through market pressure physics: Open, High, Low, Close (OHLC). We break down how candle bodies show structural consensus and candle wicks indicate rapid liquidity sweeps and price rejection points. Learn how to identify when institutional orders are absorbing supply or purging selling pressure at key structural margins.",
+            content_zu: "Siyakwamukela kwiSifundo 2. Sishiya phansi ukubamba ngekhanda amagama ezinto angenasisekelo afana nokuthi 'izinyoni ezintathu'. Kunalokho, sihlazulula amakhandlela ngamandla entengo yangempela: O-H-L-C. Funda ukubona lapho izikhungo ezinkulu zamabhange ziqoqa khona ama-orders entengo kulayini womngcele.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Master_Candlestick_OHLC_Guide.pdf",
+                name_zu: "Ibhuku_Lokuhlaziya_Ukuvaleka_Kwekhandlela_OHLC.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: THE PHYSICS OF MARKET PRICE CONCRETE CANDLES (OHLC)
+==================================================================
+
+1. THE OHLC ANATOMY
+Every candle represents a specific window of auction history:
+- OPEN: The opening transaction of the period.
+- HIGH: The maximum transaction level hit by high buying pressure.
+- LOW: The minimum transaction level hit by selling pressure.
+- CLOSE: The final settlement price before the next cycle starts.
+
+2. QUANTIFIED CANDLE WICK INTERPRETATION
+Do not read candles mechanically. Analyze them based on LIQUIDITY:
+A massive upper wick on EURUSD or GBPUSD indicates that prices were pushed up to sweep resting take-profit/buy stop orders, then immediately met massive institutional selling orders, driving prices back down.
+- Wick-to-Body Ratio > 70% shows real dynamic exhaustion / institutional rejection.
+- Wide Range Candles with minute wicks show strong structural momentum indicating institutional urgency.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: ULWAZI NGEMAKETHE NOKUHLAZIYA IKHANDLELA (OHLC)
+==================================================================
+
+1. SAKHIWO SE-OHLC (Open-High-Low-Close)
+Ikhandlela ngalinye limela umlando wentengo ngesikhathi esithile:
+- KUVILE: Intengo yokuqala yenkipha yesikhathi.
+- PHEZULU: Intengo ephezulu efundelwe ukuthengwa kwayo.
+- PHANSI: Intengo ephansi ekhethelwe ukuthengiswa kwayo.
+- VALIWE: Intengo yokuvalwa kokugcina kwaleso sikhathi.
+
+2. INDLELA YOKUFUNDA IMISILA (WICKS)
+Umsila omude phezulu ukhombisa ukuthi intengo ikhuphukile yashunyayelwa ukususa ama-stop-loss, kodwa mabeza abahwebi abakhulu (institutions) bashaya ngama-orders amakhulu okuthengisa, baphinda bayehlisela phansi futh.`
+              }
+            ],
+            quiz: {
+              id: "elite_q2",
+              title_en: "OHLC Auction & Candle Wick Rejection Check",
+              title_zu: "Ukuhlolwa Kwedatha Yamakhandlela ne-OHLC",
+              questions: [
+                {
+                  id: "sov_q2_q1",
+                  question_en: "What does a candle with a dynamic 80% upper wick (long tail on top) and small body near the bottom signal in an uptrend?",
+                  question_zu: "Yini ikhandlela elinomsele ongu-80% phezulu nendikimba encane kakhulu phansi eliyikhombisayo?",
+                  options_en: [
+                    "Institutional rejection of higher prices, implying supply absorbed and seller control",
+                    "Immediate continuation of rapid retail upward momentum with zero risk",
+                    "A direct network drop between local hosting brokers and data servers",
+                    "A mandatory requirement to purchase custom visual moving averages"
+                  ],
+                  options_zu: [
+                    "Ukunqatshwa kwamabhange amanani aphezulu, okusho ukuthi umthengisi usesandleni sokuphatha",
+                    "Ukuhamba phezulu okulula kwayo yonke imakethe ngaphandle kokubeka ubungozi obukhulu",
+                    "Ukunqanyulwa kwe-network okuqondile phakathi kwe-broker nezinsiza ye-datha",
+                    "Isidingo esiphoqelekile sokuthenga amashadi ne-moving average"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: "elite_m2",
+        title_en: "Module 2: Strategic Core Formations & Dynamic Supply/Demand Systems (Intermediate)",
+        title_zu: "Isifundo 2: Uhlelo Lolwazi Olujulile Nomhlahlandlela wentengo (Amaphetheni)",
+        lessons: [
+          {
+            id: "elite_l3",
+            title_en: "Class 3: Finding Footprints: Order Blocks & Fair Value Gaps",
+            title_zu: "Isigaba 3: Footprints: Ama-Order Blocks Nomgodi We-Fair Value Gaps",
+            duration: "1 Hour 40 Mins",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 3. Institutional market makers leave clear footprints when deploying massive capital. They do this because they cannot hide their major purchase orders. Learn how to locate 'Order Blocks' - the exact candle that marks the final institutional push before a massive structural break of structure. We also study 'Fair Value Gaps' (FVGs), which are structural imbalance holes created by rapid market displacement. We outline step-by-step how to map these institutional levels on your charts and wait patiently for confirmations rather than guessing or chasing wild breakouts.",
+            content_zu: "Siyakwamukela kwiSifundo 3. Kulobu buchwepheshe bamazinga, sifunda ukubona izinyawo zakwamabhange (Order Blocks ne-Fair Value Gaps). Abahwebi abakhulu kabakwazi ukufihla yonke imisebenzi yabo, bahlala bashiye izikhala ezivulekile (imbalance). Funda ukungena ohwebeni ngezindlela eziphezulu ngeqile zokuqapha imali.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Order_Block_and_Imbalance_Playbook.pdf",
+                name_zu: "Umtapo_Ulwazi_I-Order_Block_ne_Imbalance.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: THE ORDER BLOCK & FAIR VALUE GAP (FVG) MECHANICS
+==================================================================
+
+1. THE ORDER BLOCK DEFINITION
+An Elite Bearish Order Block is the consecutive buying candlestick sequence that sweeps liquidity highs immediately prior to a violent, institutional impulse expansion downwards.
+- The highest point of this block represents institutional short resistance.
+- The lowest point is the primary validation mark of the block.
+
+2. FAIR VALUE GAPS (FVG) / LIQUIDITY IMBALANCES
+An FVG occurs inside a 3-candle sequence where Candle 1 High and Candle 3 Low fail to touch each other, leaving a massive empty space in the middle (Candle 2).
+- This gaps act as price magnets. Price must revisit the gap to rebalance physical orders.
+- Entry Model: Wait for premium displacement to sweep highs, then buy or sell on a clean re-test of the 50% equilibrium line of the FVG.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: ULWAZI OLUPHEZULU NGAMA-ORDER BLOCKS LE-FAIR VALUE GAP
+==================================================================
+
+1. INKOMBANDLELA YE-ORDER BLOCK
+I-Order Block iyikhandlela lokugcina lombala obomvu noma oluhlaza ngaphambi kokuba imakethe isuke ngamandla iye phezulu noma phansi ngezinyawo zemali enkulu yamabhange.
+- Sisebenzusa le ndawo ukulinda intengo ukuthi ibuyele ukuze singene kahle esifundweni sokuhweba ngobuhlakaniphile.
+
+2. UKUBAKHO KWE-FAIR VALUE GAP (FVG)
+Lokhu kwenzeka uma kunekhandlela elikhulu lasendleleni lapho imisila yekhandlela lokuqala nelesithathu ingahlangani, ishiye umgodi (imbalance). Imakethe ivame ukubuya izovala le ndawo.`
+              }
+            ],
+            quiz: {
+              id: "elite_q3",
+              title_en: "Order Block & Imbalance Validation Review",
+              title_zu: "Ukuhlolwa Kwezincwadi Zokuhlola Ubungozi be-Imbalance",
+              questions: [
+                {
+                  id: "sov_q3_q1",
+                  question_en: "What defines a true institutional Fair Value Gap (FVG)?",
+                  question_zu: "Yini echaza i-Fair Value Gap (FVG) yangempela yamabhange?",
+                  options_en: [
+                    "A 3-candle sequence where the High of Candle 1 does not overlap the Low of Candle 3, leaving an imbalance in Candle 2",
+                    "A pattern where two moving averages cross each other precisely during trading sessions",
+                    "An automatic order sent by a retail broker to shut down a user's terminal",
+                    "A simple layout of three candlesticks of identical height and color in a row"
+                  ],
+                  options_zu: [
+                    "Umgcibelo wamakhandlela amathathu lapho umsila kaphansi kowokuqala noka phezulu kowesithathu ungahlangani",
+                    "Iphethini lapho ama-moving average amabili adlulana khona phakathi komlilo wokuhwebelana",
+                    "Umyalezo othunyelwa yi-broker yakho ecela ukuthi unikeze b-book fees zakho",
+                    "Iphethini elula lapho amakhandlela amathathu anemibala nokuphakama okufanayo egobela phansi"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          },
+          {
+            id: "elite_l4",
+            title_en: "Class 4: Multi-Asset Correlative Markets: Gold, FTSE Indices & Correlations",
+            title_zu: "Isigaba 4: Ukuxhumana Kwezimali Emakethe: Igolide, I-FTSE Level ne-Gold",
+            duration: "1 Hour 10 Mins",
+            videoUrl: "https://www.w3schools.com/html/movie.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 4. No asset exists in a vacuum. A master FX trader does not look only at a single currency pair chart like GBP/USD. To survive professionally, you must understand intermarket correlates. For example, the FTSE index reflects London equity performance, which has highly correlated flow patterns to the British Pound (GBP). Likewise, US Bond Yields track interest rate policy, which directly dictates USD strength, moving Gold inversely. We cover step-by-step how to review daily correlate structures to predict directional flows accurately and trade with higher statistical models.",
+            content_zu: "Siyakwamukela kwiSifundo 4. Akukho mali ehamba yodwa. Ukuze uphumelele, kufanele wazi kabanzi ngokuzwelana kwezinhlobo zezimakethe (GBPUSD, FTSE, Igolide, ne-Dollar). Sifunda lapha izeluleko zokubuka zonke izinto ngaphambi kokuthatha isinqumo semali.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Multi_Asset_Intermarket_Correlation_Manual.pdf",
+                name_zu: "Uhlelo_Lokulawula_Ukuthambekela_Zezimakethe_Correlation.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: MULTI-ASSET CORRELATING FLOW MATRIX
+==================================================================
+
+1. THE THREE CORE GLOBAL METRICS
+Trading effectively requires monitoring three major flows:
+- THE US DOLLAR INDEX (DXY): The global reserve index. A rising DXY exerts automatic downward gravity pressure on EURUSD, GBPUSD, and Gold.
+- US 10-YEAR TREASURY YIELDS (US10Y): Tracking yield changes. As yields expand, capital moves to interest-bearing assets, hurting non-interest assets like Gold.
+- CORE EQUITIES INDICES (FTSE, S&P500): Indicator of risk appetite. Falling indices display high 'Risk-Off' attitudes where capital runs to bonds and the US Dollar.
+
+2. FOREX / EQUITIES TRADING RULE
+When trading the British Pound (GBP), observe the FTSE and overnight London session indices. If UK index flow displays institutional distribution, GBP currency is highly susceptible to macro seller runs. Align your pairs of trading with major market sentiments.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: ULWAZI LWEZIMAKETHE EZIXHANYALANAYO (CORRELATIONS)
+==================================================================
+
+1. IZINTO EZINTATHU EZIPHEZULU OKUMELE UZIBHEKE
+Ukuze uhwebe kahle, hlola lezi zinto zansuku zonke:
+- I-US DOLLAR INDEX (DXY): Uma i-DXY ikhuphuka, imvamisa izinhlobo zezimali ezifana ne-GBPUSD ne-EURUSD ziyawa phansi, negolide liyawa na.
+- I-UK FTSE INDEX ne-S&P500: Lezi zikhombisa uma abatshalimali bafisa ukungena ezincombeni zobungozi (Risk-on) noma amabhange ethatha izimali azisindise kulayini wezincomo zokuhluthwa kwemali (Risk-off).`
+              }
+            ],
+            quiz: {
+              id: "elite_q4",
+              title_en: "Correlations & Global Macro Review",
+              title_zu: "Ukuhlolwa Kokuzwelana Nezinhlobo Zezimali zomhlaba",
+              questions: [
+                {
+                  id: "sov_q4_q1",
+                  question_en: "If US Treasury yields (US10Y) rise sharply, what is the typical inverse statistical impact on Gold prices?",
+                  question_zu: "Uma usizo lomthetho lwe-Treasury yaseMelika (US10Y) lukhuphuka kakhulu, kwenzekani kuvamile entengweni yegolide?",
+                  options_en: [
+                    "Gold tends to fall because capital transfers to interest-bearing dollar-linked assets",
+                    "Gold rises exponentially because investors lose faith in paper markets",
+                    "The FTSE index immediately shuts down for scheduled holiday reviews",
+                    "The local broker cancels the spread values and disables client accounts"
+                  ],
+                  options_zu: [
+                    "Igolide lithambekela ekugobeleni phansi ngoba izimali zisuswa ziyiswa kumadola thola isithelo sentshisekelo",
+                    "Igolide likhuphuka kakhulu ngoba abantu balahlekelwa ukwethemba amaphepha emakethe",
+                    "I-index ye-FTSE ivalwa ngokushesha ngenxa yamaholide omshini ezohwebo",
+                    "I-broker isusa izintengo ze-spread sikhawule i-akhawunti yakho ngaso leso sikhathi"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: "elite_m3",
+        title_en: "Module 3: Precision Position Sizing, Trading Mathematics & Safety Standards (Professional)",
+        title_zu: "Isifundo 3: Isifundo Sezinamba: Ukulawula Ingozi Nezibalo Jamabhange",
+        lessons: [
+          {
+            id: "elite_l5",
+            title_en: "Class 5: The Math of Capital Preservation: 1% Risk Rule, Compounding, and Outcomes",
+            title_zu: "Isigaba 5: Izibalo zika 1% Wengozi: Indlela Enembile Yokuvikela Imali Yakho Ebonakalayo",
+            duration: "1 Hour 50 Mins",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 5. Trading is entirely a game of probabilities. To be complete and strictly realistic: we must state that most retail traders fail due to poor risk practices, over-leverage, and looking for immediate millions. To master this profession, you must understand position sizing mathematics. You must never risk more than 1% of your total account equity on any individual trade. We present the compound growth curve math, drawdowns recovery dynamics, and calculate the strict risk-to-reward ratio (must hit a minimum of 1:2 R:R ratio to survive). Elite professional traders do not double accounts in a day; they master consistent 3% to 5% monthly compounding yields with minimal Drawdowns. Learn to treat trading as an absolute business rather than a slot machine.",
+            content_zu: "Siyakwamukela kwiSifundo 5. Ukuhweba kuwumdlalo wezibalo namathuba. Ukuvikeleka kwengcebo yakho kulele kwisinqumo sika 1% kuphela ubungozi kumhwebo ngamunye. Izazi ezinkulu azifuni u-100% ngosuku; zithola u-3% kuye ku-5% ngenyanga onenhlonipho enembile futhi ovikelekile ebungozini bomlilo wezimali.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Professional_Risk_Matrix_math_Calculations.pdf",
+                name_zu: "Iphepha_Lokubala_Ubukhulu_Bengcuphe_leMaths.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: CLASSICAL POSITION SIZING & PROBABILITY MATHEMATICS
+==================================================================
+
+1. THE MATHEMATICAL RISK OUTCOME PREFERENCE
+Your position size must calculate Stop Loss size in pips relative to your target dollar amount.
+Formula:
+- Position Size (Lots) = (Account Balance * Risk %) / (Stop Loss in Pips * Pip Value of pair)
+- Maximum Risk limit per trade: 1% of Equity.
+
+2. THE DRAWDOWN MATHEMATICAL RECOVERY TRAP
+When you lose capital, the returns needed to return to break-even grow exponentially:
+- Lose 10% of Capital -> Need 11% return to return.
+- Lose 25% of Capital -> Need 33% return to return.
+- Lose 50% of Capital -> Need 100% return to return.
+- Lose 90% of Capital -> Need 900% return to break-even.
+Conclusion: Capital safety is of absolute paramount importance. Once you damage your account size via high leverage, your recovery becomes mathematically unsustainable.
+
+Your Strategy: Target a minimum Risk-to-Reward (R:R) ratio of 1:2 (example: risk $10 to capture $20). With a 40% win rate, you will remain highly profitable.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: TIMETSHEKISO NEZIBALO ZOKUVIKELA ENGCEBHENI (1% RISK)
+==================================================================
+
+1. ISIBALO SESIZI SESIKHUNDLA (POSITION SIZING MATRIX)
+Ngeke uvele ukhethe usayizi (lot size) ngendlela yokungaqondi:
+- Usayizi we-Lot = (I-Mali Yonke * Amaphesenti Wengozi ka 1%) / (Stop Loss nge-Pips * I-Pip Value yaPair)
+
+2. I-DRAWDOWNS EXPONENT OVERVIEW
+Uma ulahlekelwa yi-capital yakho, ukubuyela emuva kuqala ngomzamo ochoma kakhulu:
+- Ulishe u-10% -> Udinga imbuyiselo ka-11% ukubuyisela.
+- Ulishe u-50% -> Udinga u-100% we-return ukubuyisela imali obuqale ngayo.
+Yingakho kumele ungalokothi ugubhele phezulu ungaphezu kuka-1% wengozi! Gcina umgomo wokugcina imali iphephile.`
+              }
+            ],
+            quiz: {
+              id: "elite_q5",
+              title_en: "Compounding Growth & Risk Matrix Assessment",
+              title_zu: "Ukuhlolwa Kwezibalo Zokubamba Ubungozi Bemakethe",
+              questions: [
+                {
+                  id: "sov_q5_q1",
+                  question_en: "If you lose 50% of your account capital, what percentage rate of return do you mathematically need just to break even?",
+                  question_zu: "Uma ulahlekelwa ngu-50% we-akhawunti yakho, ulinganiselwa kwisiphi isithunywa sayo ukuze ubonakale ubuyele emgqeni wokuqala?",
+                  options_en: [
+                    "100% return on the remaining capital balance",
+                    "50% return to recover exactly what was lost",
+                    "A simple 10% system gain inside high-volume sessions",
+                    "No return is required; B-Book systems automatically reimburse clients in regulated networks"
+                  ],
+                  options_zu: [
+                    "u-100% we-return emalini osele nayo",
+                    "u-50% we-return ucinge lokho okulibalekile",
+                    "u-10% we-return ezinkankeni zemakethe ezinkulu zansuku zonke",
+                    "Alukho usizo oludingekayo; ama-broker abuyisela imali mahhala emshinini"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: "elite_m4",
+        title_en: "Module 4: Professional Trade Verification, Confluences & Session Liquidity (Advanced)",
+        title_zu: "Isifundo 4: Ukuhlolwa Ohlangothini Lomhlaba: Izikhathi ze-Liquidity nama-Kill Zones (Kuthuthukile)",
+        lessons: [
+          {
+            id: "elite_l6",
+            title_en: "Class 6: The London Open & New York Kill Zones (Session Times & Asia Sweep)",
+            title_zu: "Isigaba 6: Amasikhathi Omsebenzi: I-London Open ne-New York Kill Zones",
+            duration: "1 Hour 30 Mins",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 6. Time is just as critical as price. Institutional trading does not occur randomly throughout the day. It is highly concentrated inside specific intervals known as 'Kill Zones'. We explore the London Kill Zone (06:00 - 09:00 UTC) and the New York Kill Zone (12:00 - 15:00 UTC). We analyze why the Asian Trading Range (overnight sessions) routinely acts as a liquidity pool. Standard retail buy-stops and sell-stops are placed just outside the Asian high and low boundaries. Amnhlaba banks purposely sweep these stops during the London Open before launching the true trend of the day. Learn to identify the sweep and trade in harmony with smart money.",
+            content_zu: "Siyakwamukela kwiSifundo 6. Isikhathi sibaluleke kakhulu njengentengo. Imisebenzi yabaphathi bemali yenzeka ngezikhathi ezithile ezibizwa ngokuthi 'i-Kill Zones'. Sifunda kulesi sigaba nge-London Open (06:00 - 09:00 UTC) kanye ne-New York Open (12:00 - 15:00 UTC). Sihlaziya indlela amabhange asusa ngayo ama-stop-loss abahwebi abancane phezulu naphansi kwebanga lase-Asia ngaphambi kokuqondisa intengo yangempela yekhwalithi.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Session_Timetables_and_Kill_Zones_Strategy.pdf",
+                name_zu: "Ibhuku_Lamasikhathi_Omsebenzi_ne_Kill_Zones.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: INSTITUTIONAL TIME CHRONOMETRICS & KILL ZONES
+==================================================================
+
+1. THE THREE CORE LIQUIDITY WINDOWS
+Do not look at the market all-day. Trade only inside these high-volume volatility zones:
+- ASIAN RANGE: 22:00 - 06:00 UTC. Low volatility consolidation. Establishes the liquidity parameters of the day.
+- LONDON KILL ZONE: 06:00 - 09:00 UTC. High volume volatility expansion. Frequently sweeps Asian highs or lows to gather orders.
+- NEW YORK KILL ZONE: 12:00 - 15:00 UTC. High-volume period driven by major US fundamental releases.
+
+2. THE ASIAN SWEEP STRATEGY MODEL
+Steps to verify:
+- Map the maximum high and lowest low of the Asian trading range.
+- Wait for London open at 06:00 UTC.
+- Look for a rapid, high-momentum surge that sweeps the Asian High or Asian Low by 5 to 15 pips.
+- Wait for a rapid reversal candlestick showing institutional rejection, indicating the sweep was a trap to take resting stop losses (liquidity run).
+- Execute only after price returns inside the Asian range with a clear structural marker.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: AMASIKHATHI ALAWULEKAYO (KILL ZONES)
+==================================================================
+
+1. IZINDAWO EZINTATHU ZOMHLABA ZEZIKHATHI
+Misa ukuhlala usuku lonke phambi kwamashadi. Hweba kuphela kulezi zindawo ezinamandla amakhulu:
+- ASIAN RANGE: 22:00 - 06:00 UTC. Isikhathi lapho imakethe ilala khona, yenza ibanga elincane lokuqoqa izizathu.
+- LONDON KILL ZONE: 06:00 - 09:00 UTC. Isikhathi sokuvulwa kwe-London lapho kufikela ama-orders amakhulu avame ukushanela (sweep) imingcele yase-Asia.
+- NEW YORK KILL ZONE: 12:00 - 15:00 UTC. Isikhathi samaholide eMelika nezindaba zemicimbi yezomnotho.`
+              }
+            ],
+            quiz: {
+              id: "elite_q6",
+              title_en: "Session Liquidity & Kill Zone Operations",
+              title_zu: "Ukuhlolwa Kwezikhathi Zensimbi ne-Kill Zones",
+              questions: [
+                {
+                  id: "sov_q6_q1",
+                  question_en: "What occurs typically during the London Open at 06:00 UTC regarding the Asian Trading Range?",
+                  question_zu: "Yini evame ukwenzeka ekuvulweni kwe-London ngo 06:00 UTC maqondana nebanga lezohwebo lase-Asia?",
+                  options_en: [
+                    "Institutional price sweeps the high or low of the Asian range to grab resting retail stops as liquidity",
+                    "The global Forex currency network completely deactivates due to bank holiday processing",
+                    "All retail brokers automatically remove spreads and implement fixed 1.0 lot mandates",
+                    "Financial developers are forced to restart their local Node servers on alternative ports"
+                  ],
+                  options_zu: [
+                    "Izikhungo zamabhange zishanela (sweep) phezulu noma phansi kwebanga lase-Asia ukuze ziqoqe imali yama-stops",
+                    "Wonke amanethiwekhi emakethe ye-Forex ayama kwasikhathi ngenxa yamaholide omshini ezohwebo",
+                    "Ama-broker asusa zonke izintengo ze-spread anikeze umfundi amakhodi wokuhweba mahhala",
+                    "Abathuthukisi baphoqeleka ukuthi bavule kabusha amaseva wabo kwi-port ehlukile"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          },
+          {
+            id: "elite_l7",
+            title_en: "Class 7: Top-Down Market Structure Mapping (HTF Bias to LTF Entry)",
+            title_zu: "Isigaba 7: Top-Down Analysis: Ukuhlaziya Kusukela Elangeni Kuye Kumizuzu Emibili",
+            duration: "1 Hour 45 Mins",
+            videoUrl: "https://www.w3schools.com/html/movie.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 7. A major trap for retail traders is trading on low timeframes (like the 1-minute or 5-minute charts) without knowing the big picture trend (the High Timeframe, or HTF, bias). In this class, we teach the absolute gold standard of market analysis: Top-Down Multi-Timeframe Analysis. We start on the Daily chart to determine which direction mega-investors are pushing price. We then move down to the 4-Hour (H4) and 1-Hour (H1) charts to locate high-probability Order Blocks and Fair Value Gaps. Finally, we execute trades on the 5-minute or 15-minute chart ONLY when those lower timeframes shift structure (using a Change of Character, or CHoCH) in alignment with our master HTF bias. Learn to design high-probability, low-risk trade setups systematically.",
+            content_zu: "Siyakwamukela kwiSifundo 7. Ubuciko obukhulu bokuhweba bulele ekwazini ukuthi iyaphi imakethe jikelele (HTF) ngaphambi kokungena kulezo zindawo ezincane (LTF). Sakha umdwebo kulayini we-Daily ne-4-Hour (H4) ukuthola uhlangothi olufanele lamabhange, bese sijika silinda ku-15-minute noma ku-5-minute ukubona uphawu lokushintsha komkhondo wentengo (CHoCH) ngaphambi kokuthatha isinqumo sokungena.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Top_Down_Analysis_Execution_Grid.pdf",
+                name_zu: "Uhlelo_Lokuhlaziya_Kusuka_Phezulu_Kuye_Phansi.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: TOP-DOWN MARKET STRUCTURE & MULTI-TIMEFRAME ALIGNMENT
+==================================================================
+
+1. THE MULTI-TIMEFRAME HIERARCHY
+To ensure pristine trade quality, map structures across these distinct timeframes:
+- DAILY TIMEFRAME (D1): Directs the Institutional Market Bias. Tells us if the institution is in accumulation, manipulation, or distribution phases.
+- 4-HOUR / 1-HOUR TIMEFRAME (H4/H1): Identifies key pools of supply & demand, high-quality Order Blocks, and unmitigated Fair Value Gaps.
+- 15-MINUTE / 5-MINUTE TIMEFRAME (M15/M5): Displays local market cycles. Serves exclusively as our exact tactical execution zone.
+
+2. TRANSITIONAL STRUCTURE MARKS
+- BOS (Break of Structure): Price breaks the previous swing point in alignment with the master trend, confirming continuation.
+- CHOCH (Change of Character): The first structural swing point failure indicating a major reversal shift in trend direction.
+Rule: Do not take positions on lower-timeframe BOS unless local trend shifts are fully supported by an unmitigated HTF institutional level.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: UKUHLAZULULA AMASHADI Phezulu Nokulalela kuka-CHoCH
+==================================================================
+
+1. IZINHLAKA ZENKOMBANDLELA
+Vikela imali yakho ngokuhlola amashadi ngale ndlela ehlelekileyo:
+- ISHADI LOSUKU (Daily): Likunika indlela eyinhloko okuhamba kuyo amabhange amakhulu (Institutional Bias).
+- ISHADI LAMAHORA AMANE (4-Hour): Libonisa lapho ama-Order Blocks angathintwanga nemigodi (FVGs) ekhona.
+- AMAMIZUZU AWU-15 (15-Min): Zone lapho ugada khona uphawu lo kuguquka wentengo kwashesha (CHoCH) ukuze ungene ohwebeni.`
+              }
+            ],
+            quiz: {
+              id: "elite_q7",
+              title_en: "Top-Down Analysis & Structural Reversals",
+              title_zu: "Ukuhlolwa Kokusuka Phezulu Kuye Phansi ne-Structural Bias",
+              questions: [
+                {
+                  id: "sov_q7_q1",
+                  question_en: "What is the difference between a Break of Structure (BOS) and a Change of Character (CHoCH)?",
+                  question_zu: "Yini umehluko phakathi kwe-Break of Structure (BOS) ne-Change of Character (CHoCH)?",
+                  options_en: [
+                    "BOS represents trend continuation, while CHoCH represents the first major structural signal of trend reversal",
+                    "BOS is only utilized by retail indicator scripts, while CHoCH is exclusive to institutional B-Book engines",
+                    "There is no difference; they are childish branding names used to mislead retail traders",
+                    "BOS is restricted to USD currencies, while CHoCH is used only on London FTSE equities and Gold"
+                  ],
+                  options_zu: [
+                    "I-BOS imele ukuqhubeka komkhondo (trend), kanti i-CHoCH imele uphawu lokuqala olukhulu lokujika komkhondo lowo",
+                    "I-BOS isetshenziswa ama-scripts kuphela kanti i-CHoCH yenzelwe izinhlelo zezikhungo ze-B-Book",
+                    "Akukho mehluko; amagama angenasisekelo asetshenziswa ukukhohlisa abahwebi",
+                    "I-BOS isebenza kumadola kuphela kanti i-CHoCH isebenza emishinini ye-FTSE negolide labaseLondon"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: "elite_m5",
+        title_en: "Module 5: Mindset Calibration & The Psychology of Peak Performance (Mastery)",
+        title_zu: "Isifundo 5: Ukulawula Inqondo Nemicabango Yokuhweba Ngengqondo Eqinile (I-Psychology)",
+        lessons: [
+          {
+            id: "elite_l8",
+            title_en: "Class 8: Overcoming Retail Cognitive Biases (Greed, FOMO, Revenge Trading)",
+            title_zu: "Isigaba 8: Ikhwalithi Yemicabango: Indlela Yokulwanyulwa kwe-Greed, FOMO ne-Revenge",
+            duration: "1 Hour 10 Mins",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 8. You can have the best trading strategy in the world, but if your mindset is uncalibrated, you will mathematically destroy your trading account balance. The human mind is naturally wired for survival in physical environments, but these evolutionary instincts work completely against us in financial markets. We explore 'Greed' (placing massive slot-machine sizes to double accounts), 'FOMO' (Fear of Missing Out, chasing running prices after a move has already completed), and 'Revenge Trading' (violently entering trades to win back money lost). We cover step-by-step how to construct a rigid trading plan, treat losses as routine operating costs, and remain completely cold and emotional-free during execution.",
+            content_zu: "Siyakwamukela kwiSifundo 8. Ungaba neqhinga elihle kakhulu emhlabeni, kodwa uma ingqondo yakho ingenandlela ehlelekileyo yokugada imicabango yakho, uzolahlekelwa yimali yakho yonke. Sifunda kulesi sigaba ngezincomo zempilo nengqondo egada i-Greed, ukwesaba ukushiyeka (FOMO), kanye nokuziphindiselela (Revenge Trading). Funda ukubona ukulahlekelwa njengento evamile yebhizinisi.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Mindset_Calibration_and_Trader_Logs_Blueprint.pdf",
+                name_zu: "Uhlelo_Lokulawula_Ingqondo_Nemizwa_ku-Forex.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: PERFORMANCE COGNITIVE BIAS CALIBRATION
+==================================================================
+
+1. THE PSYCHOLOGICAL REALITY OF LOSSES
+In professional trading, loss is a standard cost of doing business, just like monthly rent in a physical shop.
+- Weak Traders: View a lost trade as a personal failure or an error. They react with immediate Revenge Trading to 'win back' money.
+- Elite Traders: Accept loss as a simple statistical event. They know their 40% win rate with 1:2 R:R mathematically ensures long-term wealth.
+
+2. ELIMINATING EMOTIONAL SURGES (FOMO & GREED)
+Your Execution Protocol:
+- If a high-impact setup of EURUSD or GBPUSD leaves without you, do NOT chase it. Let it go. The market will always present another setup tomorrow.
+- Never manually override or expand your Stop Loss once a trade is active.
+- Keep a pristine daily journal documenting: Entry reasons, Risk used, emotional state, and outcome compliance.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: IZINGCONCE ZENGQONDO NOKUQAPHA IMICEBISO (TRADER BLUEPRINT)
+==================================================================
+
+1. UKWAMUKELA UKULAHLEKELWA NGENDLELA EFANELEKO
+Ukunqotshwa emhlabeni wezohwebo kumele kubonakale njenge-cost ejwayelekile yebhizinisi, kufana nebilling ka electricity esitolo sakho.
+- Abahwebi abafuna imali kalula: Bephendula ngokuthukuthela nokuziphindiselela okubenza balahlekelwe kakhulu.
+- Abahwebi bezikhungo eziqinileyo: Balandela imithetho kuphela bathole u-3% ngenyanga phezulu kwazo zonke iziphithiphithi.
+
+2. UKUVIKELA IMICABANGO EMIYALELO (FOMO)
+- Uma intengo ifika isihambile ku-GBPUSD, ungagijimi ngemva kwayo. Linda enye indawo efanele kusasa. Imakethe ivulwa nsuku zonke.`
+              }
+            ],
+            quiz: {
+              id: "elite_q8",
+              title_en: "Trader Psychology & Bias Review",
+              title_zu: "Ukuhlolwa Kwezengqondo Nokugada Imicabango Ku-Forex",
+              questions: [
+                {
+                  id: "sov_q8_q1",
+                  question_en: "How should a professional elite trader perceive a losing trade?",
+                  question_zu: "Umfundi ohwebayo ngendlela efanele kumele akubone kanjani ukulahlekelwa emhlabeni we-Forex?",
+                  options_en: [
+                    "As a simple, neutral statistical event representing a normal cost of doing business",
+                    "As a personal failure that must be corrected immediately by tripling the position size",
+                    "As a technical glitch caused by the brokerage data server network system",
+                    "As a direct command from standard indicators to immediately buy in the opposite direction"
+                  ],
+                  options_zu: [
+                    "Njengento elula yenombolo engenandaba nemicabango (statistical cost) ehambisana nebhizinisi",
+                    "Njengokuhluleka okukhulu okumele kulungiswe ngokukhulisa ama-lots size ngokuphazima kweso",
+                    "Njengesiphambeko sobuchwepheshe esivela kumaseva we-broker yakho",
+                    "Njengesinyathelo esiphoqelekile sokuthi ungene ohwebeni oluphambene nakho"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          },
+          {
+            id: "elite_l9",
+            title_en: "Class 9: Setting Realistic Annual Benchmarks & The Master Income Blueprint",
+            title_zu: "Isigaba 9: Izinkozo Zenzuzo Enembile: Ukubeka Imigomo Ka-Compounding Yansuku Zonke Nomnyaka",
+            duration: "1 Hour 15 Mins",
+            videoUrl: "https://www.w3schools.com/html/movie.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 9. To become a master trader in financial markets, you must think and operate like an investment fund manager, not a retail gambler. The internet is flooded with fake gurus claiming they double their accounts every week with zero risk. This is a absolute lie aimed at misleading beginners into losing their capital to B-Book retail market makers. In this class, we walk step-by-step through the realistic metrics of elite trading: targeting 3% to 6% monthly growth with a maximum drawdown limit of 5%. We introduce prop firm funding structures, demonstrating how to secure $100,000+ in managed capital safely once you master risk metrics, and how to build an independent, legally compliant financial business.",
+            content_zu: "Siyakwamukela kwiSifundo 9. Ukuze ukwazi ukuthuthuka kahle, kulesi sigaba sichitha wonke amanga asequmbile ezinkundleni zokuxhumana aphathelane nokuthi ungavula i-akhawunti ka-R1000 uyenze uphephe kahle ube usozigidi ngenyanga eyodwa. Sifunda izibalo zendlela amabhange nabasebenzi bezinhlangano ezinkulu abazenza ngazo (3% kuye ku-6% ngenyanga onohlonipho lobungozi). Funda ngokusebenzisa amabhizinisi we-Prop Firms anikeza abahwebi ama-akhawunti amakhulu.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Compounding_Pro_Forma_and_Prop_Firm_Playbook.pdf",
+                name_zu: "Ibhuku_Lezibalo_Zokukhulisa_Imali_Nezinkundla_zeProp_Firms.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: THE EXCECUTIVE COMPOUND BLUEPRINT & PROP FUNDS
+==================================================================
+
+1. THE EXTREME REALITY OF COMPOUND INTEREST
+If you grow a $10,000 account, look at how mathematical compounding delivers wealth over time (retaining simple 4% average monthly yields):
+- Year 1 End: $16,010
+- Year 2 End: $25,633
+- Year 3 End: $41,039
+- Year 5 End: $105,196
+High leverage is never necessary. Consistent performance is key.
+
+2. PROP FIRM CAPITAL INTEGRATION
+Rather than risking your initial family savings, master your strategy, then submit your performance to regulated funding firms (Prop Firms like FTMO, FundedNext, etc.).
+- Passing Criteria: Demonstrate solid risk preservation with a maximum 5% daily loss limit and target 8-10% gain within conservative parameters.
+- Reward: Gain profit splits of up to 80% on $100,000+ managed funds without risking your personal capital.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: UHLELO LOKUKHULISA IMALI (COMPOUND STATS) NE-PROP FIRMS
+==================================================================
+
+1. IZIBALO ZESITHELO SE-COMPOUNDING
+Uma unemali engu-R10,000 ukhula nayo ngokuzethemba uzola:
+- Inyanga ka 12 (u-4% Monthly average): R16,010.
+- Imigudu yakho iqala ukuba nesisindo ngendlela yesikhathi ngaphandle kokubeka umndeni wakho ebungozini bomlilo.
+
+2. I-PROP FIRM SYSTEM ANALYSIS
+Kunokuthi ubeke imali yempilo yakho engozini, lulama umgudu wemfundo kule-academy bese ufaka izicelo ku-Prop Firms ukuze uthole amashumi ayizinkulungwane zedola eziyizimali zokuhweba amabhange.`
+              }
+            ],
+            quiz: {
+              id: "elite_q9",
+              title_en: "Compounding Logic & Capital Scaling",
+              title_zu: "Ukuhlolwa Kwendlela Ye-Compounding Nezinkomo zika-Prop Firms",
+              questions: [
+                {
+                  id: "sov_q9_q1",
+                  question_en: "What is a major advantage of utilizing regulated Prop Firms (institutional funding platforms) to trade?",
+                  question_zu: "Yisiphi isisizakala esikhulu sokusebenzisa amabhantshi we-Prop Firms ohlelweni lwakho lwasemhlabeni Forex?",
+                  options_en: [
+                    "They allow you to trade with up to $100,000+ of managed institutional capital, removing the risk of losing your own personal savings",
+                    "They guarantee 100% winning trades without enforcing any stop loss or position sizing rules",
+                    "They provide direct gold coins shipped to your home address on passing theoretical courses",
+                    "They automatically configure process.env.GEMINI_API_KEY inside your server's metadata parameters"
+                  ],
+                  options_zu: [
+                    "Bakunika ithuba lokuhweba ngemali engaphezu kuka-$100,000+ ngaphandle kokubeka engozini imali yakho yasekhaya",
+                    "Baqinisekisa u-100% we-winning trades ngaphandle kokuphoqa imithetho yama-stop-loss",
+                    "Bathumela izinto zegolide ezindlini zabafundi ngezinkathi zamaholide e-London",
+                    "Bafaka amakhodi e-API yakwaGemini ezinhlelweni amaseva akho ngaphandle kokuba ubhale amakhodi"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: "elite_m6",
+        title_en: "Module 6: Final Master Evaluation & Practical Live Sandbox Sim (Mastery)",
+        title_zu: "Isifundo 6: Ukuhlolwa Kwokugcina Kokuhweba Nesinyathelo Senyathelo (Final Certification Path)",
+        lessons: [
+          {
+            id: "elite_l10",
+            title_en: "Class 10: Step-by-Step Practical Blueprint: Executing Your First Safe Trade",
+            title_zu: "Isigaba 10: Isinyathelo Ngesinyathelo sokuNgene: Indlela Enembile Yokuthatha Umhwebo Wokuqala",
+            duration: "2 Hours 10 Mins",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            imageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 10, the climax of the Elite Pathway. In this final class, we consolidate everything we have covered into a simple, beautiful, step-by-step physical trading checklist. Do not open a live trading block until every single criteria in this checklist is verified. We cover: 1. Discerning the High Timeframe (Daily/H4) structural trend. 2. Locating unmitigated institutional Order Blocks or Fair Value Gaps inside premium/discount zones. 3. Waiting patiently for the session clock (London Open or New York Kill Zones). 4. Observing a lower-timeframe shift (CHoCH) on the 15-minute chart. 5. Applying the 1% risk lot size math based on Stop Loss size. 6. Setting and forgetting the trade, allowing probabilities to execute.",
+            content_zu: "Siyakwamukela kwiSifundo 10. Kulesi sigaba sokugcina, sihlanganisa zonke izifundo esifunde ngazo sizenze uhlu olulula olubanzi lokugada izici zohwebo (Checklist) ngaphambi kokuthinta insimbi yokuhweba. Sihlola: Umkhondo omkhulu, isikhathi se-kill zone, uphawu lwe-CHoCH emizuzwini eyi-15, ukubala ubukhulu bengcuphe ngesibalo sika 1% stop loss size, kanye nokulinda amaphesenti namathuba asebenze ngaphandle kokuthatha imizwa eceleni.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_The_Master_Syllabus_Step-by-Step_Checklist.pdf",
+                name_zu: "Uhlu_Lwesinyathelo_Ngesinyathelo_Lwesitifiketi.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: THE ELITE TRADER STEP-BY-STEP CHECKLIST
+==================================================================
+
+To protect your capital, adhere strictly to this professional master protocol before clicking 'BUY' or 'SELL':
+
+STEP 1: D1/H4 TREND MAPPING (HTF BIAS)
+- Is the Daily trend trending upwards (making consecutive Higher Highs & Higher Lows) or downwards? Identify if price has mitigated an HTF Order Block recently.
+
+STEP 2: LOCATE STRUCTURAL IMBALANCES & KEY ZONE
+- Is price inside an unmitigated High-Timeframe Fair Value Gap? Always prefer to execute trades inside 'Discount' zones (lower 50% section of the swing range) for buy setups, or 'Premium' zones (upper 50%) for sell setups.
+
+STEP 3: THE TICKING CLOCK CHECK (TIME CONFLUENCE)
+- Is the current local UTC time inside London Kill Zone (06:00 - 09:00 UTC) or NY Kill Zone (12:00 - 15:00 UTC)? If the local time is outside these zones, shut down the terminal and walk away.
+
+STEP 4: LOWER TIMEFRAME CONFIRMATION (CHoCH)
+- On the M15/M5 chart, has price swept the local swing highs/lows and executed a clear Change of Character (reversing local direction with powerful displacement)?
+
+STEP 5: CHOOSE POSITION SCALE METHOD (1% MATH LIMIT)
+- Open your Risk Preservation Calculator. Input the stop loss size in pips (derived from structural levels). Choose exactly 1.0% maximum risk. Calculate lot size.
+
+STEP 6: SECURE INSTRUCTIONS (SET & FORGET)
+- Enter the orders with structural protective Stop Loss and profit target levels in place. Turn off your monitor. Let the dynamic interbank probability play out and accept whichever outcome occurs with objective calm maturity.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: UHLU LWESINYATHELO NGESINYATHELO LOMHWEBI (CHECKLIST)
+==================================================================
+
+Silinde isitifiketi sakho! Ngaphambi kokuthatha isinqumo sokuhweba, phatha lolu hlu uhlole izinto ngezinto ezithinta ubungozi:
+
+ISINYATHELO 1: UHLOBO LOMKHONDO (HTF BIAS)
+- Ngabe isikhathi sika Daily no 4-Hour sikhomba phezulu noma phansi? Thola lapho amabhange eqondisa entengo khona.
+
+ISINYATHELO 2: EZOMUGODI NEZOKUQAPHA (FVG & DISCOUNT)
+- Linda intengo ukuthi ingene kulayini othembekile (Discount Zone) ngokuthenga ezigabeni zentengo ephansi kakhulu ehambisana ne-imbalance.
+
+ISINYATHELO 3: ISIKHATHI SAMABHANGE (KILL ZONES)
+- Ngabe usesikhathini sikayini se-London (06:00 - 09:00 UTC) noma New York (12:00 - 15:00 UTC)? Uma ungaphandle kwalelihora, vala ishadi lowo hambe uphumule.
+
+ISINYATHELO 4: I-CHoCH (M15/M5 REVERSAL)
+- Kwi-15 minutes charts, ngabe kukhona uphawu lo kuguquka wentengo kwashesha (Change of Character)?
+
+ISINYATHELO 5: BALA INGOZI KAMANGA (1% LOT SIZE)
+- Bala isiphoqelelo sika 1% maximum risk lot size ngokuthatha i-stop loss sika pair yakho ngaphambi kokucindezela inkinobho.`
+              }
+            ],
+            quiz: {
+              id: "elite_q10",
+              title_en: "Elite Master Checklist Validation Quiz",
+              title_zu: "Ukuhlolwa Kokugcina ngezibalo nomgudu weSitifiketi",
+              questions: [
+                {
+                  id: "sov_q10_q1",
+                  question_en: "Which step is crucial before executing *any* institutional position on GBP/USD or EUR/USD?",
+                  question_zu: "Yisiphi isinyathelo esibaluleke kakhulu ngaphambi kokuthatha i-order ye-Forex emakethe?",
+                  options_en: [
+                    "Perform multi-timeframe mapping, check kill zone session clocks, and calculate stop-loss limits under a strict 1% risk size protocol",
+                    "Verify if three indicator ribbons are showing identical purple neon colors on a 1-minute chart snapshot",
+                    "Contact unregulated online signal channels to buy premium short-term alerts with leverage",
+                    "Run a local CLI command continuously to override any browser frame permission constraints"
+                  ],
+                  options_zu: [
+                    "Yenza ukuhlaziya kusuka phezulu kuye phansi, hlola ama-kill zone, bese ubala usayizi we-lot ngaphansi kwe-rule ka-1%",
+                    "Bheka ukuthi imigqa emithathu ye-indicator ikukhombisa umbala ophambene kulayini we-neon",
+                    "Thola izinhlelo zemiyalezo ezibizwa ngokuthi 'signals' ukuze uthenge amacebo angenasisekelo sezindaba",
+                    "Sebenzisa umyalo ohlangothini lwesiteshi sakho ukushintsha i-port yenjini yabasebenzisi be-app"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "trader_mindset_psychology",
+    title_en: "The Elite Mindset: Cognitive Bias & Peak Performance Psychology",
+    title_zu: "Umqondo Wobuchwepheshe: Ukulawulwa Kwemizwa Nenqubo Yokuhweba",
+    category_en: "Executive Mental Performance",
+    category_zu: "Izinga Lempilo Nengqondo",
+    difficulty_en: "Beginner to Expert",
+    difficulty_zu: "Osaqala kuye kuNgcweti",
+    duration_en: "12 Hours",
+    duration_zu: "Amahora angu-12",
+    description_en: "Unpack the psychology that separates professional fund managers from struggling retail accounts. Audit cognitive biases, construct emotional resilience rules, and execute with absolute discipline under drawdown conditions.",
+    description_zu: "Hlaziya imizwa eyenza abahwebi abancane balahlekelwe imali ngenkathi izikhungo ezinkulu kakhulu zizuza profit. Funda ukulawula ukwesaba, ukugula ngenxa ye-drawdown, nendlela yokuthobela imithetho.",
+    thumbnail: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Thabiso Khumalo & Jean-Louis Cele",
+    rating: 4.9,
+    studentsCount: 3100,
+    modules: [
+      {
+        id: "psych_m1",
+        title_en: "Module 1: Combating Cognitive Biases, FOMO & Loss Aversion",
+        title_zu: "Isifundo 1: Ukulawula Ukwesaba, i-FOMO Nemizwa Yokulahlekelwa Imali",
+        lessons: [
+          {
+            id: "psych_l1",
+            title_en: "Class 1: Overcoming FOMO (Fear Of Missing Out) & Loss Aversion Bias",
+            title_zu: "Isigaba 1: Uhlelo lokunqoba i-FOMO (Fear Of Missing Out) Nokwesaba Ukulahlekelwa",
+            duration: "1 Hour 15 Mins",
+            videoUrl: "#",
+            imageUrl: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 1. In this lesson, we study the biological and psychological factors that lead to retail account destruction. When retail traders see a green candle shooting up fast, their brain stimulates dopamine, triggering a severe urge to buy (FOMO). This leads to buying at the absolute peak of the market auction range, immediately before institutional algorithms execute a price correction. We construct strict, objective rules (mental filters) to filter out emotion. You will learn to recognize when your heart rate changes, when you suffer from FOMO, and how to stay entirely detached from individual trade outcomes.",
+            content_zu: "Siyakwamukela kwiSifundo 1 saMamodulo we-Psychology. Lapha, sihlola imizwa eyenza abahwebi bagijimele ukuthenga uma bebona intengo ikhuphuka kakhulu (FOMO), okukugcina ngokuthi uthenge endaweni embi kakhulu lapho amabhange esezothengisa khona. Sifunda ukuzivikela emizweni yokwesaba nokufuna ukuphindisela imali uma ulahlekelwe (revenge trading).",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Professional_Emotional_Logbook_Template.pdf",
+                name_zu: "Ibhuku_Lokulawula_Imizwa_Kamhwebi_Osemthethweni.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: EMOTIONAL DIARY & EXECUTIVE MENTAL PROTOCOLS
+==================================================================
+
+1. THE RULES OF SYSTEMATIC ENGAGEMENT
+To operate like a professional fund manager, you must treat trading as a pure business. Never touch the terminal without a structured checklist:
+- RULE 1: If I miss an entry, the trade is dead. I do not chase. Chasing prices increases drawdown risk.
+- RULE 2: No revenge trading. If I hit two consecutive losses, I close the MT4 platform immediately for 24 hours.
+- RULE 3: I do not trade when emotionally unstable or physically fatigued.
+
+2. LOGICAL METRIC JOURNALING
+Before opening any coordinate, log:
+- The technical reason for the entry (liquidity sweep or Mitigation block).
+- Current physiological state (calm, elevated, anxious, relaxed).
+- Calculated stop loss size ensuring max risk remains below 1%.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: IDAYARI YEMIZWA NOKUZIBAMBA EMOTIONAL CHECKLIST
+==================================================================
+
+1. IMITHETHO NGOKOBUHLAKANI BOKUHWEBA
+Ukuze uhwebe njengongcweti ozinzile ezikhungweni ezinkulu, thobela le miyalelo ngokunamandla:
+- UMTHETHO 1: Uma ngiphuthwe indawo yokungena (entry), umhwebo lowo uphelile. Angizisusi emoyeni ngiwulandele.
+- UMTHETHO 2: Uma ngithola ukulahlekelwa okubili kulandelana (2 losses), ngivala masinyane i-MT4 amahora angu-24.
+- UMTHETHO 3: Angihwebi uma ngizwa ukukhathala kwekhanda noma umuzwa wokufuna ukuphindisela.`
+              }
+            ],
+            quiz: {
+              id: "psych_q1",
+              title_en: "Cognitive Bias & Sizing Review",
+              title_zu: "Ukuhlolwa Kokulawula Imizwa ne-FOMO",
+              questions: [
+                {
+                  id: "psych_q1_q1",
+                  question_en: "What should a professional trader do under strict capital preservation rules after hitting two consecutive losses during a single session?",
+                  question_zu: "Yini okumele yenziwe umhwebi oqeqeshiwe ngaphansi kwemithetho yokuvikela imali yakho uma ehlangabezane namaloss amabili ngokulandelana phakathi nosuku?",
+                  options_en: [
+                    "Close the MT4 execution platform immediately and step away from the charts for 24 hours",
+                    "Increase leverage to 10x and open larger trades to win the lost funds back instantly",
+                    "Delete all current stop losses to allow the market more space to fluctuate",
+                    "Change the platform settings to connect directly with an unregulated B-Book forum"
+                  ],
+                  options_zu: [
+                    "Vala i-MT4 execution platform ngaso leso sikhathi bese uyasuka ku-computer amahora angu-24",
+                    "Khulisa i-leverage iye ku-10x bese uvula ama-orders amaningi amakhulu ukuze ubuyise imali masinyane",
+                    "Susa yonke imingcele yama-Stop Loss ukuze unikeze intengo ithuba elikhulu lokujikeleza",
+                    "Shintsha uhlelo lwakho uxhumane ne-broker engalawulwa ngaphansi kwe-B-Book"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          },
+          {
+            id: "psych_l2",
+            title_en: "Class 2: Constructing Your Professional Trading Plan & Hard Discipline Rules",
+            title_zu: "Isigaba 2: Ukwakha Uhlelo Lobuchwepheshe Nemithetho Eqinile Yokuhweba",
+            duration: "1 Hour 05 Mins",
+            videoUrl: "#",
+            imageUrl: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 2. A strategy is worthless without execution consistency. We show you how to write an airtight, personalized Trading Plan. This includes identifying your active market sessions (London or New York open), daily profit targets, maximum drawdown limits, and logging procedures. We expose why having a written physical plan keeps your conscious mind out of panic state and in executive flow state, forcing you to execute setups purely as statistical probability models rather than emotional gambling events.",
+            content_zu: "Siyakwamukela kwiSifundo 2. Uhlelo lokuhweba ngaphandle kwemithetho lufana nemoto engenamabhuleki. Kule klasi, sakha 'Professional Trading Plan' yakho ebhaliwe phansi. Ufunda ukumisa uhlelo lwezinsuku zonke, ukugada amahora we-London ne-New York session, nokuzibophezela kuyinketho yemishini yakho.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Ultimate_Written_Professional_Plan_Framework.pdf",
+                name_zu: "Umtapo_Lokwakha_Trading_Plan_Evikelekile.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: THE PROFESSIONAL OPERATIONAL PLAN CONSTRUCT
+==================================================================
+
+1. THE MASTER FORMAT OF TRADING PLANS
+Your business plan must dictate every single variable before the trading day begins:
+- FOCUS TIME: London Open (7:00 AM - 11:00 AM UTC) & New York Open (12:00 PM - 4:00 PM UTC). These hours contain maximum central bank volume.
+- DAILY MAX DRAWDOWN: If my account equity drops by 2% on any single day, my risk engine is fully disabled. I submit to structural halts.
+- EXECUTION STANDARD: Confirm Liquidity Sweep + Mitigation Block before touching order panels. Any trade entered without structural reasons is a critical penalty.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: IFOMETHI YESOBHOLO TRADING BUSINESS PLAN
+==================================================================
+
+1. ISAKHIWO SE-TRADING PLAN EMTHETHWENI
+Uhlelo lwakho kumele lube nazo zonke ezemikhakha:
+- I-SESSION: Uhwebelana kuphela nge-London session noma NY session (izikhathi lapho amabhange amakhulu evula uhla lwawo).
+- ISILINGANISO SELOSS (2% max per day): Uma ulahlekelwa u-2% wentengo yakho ngosuku olulodwa, vala uhlelo ngokushesha ukuvimbela ingozi ebizwa ngokuthi drawdown cascade.`
+              }
+            ],
+            quiz: {
+              id: "psych_q2",
+              title_en: "Elite Trading Plan Structure Check",
+              title_zu: "Ukuhlolwa Kwezinhlelo ze-Trading Plan",
+              questions: [
+                {
+                  id: "psych_q2_q1",
+                  question_en: "Why is restricting your trade execution windows strictly to London and New York session opens beneficial?",
+                  question_zu: "Kungani kubalulekile ukuthi ukhawulele amahora akho okuhweba kuphela nge London ne New York session open?",
+                  options_en: [
+                    "These hours host maximum liquidity and central bank algorithmic volume, yielding clean trends",
+                    "Unregulated brokers pay a special commission bonus to B-Book traders during these sessions",
+                    "All server nodes automatic ports are fully disabled during Asian sessions",
+                    "It allows you to bypass the rules of leverage completely without any Margin Level drawdown"
+                  ],
+                  options_zu: [
+                    "Lezi zikhathi inazo i-liquidity enkulu kakhulu kanye ne-volume yamabhange amakhulu we-Central banks",
+                    "Ama-broker angenasimilo anikela amabhonasi ahlukile kumhwebi ohlangabezana nabo",
+                    "Wonke amaseva we-MT4 ayavalwa ngesikhathi se-Asian sessions ngenkani",
+                    "Ikugcina ekubeni udlule emithethweni ye-leverage ngaphandle kwemingcele ye-Margin level"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "learning_mt4_mastery",
+    title_en: "MetaTrader 4 (MT4) Mastery: Practical Platform & Interface Navigation",
+    title_zu: "Ukuchwepheshe ku-MetaTrader 4 (MT4): Uhlelo Nomhlahlandlela wentengo",
+    category_en: "Execution Platforms & Toolsets",
+    category_zu: "Izincomo Zokuhweba neMishini",
+    difficulty_en: "Beginner to Intermediate",
+    difficulty_zu: "Osaqala kuye kuMaphakathi",
+    duration_en: "15 Hours",
+    duration_zu: "Amahora angu-15",
+    description_en: "A comprehensive hands-on program on how to navigate MT4/MT5 platforms, customize charts, understand bid/ask spreads, manage orders, and analyze margin requirements securely.",
+    description_zu: "Uhlelo oluphelele lokufunda ukusebenzisa i-MT4 ne-MT5, ukulungisa amashadi, ukuqonda i-bid/ask spreads, ukulawula i-margin nokuvikela imali yakho ngaphandle kwama-broker amabi.",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Sipho Ndlovu & Thabiso Khumalo",
+    rating: 4.9,
+    studentsCount: 2310,
+    modules: [
+      {
+        id: "mt4_m1",
+        title_en: "Module 1: MT4 Layout, Custom Charts & Navigation",
+        title_zu: "Isifundo 1: Ukuhlelwa, Amashadi, nokuZulazula ku-MT4",
+        lessons: [
+          {
+            id: "mt4_l1",
+            title_en: "Class 1: Navigating the Graphical User Interface & Market Watch",
+            title_zu: "Isigaba 1: Uhlelo Lolwazi lwe-Interface ne-Market Watch",
+            duration: "1 Hour 05 Mins",
+            videoUrl: "https://www.youtube.com/watch?v=SgK5M20eYhE",
+            imageUrl: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 1. In this hands-on lesson, we do a thorough teardown of the MetaTrader 4 desktop interface. We cover the main four sections of the screen: the Market Watch window (where bid-ask prices for EURUSD and other symbols tick live), the Navigator pane (hosting your active accounts, indicators, and scripts), the Chart Workspace (where auction history is plotted), and the Terminal/Toolbox bar at the bottom. This bottom bar is where you trace your balance, equity, margin, free margin, and active trade drawdowns. Standard retail systems omit warnings on execution slippage, but we map out exactly how price ticks travel to the server nodes.",
+            content_zu: "Siyakwamukela kwiSifundo 1. Kulesi sigaba sokuqala, sihlola kabanzi uhlelo lohlelo lwe-MetaTrader 4 (MT4). Sibheka izingxenye ezine eziyinhloko: i-Market Watch (lapho kubonakala khona amanani entengo e-EURUSD nabanye ticking live), i-Navigator (lapho kuphephile khona amakhodi ne-scripts), i-Chart Workspace (lapho ubona khona umlando wentengo), ne-Terminal Toolbox phansi kakhulu lapho uhlola khona i-Balance lakho, equity, ne-Margin yakho.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_MT4_Graphical_Interface_Map.pdf",
+                name_zu: "Ibalazwe_Lolwazi_le-Interface_MT4.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: METATRADER 4 LOGICAL GRAPHICAL INTERFACE
+==================================================================
+
+1. THE FOUR ESSENTIAL WINDOWS
+- MARKET WATCH (Ctrl+M): The main list of financial products. Displays live Bid (sell) and Ask (buy) price changes.
+- NAVIGATOR (Ctrl+N): Helps you switch accounts, find indicators, and run quantitative scripts easily.
+- CHART WINDOW: The visual display of price over time.
+- TERMINAL/TOOLBOX (Ctrl+T): The account control room. Displays current balance, equity, margin, margin level %, and active trades.
+
+2. REAL TRADING WARNINGS
+- Slippage: The difference between your expected price and the actual execution price. This occurs during peak news volatility.
+- Server Nodes: Your broker's server network. Always select brokers with nodes physically close to main liquidity execution spots (like London and NY servers) to minimize latency-related execution gaps.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: UMHLALANDLELA WE-INTERFACE YE-METATRADER 4
+==================================================================
+
+1. IZINDAWO EZINE EZIBALULEKILEYO KWI-MT4
+- MARKET WATCH (Ctrl+M): Uhlu lwazo zonke izinhlobo zezinhlelo zethu (EURUSD, GBPUSD). Likubonisa intengo ye-Bid (okuthengisa) ne-Ask (okuthenga) ngaleso sikhathi.
+- NAVIGATOR (Ctrl+N): Ikhabethe elikusiza ukuba ushintshe ama-akhawunti ohwebo noma ufake ama-scripts.
+- TERMINAL/TOOLBOX (Ctrl+T): Igumbi elikhulu lokulawula. Libonisa i-Balance kuku, Equity, ne-Margin onayo ngenkathi uhweba, kanye nomashuni wengozi yakho (margin level %).`
+              }
+            ],
+            quiz: {
+              id: "mt4_q1",
+              title_en: "MT4 Window Navigation Analysis",
+              title_zu: "Ukuhlolwa Kokuzulazula Kwamawindi e-MT4",
+              questions: [
+                {
+                  id: "mt4_q1_q1",
+                  question_en: "Where in the MT4 interface do you find your current account balance, equity, and active trades?",
+                  question_zu: "Iphi ingxenye kwi-MT4 interface lapho uthola khona ama-Balance akho, equity, nezikhundla ozihwebayo (active trades) njengamanje?",
+                  options_en: [
+                    "In the Terminal/Toolbox panel at the bottom of the screen",
+                    "Inside the corporate B-Book newsletter system",
+                    "In the Indicators tab under the Navigator panel",
+                    "Behind the local system administrator port network options"
+                  ],
+                  options_zu: [
+                    "Kwipanel ye-Terminal/Toolbox phansi kweshadi lakho",
+                    "Ngaphakathi kwencwadi yezindaba ngebhuku le-B-Book",
+                    "Kwitabh ye-Indicators ngaphansi kwe-Navigator",
+                    "Ngemuva kwezincomo ze-port network zomlawuli wesayithi"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          },
+          {
+            id: "mt4_l2",
+            title_en: "Class 2: Customizing Charts, Candlestick Templates & Grid Controls",
+            title_zu: "Isigaba 2: Ukulungisa Amashadi, ama-Candlestick Templates nemingcele we-Grid",
+            duration: "55 Mins",
+            videoUrl: "https://www.youtube.com/watch?v=v9ZscUuofR0",
+            imageUrl: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 2. In this class, we move away from default MT4 chart settings (like the green-on-black neon grid that creates massive visual fatigue). We learn step-by-step how to configure custom, highly professional chart properties (F8 panel). We design a clean premium theme (Off-white canvas, dark charcoal bearish candles, clear gold bullish candles). We explore how to manage gridlines, period separators, zoom configurations, and save your setup as a default workspace template (.tpl), ensuring you spend your screen hours looking at clean, visually balanced auction environments rather than cluttered indicators.",
+            content_zu: "Siyakwamukela kwiSifundo 2. Kulesi sigaba somsebenzi, sisusa amandla amabi we-neon grids ku-MT4 (evame ukudala ukukhathala kwamehlo) bese sifaka uhlelo oluhle lweshadi (F8). Sanelisa isithombe somsebenzisi nge-off-white background, amakhandlela obomvu (abheke phansi), namakhandlela asagolide (abheke phezulu). Ufunda nendlela yokugcina le plan (saves template) ukuze zonke izifundo zakho zivulege ngale ndlela enhle kune-clutter yemishini emibi.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Professional_Chart_Formatting_Blueprint.pdf",
+                name_zu: "Umhlahlandlela_Lokuhlelwa_Kwamashadi_Amahle.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: PREMIUM CHARTS CONFIGURATIONS (F8 SETTINGS)
+==================================================================
+
+1. THE GOLDEN CLASS SETUP RULES
+A cluttered chart reflects a cluttered trading mind. Set up your charts to display only clean price action.
+Steps to apply:
+- Press F8: Opens Chart Properties.
+- Under Common Tab: Check "Show OHLC", uncheck "Show Grid". Grid lines add massive visual noise.
+- Under Colors Tab:
+  * Background: Slate or Soft Light White.
+  * Foreground (labels): Deep Charcoal or Black.
+  * Bullish Candle (Bar Up & bull candle): Gold (#D4AF37)
+  * Bearish Candle (Bar Down & bear candle): Deep Black or Charcoal Grey.
+
+2. THE TEMPLATE BLUEPRINT
+Once complete, right-click on the chart workspace, navigate to "Template", select "Save Template...", and name it "default.tpl". 
+Every new financial chart you open will now launch with your exact luxury, eye-safe gold & slate design automatically.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: INDLELA EKHESTHILE YOKULETHA ISITHOMBE SEShadi
+==================================================================
+
+1. IMITHETHO YEKHWALITHI YEShadi
+Ishadi eligcwele izinto eziningi lidala isiphithiphithi engqondweni yomfundi.
+Inqubo yefomethi enhle:
+- Cindezela u-F8: Lokhu kuvula ifasitela lamakhanda (Properties).
+- Kumathebhu e-Common: Susa umaka ku-Show Grid. Imigqa eminingi (grid) idala umthelela omubi emehlweni.
+- Kumathebhu e-Colors: Sethela Bull candle kumbala oyiGolid (#D4AF37) kanti i-Bear candle isethele kumbala oMnyama noma uSlate onsundu.
+- Londoloza isifanekiso: Qhafaza kwesokudla ku-Template, qhafaza u-Save Template bese uyibiza ngokuthi default.tpl.`
+              }
+            ],
+            quiz: {
+              id: "mt4_q2",
+              title_en: "Chart Template & Layout Properties Check",
+              title_zu: "Ukuhlolwa Kwezakhi Zamashadi we-Template",
+              questions: [
+                {
+                  id: "mt4_q2_q1",
+                  question_en: "Which configuration key displays the chart properties window inside MT4 platforms?",
+                  question_zu: "Iyiphi inkinobho kwi-keyboard yakho ekuvulela i-properties window (ukulungisa amashadi) ku-MT4?",
+                  options_en: [
+                    "F8 key on your keyboard",
+                    "F1 key for system help",
+                    "Ctrl+Alt+Delete to force refresh node parameters",
+                    "The automatic B-Book chat connection toggle link"
+                  ],
+                  options_zu: [
+                    "Inkinobho ka-F8",
+                    "Inkinobho ka-F1",
+                    "Inkinobho ka-Ctrl+Alt+Delete ukulungisa amaprosesa",
+                    "Inkinobho ehambelana nama-B-Book chat links"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: "mt4_m2",
+        title_en: "Module 2: Practical Order Executions & Money Metrics",
+        title_zu: "Isifundo 2: Uhlelo lokuvula ama-orders nokuLawulwa kwemali",
+        lessons: [
+          {
+            id: "mt4_l3",
+            title_en: "Class 3: How to Place Trades: Market Orders vs. Limit & Stop Orders",
+            title_zu: "Isigaba 3: Uyenza kanjani i-Trade: Imali ebonakalayo ne-Limit Orders vs Stop Orders",
+            duration: "1 Hour 15 Mins",
+            videoUrl: "https://www.youtube.com/watch?v=kYpIid_jpxE",
+            imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 3. This is the heart of execution mastery. Placing orders incorrectly is a primary cause of accidental capital destruction. We analyze the four main order types step-by-step: 1. Market Execution (entering a trade instantly at the current ask or bid rate). 2. Buy Limit & Sell Limit orders (passive orders waiting to buy lower or sell higher than current prices, in harmony with institutional mitigation pools). 3. Buy Stop & Sell Stop orders (orders waiting to buy higher or sell lower than current prices, typically swept by banks during liquidity grabs). We outline exactly how to input Stop Loss (your ultimate capital shield) and Take Profit levels inside the MT4 prompt panel securely.",
+            content_zu: "Siyakwamukela kwiSifundo 3. Lokhu kuyinhliziyo yokuthatha ama-orders emakethe. Ukufaka ama-orders ngendlela engalungile idala ukuthi ulahlekelwe yimali yakho ngengozi engenangozi. Kule klasi, sihlaziya izindlela ezine eziyinhloko: 1. Market Execution (ukuthatha umhwebo ngaso leso sikhathi). 2. Buy Limit & Sell Limit orders (ama-orders alinda ukuthenga uma intengo yehle macinge noma ukuthengisa uma inyuke phezulu). 3. Buy Stop & Sell Stop (ama-orders alinda intengo ngale kwendawo ethile). Sifunda nendlela yokufaka i-Stop Loss (isihlangu semali yakho yonke) ne-Take Profit ngendlela eqondile.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Market_And_Pending_Orders_Reference_Sheet.pdf",
+                name_zu: "Iphepha_Lokuhlola_Izinhlobo_Zezinketho_Zama-Orders.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: THE MATRIX OF TRADING ORDERS (STANDARD EXECUTIONS)
+==================================================================
+
+1. MARKET EXECUTION DIRECT ENTRY
+- BUY ORDER: Places trade immediately at the live ASK price. Open positions enter a negative spread drawdown instantly (normal auction friction).
+- SELL ORDER: Places trade immediately at the live BID price.
+
+2. PENDING EXECUTIONS (THE INSTITUTIONAL STANDARD)
+- BUY LIMIT: An order placed below current market price. Used when waiting for price to decline into an institutional Bullish Order Block.
+- SELL LIMIT: An order placed above current market price. Used when waiting for price to mitigate a Bearish FVG.
+- BUY STOP: An order placed above current price, activated as price rises past it.
+- SELL STOP: An order placed below current price, activated as price drops past it. (Commonly swept as liquidity).
+
+Rule: Never enter active trades on market executions without first calculating stop loss sizes relative to your 1% account risk limit.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: ULWAZI NGOKUFAKA AMA-TRADE NAMA-PENDING ORDERS
+==================================================================
+
+1. MARKET EXECUTION (UKUTHATHA UMHWEBO NGANGOKUNGETHEMBEKA)
+- Lapho uthenga (BUY), trade ivuleka ngamanani we-Ask. Lapho uthengisa (SELL), ivuleka ngamanani we-Bid.
+
+2. PENDING ORDERS (INDLELA YE-ELITE TRADERS)
+- BUY LIMIT: Oda elibekwa ngaphansi kwentengo emakethe njengamanje. Linda intengo yehle iye kwi-Bullish Order Block ngaphambi kokukhuphuka.
+- SELL LIMIT: Oda elibekwa ngaphezu kwentengo emakethe njengamanje. Linda intengo ikhuphuke iye kwi-Bearish imbalance (FVG) ngaphambi kokwehla.`
+              }
+            ],
+            quiz: {
+              id: "mt4_q3",
+              title_en: "Order Execution Types Assessment",
+              title_zu: "Ukuhlolwa Kwezinhlobo Zokuthengiselana Ngama-Orders",
+              questions: [
+                {
+                  id: "mt4_q3_q1",
+                  question_en: "Which type of pending order is placed below the current market price, waiting for a price drop into an institutional demand block?",
+                  question_zu: "Yiluphi uhlobo lwe-order elibekwa ngaphansi kwentengo yemakethe, elilinda ukuthi intengo yehle phezulu kulandela uhlelo lwama-Order Blocks?",
+                  options_en: [
+                    "Buy Limit order",
+                    "Buy Stop order",
+                    "Market Sell execution option",
+                    "High Leverage B-Book automation index"
+                  ],
+                  options_zu: [
+                    "I-Buy Limit order",
+                    "I-Buy Stop order",
+                    "I-Market Sell execution order",
+                    "Uhlobo lwemishini ye-B-Book ebizayo"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          },
+          {
+            id: "mt4_l4",
+            title_en: "Class 4: Platform Leverage, Free Margin & Drawdown Math Protection",
+            title_zu: "Isigaba 4: Ukulawula Amandla we-Leverage, i-Free Margin, nendlela Yezibalo ze-Drawdown",
+            duration: "1 Hour 10 Mins",
+            videoUrl: "https://www.youtube.com/watch?v=mK9A4vE_n8Y",
+            imageUrl: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 4. Here we analyze the core math that governs your account terminal statistics. Retail brokers often advertise 1:500 leverage as a gift; we expose why leverage is actually a double-edged sword designed to sweep novice accounts. Learn how to calculate: 1. Balance (total cash). 2. Equity (cash value plus or minus floating trade profits/losses). 3. Margin (the collateral locked by the broker per position size). 4. Margin Level % (the index of your account safety). Standard brokers automatically trigger a margin call or a stop-out (liquidation of all coordinates) when Margin Level % drops below 50% or 30%. Master our strict security buffers to keep your margin level above 1000% at all times.",
+            content_zu: "Siyakwamukela kwiSifundo 4. Lapha sitshuza sititilika ezibalweni ezilawula i-akhawunti yakho. Ama-broker amaningi asusa emoyeni i-1:500 leverage bethi isipho, kodwa sikukhombisa lapha ukuthi i-leverage iyingozi ephezulu ekhahla ama-akhawunti alabo abangafundanga. Funda ngezibalo ze: Balance, Equity (iGugu likapeti lilonke lapho ohwebeni lunamandla), i-Margin (imali broker ayivimbayo u-oda), ne-Margin Level % (isala sokuphepha we-akhawunti yakho). Uma usebenzisa i-margin level engaphansi kuka-50%, broker uzokuvala ngama-forcing-out orders (Margin Call). Sizwa indlela yokugcina i-margin level ifudumele ngaphezu kuka-1000% njalo njalo.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Margin_And_Account_Health_Protection_Math.pdf",
+                name_zu: "Izibalo_Zempilo_Nemishini_Yezokuphepha_we_Account.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: ACCOUNT MARGIN MATHEMATICS & STOP-OUT CONTROLS
+==================================================================
+
+1. THE EQUATION RATIOS
+Maintain precise awareness of your terminal status figures:
+- Balance = Initial Deposit + Settled Position Profits/Losses.
+- Equity = Balance + Floating Profits - Floating Losses.
+- Margin = (Contract Size * Lot Size) / Leverage.
+- Free Margin = Equity - Margin.
+- Margin Level Percentage = (Equity / Margin) * 100.
+
+2. TRIGGER POINTS FOR TERMINAL SHUTDOWN
+- Margin Call: Occurs typically when Margin Level % drops below 100%. Represents a critical warning.
+- Stop Out: Occurs when Margin Level % touches 50% or 30%. The MT4 matching broker engine automatically terminates your largest losing position to release collateral, preventing balance from entering negative zone.
+
+Professional Safeguard: Standard risk-to-equity sizing restricts floating lot indices to ensure your Margin Level % is consistently structured above 1000% at all times.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: TIMETSHEKISO ZEZIBALO NE-STOP OUT SYSTEM
+==================================================================
+
+1. AMAFOMULA EZINKOLO KUPHEPHA
+Gcina i-Akhawunti yakho iphephile ngalezi zinto:
+- Margin: Uhlobo lwesibopho sezimali (collateral) esigcinwa i-broker kulo mhlaba ohweba kulo.
+- Margin Level % = (Equity / Margin) * 100.
+
+2. IBALAZWE LE-MARGIN CALL NE-STOP OUT
+- Margin Call level: Uma i-margin level ifika ku-100%, uthola isixwayiso sokuthi ungena engozini enkulu.
+- Stop-Out level: Uma yehla ifika ku-50% noma u-30%, injini yama-orders ye-broker izovukela i-trade yakho, iyivale ngenkani ungafuni phezulu ukuze ivikele i-akhawunti yakho ekubeni yize.`
+              }
+            ],
+            quiz: {
+              id: "mt4_q4",
+              title_en: "Leverage & Margin Mathematics Assessment",
+              title_zu: "Ukuhlolwa Kwezibalo Zokusetshenziswa Kwe-Margin ne-Leverage",
+              questions: [
+                {
+                  id: "mt4_q4_q1",
+                  question_en: "Which accounting figure represents your account balance plus or minus all current floating trade profits or losses in real time?",
+                  question_zu: "Yisiphi isibalo sezezimali esibonisa i-Balance lakho lifakwe noma lisuswe inzuzo noma ukulahlekelwa kwezinhlelo ozivulile ngaleso sikhathi?",
+                  options_en: [
+                    "Account Equity",
+                    "Required Margin Deposit",
+                    "Initial B-Book Broker Balance",
+                    "Central Node Volume Ratio"
+                  ],
+                  options_zu: [
+                    "I-Equity ye-Akhawunti lakho",
+                    "I-Margin Locked yomsebenzisi",
+                    "Ibhalansi yomshini we-B-Book ekuqaleni",
+                    "Amaprosesa we-Central Node"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "learning_price_action_dynamics",
+    title_en: "Price Action Dynamics: Liquidity Sweeps & Structural Alignment",
+    title_zu: "I-Price Action: Ukushaneleka kwe-Liquidity Noshintsho Lwentengo",
+    category_en: "Core Currency & Multi-Asset Systems",
+    category_zu: "Izinhlelo Zezimali Semakethe",
+    difficulty_en: "Intermediate to Advanced",
+    difficulty_zu: "Kuthuthukile kuye kuNgcweti",
+    duration_en: "18 Hours",
+    duration_zu: "Amahora angu-18",
+    description_en: "Master deep chart reading without indicators. Spot institutional footprints, map order flows, and execute with precision during high-probability liquidity sweeps.",
+    description_zu: "Funda ukuhlaziya amashadi ngaphandle kwezinkomba zomshini. Bona lapho amabhange ethatha imali (liquidity sweeps), landela u-BOS no-CHoCH ngendlela enembile.",
+    thumbnail: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Sarah Mthembu & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 1810,
+    modules: [
+      {
+        id: "pa_m1",
+        title_en: "Module 1: Liquidity Mechanics & Session Footprints",
+        title_zu: "Isifundo 1: Imisebenzi ye-Liquidity nemikhondo Yezikhathi",
+        lessons: [
+          {
+            id: "pa_l1",
+            title_en: "Class 1: Mapping Institutional Pools & Support/Resistance Liquidity Sweeps",
+            title_zu: "Isigaba 1: Ibalazwe Le-Liquidity Pools, Ukushaneleka kwe-S&R",
+            duration: "1 Hour 15 Mins",
+            videoUrl: "https://www.youtube.com/watch?v=ZzE0gG8O13k",
+            imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 1. In this lesson, we study pure market liquidity. Modern algorithms do not respect standard retail trends. Most retail courses teach that double bottoms and double tops are safe zones of support and resistance. We expose why these levels are actually the juiciest targets (liquidity pools) for major bank algorithms. Underneath every double bottom lie millions of retail sell-stops (stops from buyers). Above every double top lie buy-stops (stops from sellers). Institutional algorithms purposely push price past these exact margins to absorb this resting liquidity (referred to as a liquidity sweep) before launching a massive move in the opposite direction. Learn how to spot this activity and trade safely in harmony with smart money.",
+            content_zu: "Siyakwamukela kwiSifundo 1. Kulesi sikhathi, sihlola i-Liquidity emakethe. Imishini yamabhange (algorithms) ayihloniphi amaphetheni alula wabahwebi abancane. Izincwadi eziningi zokuhweba zifundisa ukuthi i-double bottom ne-double top iyizindawo ezivikelekile (support and resistance). Sikubonisa lapha ukuthi lezi zindawo yizona ziboniso ezithandwa kakhulu amabhange amakhulu ukushanela (sweeps) yonke imali lama-stop loss ngaphambi kokuthatha imakethe iye kolunye uhlangothi. Funda ukulinda lapho kususiwe imali phezulu noma phansi ngaphambi kokungena.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Liquidity_Pools_Sweeps_Blueprint.pdf",
+                name_zu: "Uhlelo_Lokulawulwa_Kwe-Liquidity_Sweeps.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: INSTITUTIONAL LIQUIDITY MAPPING & ALGORITHMIC SWEEPS
+==================================================================
+
+1. THE LOGICAL STRUCTURE OF POOLS
+Liquidity is the fuel of the financial markets. Central banks and Tier-1 market makers need massive counterpart volume to fill their large purchase blocks.
+- Buy-Side Liquidity (BSL): Located above previous structural swing highs, equal double tops, or equal daily highs. Hosts buy stops from retail short sellers and buy stops from breakout buyers.
+- Sell-Side Liquidity (SSL): Located below previous structural swing lows, equal double bottoms, or equal daily lows. Hosts sell stops from retail buyers and sell stop-market breakout orders.
+
+2. SWEEP RECOGNITION PATTERN
+Do not trade support/resistance directly. Wait for:
+- Price to violently break below a major Support Level.
+- A rapid, automatic reaction back inside the range, creating a long lower wick on the candlestick.
+- This wick confirms that institutional algorithms simply swept retail sell-stops to build buy orders.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: UFUTHO LWEMAKETHE NOKUSHANELELWA KWE-LIQUIDITY POOLS
+==================================================================
+
+1. INDLELA OKUSEBENZA NGAYO I-LIQUIDITY POOLS
+Imali enkulu yamabhange (Tier-1) idinga ama-orders abahwebi abancane ukuze ivule (fill) izifundo zayo ezinkulu.
+- Buy-Side Liquidity (BSL): Imali elinde ngendlela yama-Stop Loss ngaphezu kwamashalofu aphezulu (equal highs, resistance).
+- Sell-Side Liquidity (SSL): Imali elinde ngendlela yama-Stop Loss ngaphansi kwamashalofu aphansi (equal bottoms, support).
+- Ungalokothi udlale kulezi ndawo ngqo. Linda amabhange asuse abahwebi ba retail ku SSL noma BSL (Liquidity Sweep) ngaphambi kokuhambisana nabo.`
+              }
+            ],
+            quiz: {
+              id: "pa_q1",
+              title_en: "Support, Resistance & Liquidity Sweeps Check",
+              title_zu: "Ukuhlolwa Kwe-Liquidity ne-Support & Resistance",
+              questions: [
+                {
+                  id: "pa_q1_q1",
+                  question_en: "What visual signal confirms that institutional algorithms have executed a liquidity sweep below a double bottom support level?",
+                  question_zu: "Yiluphi uphawu oluguqukayo olubonisa ukuthi amabhange anyuse imakethe ngokususa (sweep) abantu kwi-double bottom support?",
+                  options_en: [
+                    "A rapid breakthrough followed by a clean, swift reversal candle leaving a long lower wick",
+                    "A mandatory requirement to shut down terminal ports for maintenance",
+                    "A simple horizontal grid pattern of identical candle sizes in blue and red",
+                    "The automatic removal of spreads by a B-Book brokerage system"
+                  ],
+                  options_zu: [
+                    "Ukuhamba ngokushesha bese kuguquka ikhandlela elishiya umsila omude ngaphansi (long lower wick)",
+                    "Isidingo sokuthi uvale amaseva emakethe ngenxa yokulimala kwedatha",
+                    "Iphethini yamakhandlela alula anombala obomvu noluhlaza asuka ohlangothini olufanayo",
+                    "Ukususwa kwama-spread kwasikhathi ne-broker yakho"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "learning_macro_economics",
+    title_en: "Fundamental Economic Matrix: Central Banks & Global News Flows",
+    title_zu: "Uhlelo Lolwazi Lwomnotho: Amabhange Emhlaba noMthelela Wezindaba",
+    category_en: "Core Currency & Multi-Asset Systems",
+    category_zu: "Izinhlelo Zezimali Semakethe",
+    difficulty_en: "Intermediate to Advanced",
+    difficulty_zu: "Kuthuthukile kuye kuNgcweti",
+    duration_en: "12 Hours",
+    duration_zu: "Amahora angu-12",
+    description_en: "Understand the financial gravity that dictates price trend movements. Master how interest rate policy, CPI inflation statistics, and high-impact reports shape Forex flows.",
+    description_zu: "Qonda amandla amakhulu omnotho womhlaba (fundamentals). Funda indlela isinqumo sentela yamabhange (interest rates), i-inflation (CPI), ne-NFP reports emisa ngayo intengo yezimali.",
+    thumbnail: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Thabiso Khumalo & Sarah Mthembu",
+    rating: 4.8,
+    studentsCount: 1540,
+    modules: [
+      {
+        id: "macro_m1",
+        title_en: "Module 1: Economic Fundamentals & Central Bank Interventions",
+        title_zu: "Isifundo 1: Izisekelo Zomnotho nezincomo ze-Central Bank",
+        lessons: [
+          {
+            id: "macro_l1",
+            title_en: "Class 1: Interest Rate Policies, Inflation Dynamics (CPI) & US Bond Yields",
+            title_zu: "Isigaba 1: Izincomo Zenani Lentela (Interest Rates), i-CPI noMthelela we-US Yields",
+            duration: "1 Hour 10 Mins",
+            videoUrl: "https://www.youtube.com/watch?v=mK9A4vE_n8Y",
+            imageUrl: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 1. In this fundamental training, we explain what makes a currency appreciate or depreciate over macro cycles. Technical analysis shows entries, but economic fundamentals dictate the overall trend. Learn about the 'Central Bank Hierarchy' (specifically the US Federal Reserve, Bank of England, and South African Reserve Bank). We break down why rising Consumer Price Index (CPI) inflation forces central banks to raise interest rates, which draws huge international سرمایہ (capital) into bonds and Treasury Yields, automatically strengthening the local currency. We map out how US Treasury yields directly control Gold flows and EURUSD trends.",
+            content_zu: "Siyakwamukela kwiSifundo 1. Kulesi sifundo sezomnotho, sichaza imithombo yangempela eyenza izinhlobo zezimali zonke zenyuke noma ziwe emhlabeni. Izinhlangano zemishini yamashadi zikhombisa indawo yokungena (technical analysis), kodwa isizathu sezomnotho (fundamentals) yisona esiphoqa imakethe ukuthi iye phezulu noma phansi phakathi nenyanga. Funda ngeqhawe lezinqumo zika-Federal Reserve (US Fed), ne-SARB yaseNingizimu Afrika, noMthelela we-CPI (Consumer Price Index) elandelwayo ekufuneni i-Interest rates ezinzile.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Fundamentals_And_Central_Banks_Glossary.pdf",
+                name_zu: "Isichazamazwi_Zezomnotho_ne-Federal_Reserve.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: CLASSICAL MONETARY ECONOMIC MATRICES
+==================================================================
+
+1. INTEREST RATE POLICIES
+Interest rates are the yield of a currency. If a country raises its overnight lending rate, international funds deposit capital there to capture higher returns, causing demand for that currency to skyrocket.
+- US Federal Reserve (Fed): The primary driver of global dollar liquidity.
+- CPI (Consumer Price Index): Measures consumer-level inflation. Higher CPI implies rising costs. The Federal Reserve reacts by raising interest rates to suppress spending.
+
+2. BONDS AND DOLLAR INDEX CONVERSION
+As US Treasuries yield rates increase, it draws international liquidity pool structures out of Gold and equities back into US Dollars, inducing downward gravity on GBPUSD and EURUSD. Align your trades with monthly bank bias.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: ULWAZI NGAMABHANGE OMNOTHO NOMHLABA (INTEREST RATES)
+==================================================================
+
+1. IMITHETHO YENANI LENTELA (INTEREST RATES)
+Inani lentela liwu-yield wemali. Amabhange amakhulu alawula:
+- US Fed (Federal Reserve): Idrayiva enkulu yedola (USD) emhlabeni jikelele.
+- CPI (Consumer Price Index): Isilinganiso se-inflation. Uma i-CPI inyuke kakhulu, i-Fed inyusa inani lentela (interest rates) ukuze ilawule ezomnotho. Lokho kuvame ukwenza i-Dollar lenyuke kakhulu libe namandla.`
+              }
+            ],
+            quiz: {
+              id: "macro_q1",
+              title_en: "Central Bank Monetary Policy Review",
+              title_zu: "Ukuhlolwa Kwezomnotho Namabhange Emhlaba",
+              questions: [
+                {
+                  id: "macro_q1_q1",
+                  question_en: "What is the typical impact on a local currency when its central bank raises interest rates to combat rising CPI inflation?",
+                  question_zu: "Kwenzekani kuvamile kumanani entengo yemali lapho i-Central Bank ye nani isanda inani lentela (interest rates) ukuze ifake i-inflation phansi?",
+                  options_en: [
+                    "The currency tends to appreciate as high yields draw in global سرمایہ (capital)",
+                    "The currency instantly goes to zero due to B-book brokerage interventions",
+                    "The local FTSE index completely deactivates due to structural port failure",
+                    "There is no impact; currency values are controlled only by retail dashboard indicators"
+                  ],
+                  options_zu: [
+                    "Imali leyo iyakhula inyuke amandla (appreciates) ngenxa yokuthi abatshalimali bafaka capital ukuzozuza yields ephezulu",
+                    "Imali iyawa iye zero ngenxa yesiphambeko soma broker we-B-book",
+                    "I-FTSE index iyavalwa ngenxa yokulimala kwasemgqeni womshini",
+                    "Akunalutho olwenzekayo; intengo ilawulwa ama-indicators alula kuphela eshadini"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "learning_risk_mathematics",
+    title_en: "Capital Preservation: Risk Management & Advanced Lot Sizing Mathematics",
+    title_zu: "Ukubalwa Kwengozi Nezibalo: Indlela Yokulawula Nosayizi Wezimali",
+    category_en: "Advanced Risk Mathematics",
+    category_zu: "Izibalo Zokugada Ingozi",
+    difficulty_en: "Intermediate to Advanced",
+    difficulty_zu: "Kuthuthukile kuye kuNgcweti",
+    duration_en: "12 Hours",
+    duration_zu: "Amahora angu-12",
+    description_en: "Understand the mathematical principles of capital preservation. Master leverage ratios, trade risk mathematical formulas, compound interest accounts, and tactical lot sizing scripts.",
+    description_zu: "Funda izibalo ezisetshenziswa amabhange ukunqoba drawdown nemingcele yokulahlekelwa. Hlaziya amandla e-leverage uqonde ne-Risk to Reward ratio ehlelekileyo.",
+    thumbnail: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Sarah Mthembu & Sipho Ndlovu",
+    rating: 4.95,
+    studentsCount: 1940,
+    modules: [
+      {
+        id: "risk_m1",
+        title_en: "Module 1: The Mathematics of Drawdown Recovery & Portfolio Sizing",
+        title_zu: "Isifundo 1: Izibalo zokubuyisa i-Loss (Drawdown Math) noSayizi weSikhundla",
+        lessons: [
+          {
+            id: "risk_l1",
+            title_en: "Class 1: Why drawdown requires exponential gains to recover",
+            title_zu: "Isigaba 1: Kungani i-Loss idinga inzuzo enkulu kakhulu ukuyilungisa",
+            duration: "1 Hour 10 Mins",
+            videoUrl: "#",
+            imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to Class 1. Drawing down your capital degrades your recovery capacity exponentially. For example, a 10% loss requires an 11.1% gain to break even. A 50% loss requires a 100% gain to break even. A 90% loss requires a massive 900% gain just to get back to your starting balance! We break down this harsh mathematical reality and provide the exact formula for safe position sizing. Our standards restrict your risk to a maximum of 1% of your account equity per trade, ensuring that even a streak of 10 consecutive losses leaves you with 90% of your starting capital.",
+            content_zu: "Siyakwamukela kwiSifundo 1. Kulesi sikhathi sezibalo, sitshengisa ukuthi i-drawdown isebenza kanjani. Uma ulahlekelwe 10% we-akhawunti yakho, udinga 11.1% ukubuyela emuva. Uma ulahlekelwe 50%, udinga 100% (ukuphinda kabili okuseleko) ukuze uthole imali yakho emuva! Sifaka amafomula enza ubufakazi balokhu ukuze ugweme ukufaka osayizi abakhulu (oversizing) abangabhubhisa u-100% wcapital yakho.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Drawdown_Mathematics_Spreadsheet.pdf",
+                name_zu: "Iphepha_Lokuhlola_Izibalo_Ze-Drawdown_Nemingcele.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: DRAWDOWN RECOVERY GEOMETRICAL FORMULA
+==================================================================
+
+1. THE EXPONENTIAL GRAVITY
+The math of losing money is asymmetrical. Review the index:
+- 10% loss -> 11.1% gain required to recover.
+- 20% loss -> 25.0% gain required to recover.
+- 30% loss -> 42.8% gain required to recover.
+- 50% loss -> 100.0% gain required to recover.
+- 90% loss -> 900.0% gain required to recover.
+
+2. POSITION SIZING ALGORITHM
+Calculate your standard lot size using this math formula:
+Lot size = (Account Balance * Risk % multiplier) / (Stop Loss in pips * Pip Value of Asset).
+Keep Risk % strictly restricted to 0.005 or 0.01 (0.5% or 1.0%). Never exceed this limit.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: TIMETSHEKISO ZEZIBALO NE DRAWDOWN RECOVERY
+==================================================================
+
+1. IZIBALO ZOMTHETHO WE-DRAWDOWN
+Kunzima kakhulu ukubuyisa imali uma ulahlekelwe yingxenye enkulu:
+- Unwebise 10% loss -> Udinga 11.1% gain ukubuyisa.
+- Unwebise 30% loss -> Udinga 42.8% gain ukubuyisa.
+- Unwebise 50% loss -> Udinga 100% gain ukubuyisa.
+- Ungaphuthelwa ile fomula yokubala osayizi: Lot Size = (Balance * Risk%) / (Stop Loss in Pips * Pip Value).`
+              }
+            ],
+            quiz: {
+              id: "risk_q1",
+              title_en: "Drawdown & Capital Math Assessment",
+              title_zu: "Ukuhlolwa Kwezibalo ze-Drawdown ne-Account Management",
+              questions: [
+                {
+                  id: "risk_q1_q1",
+                  question_en: "If a retail account suffers a 50% financial drawdown of its trading equity, what percentage gain is required just to break even and return to the starting balance?",
+                  question_zu: "Uma i-akhawunti yakho ilahlekelwa 50% wentengo yayo eyimali, udinga return percentage engakanani ukubuyisa leyo mali kuphela usele kwi-balance yokuqala?",
+                  options_en: [
+                    "A 100% gain is mathematically required to break even",
+                    "A 50% gain is sufficient to recover the funds",
+                    "A 10% automated B-Book commission bonus covers the gap",
+                    "No gain is required; MT4 networks automatically reset floating accounts"
+                  ],
+                  options_zu: [
+                    "Kudingeka inzuzo engu-100% (100% gain) ukubuyela emuva",
+                    "Inzuzo engu-50% yanele ukubuyisa leyo mali",
+                    "I-bonasi ye-B-Book engu-10% ihlanganisa wonke lowo mhosha",
+                    "Ayikho inzuzo edingekayo; iseva ihlanganyela ama-active pips"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "learning_advanced_orderflow",
+    title_en: "Institutional Order Flow: Market Depth & Volume Frameworks",
+    title_zu: "Ukusetshenziswa kwe-Order Flow: Imithombo Yomthamo Wentengo namabhange",
+    category_en: "Advanced Orderflow Dynamics",
+    category_zu: "Ukuhlaziya Advanced Orderflow yamaBhange",
+    difficulty_en: "Expert / Institutional",
+    difficulty_zu: "Kuthuthukile kuye kuNgcweti",
+    duration_en: "16 Hours",
+    duration_zu: "Amahora angu-16",
+    description_en: "Step out of charts and into actual market execution mechanics. Master market depth, order matching engines, institutional volume profile shapes, and delta analysis.",
+    description_zu: "Hamba ngale kwemishini yemifanekiso yakudala. Thola indlela intengo efaniswa ngayo ku-limit order books, ukusetshenziswa kwe-Volume Profile ne-Institutional Delta analysis.",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 4.97,
+    studentsCount: 1100,
+    modules: [
+      {
+        id: "orderflow_m1",
+        title_en: "Module 1: Order Matching Engines & Volume Profiling Structures",
+        title_zu: "Isifundo 1: Imishini yama-Order Matching kwi-Institutional Orderbook nomthamo",
+        lessons: [
+          {
+            id: "orderflow_l1",
+            title_en: "Class 1: How matching engines pair buyers and sellers inside the Order Book",
+            title_zu: "Isigaba 1: Indlela le-Matching Engine edibanisa ngayo abathengi nabathengisi",
+            duration: "1 Hour 20 Mins",
+            videoUrl: "#",
+            imageUrl: "https://images.unsplash.com/photo-1628157582853-a796fa650a6a?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to our final institutional class. Every price tick on your chart is a direct result of two orders matching. Inside the matching engine of Tier-1 banks, passive Limit Orders are stacked in the Order Book, waiting to be consumed. On the other side, aggressive Market Orders are executed instantly, eating into those passive orders. We explore how horizontal volume nodes (Volume Profile) pinpoint where major institutional blocks were mitigated and where heavy buying and selling transpired, allowing execution entries with minuscule drawdowns.",
+            content_zu: "Siyakwamukela kwiSifundo 1 seqophelo eliphezulu lohlelo lomthamo wamanani. Njalo lapho intengo ihamba (tick), lokho kuwumphumela wokuhlangana kwe-order yokuthenga neyokuthengisa. Sihlola amasu wokubamba iDatha kwi-Volume Profile ezingeni lamabhange amakhulu aseMelika (Wall Street clusters), nokuthi ifunwa kanjani i-Point of Control (POC) lapho amabhange anyakazise intengo phezulu.",
+            resources: [
+              {
+                name_en: "IMALI-EDU_Advanced_Orderflow_And_POC_Teardown.pdf",
+                name_zu: "Uhlelo_Lokulawula_Ama-Orderflow_POC_yamaBhange.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK: THE MECHANICS OF ORDER BOOK EXECUTION ENTRIES
+==================================================================
+
+1. THE PRINCIPLES OF AUCTION MARKET THEORY
+- Market Orders: Direct executions at the best available Price. These orders drive the current price auction up or down.
+- Limit Orders: Passive orders waiting at specific price thresholds (Order Blocks & mitigation pools).
+- Point of Control (POC): The specific price level where the highest volume was matched over an auction cycle, typically representing strong institutional fair pricing.
+
+2. ORDER MATCHING ALGORITHM
+Every aggressive buy matches a passive sell limit at the ask price. Every aggressive sell matches a passive buy limit at the bid price. Work in alignment with institutional resting orders.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU FINANCIAL EDUCATIONAL SYSTEM
+   INCWADI: ULWAZI NGOKUFAKA AMA-TRADE NGE_ORDERBOOK NENKQUBO POC
+==================================================================
+
+1. IMITHETHO YOMTHAMO WEMAKETHE
+- Point of Control (POC): Intengo lapho amabhange adlale khona umthamo omkhulu wezimali. Lena yindawo ephephile ukulinda kuyo intengo ukuba ibuye ngaphambi kokuhweba.
+- Limit Orders: Kushiwo ama-orders alindile (passive orders) amabhange abeka kuyo intengo eyenzelwe ukuphindiselwa phezulu noma phansi.`
+              }
+            ],
+            quiz: {
+              id: "orderflow_q1",
+              title_en: "Order Book & Point of Control Review",
+              title_zu: "Ukuhlolwa Kokusetshenziswa Kwe-Orderbook ne-Volume POC",
+              questions: [
+                {
+                  id: "orderflow_q1_q1",
+                  question_en: "What does the Point of Control (POC) represent in a volume profile distribution analysis?",
+                  question_zu: "Yini emelelwa iPoint of Control (POC) kwi-Volume Profile ngenkathi uhlaziya umthamo wamasheya emakethe?",
+                  options_en: [
+                    "The price level with the highest transaction volume over a specific time cycle",
+                    "The highest position drawdown ever recorded during a session",
+                    "The margin required to open a 1:500 leverage execution order",
+                    "A specific system configuration port setting required to open MT4 accounts"
+                  ],
+                  options_zu: [
+                    "Intengo evulelwe kuyo umthamo omkhulu wezimali zokuhweba kuleso sikhathi",
+                    "Izinga eliphakeme kakhulu le-drawdown kwesikhathi somhwebo we-account",
+                    "Inani lemali elidingeka ukuzobamba i-leverage ka 1:500 kwi-terminal",
+                    "Uhlobo lwakho lohlelo lwe-port configuration ku-MT4"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+];
+
+// PROGRAMMATIC COURSE GENERATOR FOR "ELITE COURSES" (TO SCALE UP TO 35 COURSES FOR COMPREHENSIVE CURRICULUM ARCHITECTURE)
+const templatesList = [
+  {
+    title_en: "Candlestick Pattern Mastery: Identifying Trend Reversals",
+    title_zu: "Ukufundwa Kwamakhandlela: Ukuqonda Izinguquko Nentengo",
+    category_en: "Candlesticks & Market Sentiment",
+    category_zu: "Ukuhlaziya Amakhandlela Emakethe",
+    difficulty_en: "Beginner to Intermediate",
+    difficulty_zu: "Osaqala kuye Phakathi",
+    duration_en: "12 Hours",
+    duration_zu: "Amahora angu-12",
+    description_en: "Learn to identify high-probability candlestick patterns like Pin Bars, Engulfing wicks, and Morning Stars with extreme structural precision.",
+    description_zu: "Funda zonke izinhlobo zama-patterns amakhandlela emakethe. Thola isizathu sokuthi kungani amabhange evula izikhundla kulezi zindawo.",
+    instructor: "Thabiso Khumalo",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "Candlestick Sentiment & Wick Sweep Identification",
+    lessonTitleZu: "I-Candlestick Sentiment kanye nokuhlambalaza kwe-Wick Sweeps",
+    lessonContentEn: "Candlesticks are not mere rectangles. Each candle represents an institutional battle between supply and demand. By studying candlestick wicks, we identify liquidity sweeps where major banks grab retail stop losses before turning the market direction. Look for rejection peaks on the 4-Hour timeframe near key daily key zones.",
+    lessonContentZu: "Amakhandlela emakethe awafani nama-rectangles alula. Kule isigaba, thina silinda ukukhula kwamaphethelo e-wick lapho amabhange edlala khona ngomthamo omkhulu. Thola izimpawu zokwenqatshwa kwentengo phezulu noma phansi ngezikhathi ezithize zosuku.",
+    qAnswerEn: "A liquidity sweep where market resting blocks are purged.",
+    qAnswerZu: "Ukuhlanzwa kwentengo lapho amabhange eqeda khona ama-orders okusaba."
+  },
+  {
+    title_en: "Chart Structure Masterclass: Channeling Support & Resistance",
+    title_zu: "Ijometri Yamashadi: Ama-Flags neziteshi Wentengo Enembile",
+    category_en: "Chart Reading & Geometry",
+    category_zu: "Ukuhlelwa Kwamashadi Nemizila",
+    difficulty_en: "Intermediate",
+    difficulty_zu: "Izinga Eliphakathi",
+    duration_en: "14 Hours",
+    duration_zu: "Amahora angu-14",
+    description_en: "Map out the blueprint of structural price geometry. Learn to locate double bottoms, head & shoulders patterns, and horizontal support corridors.",
+    description_zu: "Funda indlela yokubhala nokuhlaziya amashadi amakhulu namancane. Qonda ukuthi amabhange adlala kanjani uma wonke umuntu ebuka into eyodwa.",
+    instructor: "Sarah Mthembu",
+    thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "Multi-Timeframe Structure & Breakout Integrity",
+    lessonTitleZu: "Ukwakheka kwama-Timeframe amaningi nama-Breakouts amasha",
+    lessonContentEn: "A chart pattern is only valid when placed in proper market context. A bullish flag forming at a weekly premium level has a high probability of failure. Conversely, a breakout at discount support offers tight stop loss placements. Analyze structures starting from the Daily chart downwards.",
+    lessonContentZu: "Uhlobo lwamashadi luba nempumelelo kuphela uma ulubeka endaweni efanele. Gada ukugcwala kwentengo phezulu noma phansi ohlelweni lwakho lokuhweba ngezikhathi zansuku zonke.",
+    qAnswerEn: "Aligning Daily trends with 15-minute execution entries.",
+    qAnswerZu: "Ukuhlanganisa imizila yezikhathi zansuku zonke namanyathelo we-15 minutes."
+  },
+  {
+    title_en: "Technical Indicators Paradigm: RSI Divergence & Trend Lines",
+    title_zu: "Izinkomba Zobuchwepheshe: Ukuhlanganisa i-RSI ne-Moving Averages",
+    category_en: "Technical Analysis Foundations",
+    category_zu: "Ukuhlaziya Ngezibalo Nemininingwane",
+    difficulty_en: "Beginner",
+    difficulty_zu: "Osaqala",
+    duration_en: "16 Hours",
+    duration_zu: "Amahora angu-16",
+    description_en: "Discover how to decode technical indicators correctly without falling into the common trap of chart over-cluttering.",
+    description_zu: "Gwema ukufaka izinkomba eziningi ezididayo. Funda indlela eyiyo nesebenzayo yokufaka ama-moving averages ne-RSI ukubamba umnyakazo.",
+    instructor: "Sipho Ndlovu",
+    thumbnail: "https://images.unsplash.com/photo-1535320903710-d993d3d77d29?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "Momentum Divergence & Standard Deviation Bands",
+    lessonTitleZu: "I-RSI Divergence nezindlela zokubala Momentum",
+    lessonContentEn: "RSI is primarily utilized to identify shifts in momentum. When price sets a higher high but the RSI establishes a lower high, it indicates bearish divergence—a warning that buying pressure is depleting. Use this parameter solely at established supply corridors.",
+    lessonContentZu: "Inkomba ye-RSI isebenziswa ukubona igazi elisha emakethe kanti futhi sitshengisa ukuthi amandla entengo ayaphela uma kukhona i-divergence phakathi kwentengo nenkomba.",
+    qAnswerEn: "Price and RSI making opposite high/low parameters.",
+    qAnswerZu: "Intengo ne-RSI kwenza imigqa ehlukene phakathi phezulu noma phansi."
+  },
+  {
+    title_en: "MT5 Professional Terminals: Configuration & Setup Algorithms",
+    title_zu: "Ukufundwa kuka-MT5: Uhlelo Lolwazi Nobuchwepheshe",
+    category_en: "MT4 / MT5 Platforms & Execution",
+    category_zu: "Amapulatifomu Ohwebo Nobuchwepheshe",
+    difficulty_en: "Beginner",
+    difficulty_zu: "Osaqala",
+    duration_en: "8 Hours",
+    duration_zu: "Amahora angu-8",
+    description_en: "Program your execution platform to perfection. Run diagnostic reviews on pending orders, leverage settings, and margin parameters.",
+    description_zu: "Funda konke mayelana neseva ye-MT5 kwi-mobile nakwi-computer. Thola indlela yokubala ama-lot nokufunda amashadi e-terminal.",
+    instructor: "Thabiso Khumalo",
+    thumbnail: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "Order Routing, Slippage Control & Multi-Terminal Setup",
+    lessonTitleZu: "Ukuhlelwa kwama-Orders (Market vs Limit) nokubala ama-Lots",
+    lessonContentEn: "MetaTrader platforms route orders via specific broker servers. Learn how to configure terminal templates, set instant execution warnings, and manage multiple sub-accounts without computational latency. Master the absolute distinction between instant execution and pending limit thresholds.",
+    lessonContentZu: "Uhlelo we-MT5 lukunika amandla wokulawula ama-orders lula. Funda ukubeka ama-buy limit na-sell limit ezindaweni lapho ungadingi khona ukulinda usuku lonke.",
+    qAnswerEn: "Pending Limit Orders target resting price pools with zero slippage.",
+    qAnswerZu: "Ama-Limit Orders abekwa ezindaweni ezikhethekile ukunciphisa i-slippage."
+  },
+  {
+    title_en: "Macro Interest Rate Differentials: Central Bank Policies",
+    title_zu: "Izisekelo Zomnotho Onemthelela Enzuzweni: AmaBhange Amakhulu",
+    category_en: "Macro Economic Fundamentals",
+    category_zu: "Ezomnotho Nezemakethe",
+    difficulty_en: "Advanced",
+    difficulty_zu: "Izinga Elikhulu",
+    duration_en: "18 Hours",
+    duration_zu: "Amahora angu-18",
+    description_en: "Analyze the core mechanics behind currency valuations. Learn how Central Bank announcements directly fuel interbank liquidity gaps.",
+    description_zu: "Hlaziya amaphepha omnotho we-GDP, i-CPI nezilinganiso zenzuzo yamabhange amakhulu emhlabeni. Sebenzisa lokhu ulungele umnyakazo wentengo.",
+    instructor: "Jean-Louis Cele",
+    thumbnail: "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "The Yield Curve Paradox & Interest Arbitrage Flow",
+    lessonTitleZu: "I-Yield Curves kanye nokuhluka Kezomnotho Emhlabeni",
+    lessonContentEn: "Interest rates are the lifeblood of currency values. If a central bank hikes interest rates, international yield-seeking capital flows into that currency, driving up demand. Learn how to trade the interest rate differentials without taking directional speculative risks.",
+    lessonContentZu: "Ukuphakama kwezilinganiso zenzuzo (interest rates) kwandisa inzuzo wemali yakwezo hwebo. Thola ukuthi amabhange adlala kanjani ngalezozindaba ezishisayo.",
+    qAnswerEn: "Money flows toward the currency holding higher real yield returns.",
+    qAnswerZu: "Imali ihamba kakhulu iye kwimali enemba yezinga lenzuzo ephakeme."
+  },
+  {
+    title_en: "Advanced Orderflow Footprints: Mastering Volume Clustering",
+    title_zu: "Ukusetshenziswa Kwe-Order Book: Uhlelo Lomthamo Wolwazi",
+    category_en: "Order Flow Depth",
+    category_zu: "Ukuhlaziya Advanced Orderflow yamaBhange",
+    difficulty_en: "Expert",
+    difficulty_zu: "Izinga Elikhulu Ne-Expert",
+    duration_en: "24 Hours",
+    duration_zu: "Amahora angu-24",
+    description_en: "Bypass standard chart candlesticks. Dive into bid-ask order books to observe active algorithmic orders and resting institutional supply blocks.",
+    description_zu: "Hamba ngale kwemishini yemifanekiso yakudala. Thola indlela intengo efaniswa ngayo ku-limit order books, ukusetshenziswa kwe-Volume Profile ne-Institutional Delta analysis.",
+    instructor: "Jean-Louis Cele",
+    thumbnail: "https://images.unsplash.com/photo-1638274553228-69cdbe509449?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "The Depth-of-Market (DOM) Bid-Ask Cluster Analysis",
+    lessonTitleZu: "Ukuhlaziya i-Depth of Market (DOM) kanye noUmthamo POC",
+    lessonContentEn: "Inside the Depth of Market, you see passive resting orders waiting to be swept. When high-volume aggressive buyers consume passive sell limit blocks at the Ask, price goes up. Learn how order book balance forecasts immediate intraday shifts with 1-pip precision.",
+    lessonContentZu: "Kwi-Depth of Market sitshengisa ama-order e-passive alinde emugqeni. Lapho uhweba kwi-POC thola imigqa efanele amaphuzu amakhulu wokuhlasela wentengo.",
+    qAnswerEn: "Depth of Market displays resting passive buy/sell orders at current ticks.",
+    qAnswerZu: "I-DOM itshengisa ama-order alindile phezulu noma phansi entengo yamanje."
+  },
+  {
+    title_en: "The Trading Plan Matrix: Structuring Professional Guardrails",
+    title_zu: "Uhlelo Lokubhala Umhlahlandlela: Imithetho Yesikhundla",
+    category_en: "Trading Psychology & Guidelines",
+    category_zu: "Uqondo Nezempilo Yabahwebi",
+    difficulty_en: "Intermediate",
+    difficulty_zu: "Izinga Eliphakathi",
+    duration_en: "10 Hours",
+    duration_zu: "Amahora angu-10",
+    description_en: "Create a rigorous, rules-based business plan for execution. Guard yourself from impulsive over-exposure and technical burnout.",
+    description_zu: "Vimbela ukulahlekelwa yimali ngenxa yokuthukuthela noma ukusaba emaketheni. Gcina ingqondo izinzile futhi ulandele imithetho njalo.",
+    instructor: "Sarah Mthembu",
+    thumbnail: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "Execution Checklists & Post-Session Performance Diagnostic Reviews",
+    lessonTitleZu: "Ukubhalisa Imiphumela Yokuhweba (Trading Journal Guidelines)",
+    lessonContentEn: "A professional trader has strict criteria before opening an MT5 chart. This class provides a 5-variable checklist: session timing alignment, structural key support clearance, liquidity sweep verification, risk-to-reward boundary clearance, and psychological baseline checks.",
+    lessonContentZu: "Umhwebi oqeqeshiwe unemithetho emihlanu akayiphuli neze. Kulesi sikhathi sizokuxhasa ngohlaka lokubhala yonke imikhuba nemiphumela yakho.",
+    qAnswerEn: "A strict pre-execution matrix that preserves capital during high drawdown.",
+    qAnswerZu: "Umthetho wokugada ikhombisa i-capital phambi kwanoma yisiphi isinqumo."
+  },
+  {
+    title_en: "Multi-Timeframe Structure Confluence: Hour-to-Minute Entries",
+    title_zu: "Ukuhlangana Kwe-Structure Sezikhathi: Ukuhlaziya Confluence",
+    category_en: "Technical Analysis Foundations",
+    category_zu: "Ukuhlaziya Ngezibalo Nemininingwane",
+    difficulty_en: "Intermediate to Advanced",
+    difficulty_zu: "Phakathi kuye Phambili",
+    duration_en: "16 Hours",
+    duration_zu: "Amahora angu-16",
+    description_en: "Formulate trades that align the Weekly flow with the 5-Minute Entry candle. Achieve low-drawdown entries with high risk-to-reward dynamics.",
+    description_zu: "Funda ukuthi ungahlangana kanjani namashadi amakhulu ngezikhathi ze-4H ne-1D, bese ufaka i-trade kwi-15M nembile kakhulu.",
+    instructor: "Thabiso Khumalo",
+    thumbnail: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "Fractal Market Geometry & The Correlation Catalyst Breakdown",
+    lessonTitleZu: "I-Fractal Price Geometry kanye nemigqa ye-Intraday Cycles",
+    lessonContentEn: "Trading markets are fractal; the same structure seen on a weekly chart replicates on a 5-minute timeframe. Learn how to define institutional boundaries on high frames and refine execution trigger signals to a narrow structural peak, improving efficiency.",
+    lessonContentZu: "Amashadi wonke afana no-fractal geometry, okusiza ukuthi sithole ama-pattern afanayo kusukela kumasonto kuye emizuzwini emihlanu.",
+    qAnswerEn: "High-probability entries aligned with high timeframe structural trends.",
+    qAnswerZu: "Ukungena emakethe kwi-timeframe encane kuhambisane nemigqa emikhulu."
+  },
+  {
+    title_en: "Stock Indices Breakdown: High Velocity of NAS100 & US30",
+    title_zu: "Ukuhweba Ngamasheya Amakhulu: Imodeli we-NAS100 ne-US30",
+    category_en: "Chart Reading & Geometry",
+    category_zu: "Ukuhlelwa Kwamashadi Nemizila",
+    difficulty_en: "Advanced",
+    difficulty_zu: "Izinga Eliphezulu",
+    duration_en: "15 Hours",
+    duration_zu: "Amahora angu-15",
+    description_en: "Master index volatility behavior. Learn structural differences when trading commercial baskets like NAS100 and US30 compared to FX.",
+    description_zu: "Qonda ukugcwala kwentengo (volatility) yezinkampani ezinkulu zaseMelika ezifana ne-NASDAQ ne-Dow Jones ukuze uvikele ubu-capital.",
+    instructor: "Jean-Louis Cele",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "Intraday Sessions, New York Open Momentum & Basket Rebalancing",
+    lessonTitleZu: "I-New York Session Dynamics nama-Index Rebalancing Cycles",
+    lessonContentEn: "Stock index baskets like NAS100 have specific session behavior. The highest volatility sweeps occur in the first hour of the New York trading session. Learn structural gap fill zones and corporate rebalancing intervals without emotional or technical drawdown factors.",
+    lessonContentZu: "Izimakethe zezinkampani ezifana no-US30 zinyakaza kakhulu ngezikhathi we-New York Open. Funda ukuvikela i-account kulezizikhathi ngezibalo.",
+    qAnswerEn: "New York open session creates high institutional volume sweeps.",
+    qAnswerZu: "Ukuvuleka kweseshoni yaseNew York kuletha umthamo ozinzile wezimali."
+  },
+  {
+    title_en: "Risk-to-Reward optimization: Designing 1:5 Execution Matrix",
+    title_zu: "Izibalo Zokuhweba Ngengatsho: I-Risk to Reward Guidelines",
+    category_en: "Advanced Risk Mathematics",
+    category_zu: "Izibalo Zokugada Ingozi",
+    difficulty_en: "Advanced",
+    difficulty_zu: "Izinga Eliphezulu",
+    duration_en: "12 Hours",
+    duration_zu: "Amahora angu-12",
+    description_en: "Construct custom trading equations where a single win recovers up to five consecutive minor structural stop-out losses cleanly.",
+    description_zu: "Funda izibalo ezisetshenziswa amabhange ukunqoba drawdown nemingcele yokulahlekelwa. Hlaziya amandla e-leverage uqonde ne-Risk to Reward ratio.",
+    instructor: "Sipho Ndlovu",
+    thumbnail: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop",
+    lessonTitleEn: "The Asymmetric Mathematical Portfolio Advantage Engine",
+    lessonTitleZu: "Izibalo ze-Risk-to-Reward dynamic kanye no-Stop Loss Buffer",
+    lessonContentEn: "A trader with a 33% win rate can remain highly profitable by maintaining a minimum risk-to-reward ratio of 1:3 or greater. Learn to hold winning trades to key target boundaries while actively positioning stop loss markers to break-even to eliminate liability.",
+    lessonContentZu: "Inhloso kule isigaba ukuthola amasethi akhipha imali ephindwe kahlanu kunaleyo obekwe engcupheni, okuqinisekisa inzuzo ezinzile.",
+    qAnswerEn: "Maintaining asymmetric equations where gains exceed losses.",
+    qAnswerZu: "Ukugcina izibalo lapho inzuzo ingaphezu kokulahlekelwa kakhulu."
+  }
+];
+
+// GENERATE EXPLOITS TO COVER 20 - 50+ COURSES (WE WEAVE MULTIPLE DYNAMIC PATHWAYS FOR EXTRA DEPTH)
+const generatedCourses: Course[] = [];
+
+// Create 28 courses dynamically using templates and permutations of topics
+for (let i = 1; i <= 28; i++) {
+  const template = templatesList[(i - 1) % templatesList.length];
+  const courseId = `gen_course_${i}`;
+  const indexStr = i < 10 ? `0${i}` : `${i}`;
+  
+  // Custom variations per iteration to avoid exact duplicates and give real flavor
+  const difficultyLevels = [
+    { en: "Foundation to Mastery", zu: "Izisekelo kuye kuNgcweti" },
+    { en: "Intermediate Level Core", zu: "Izinga eliphakathi" },
+    { en: "Professional Core Curriculum", zu: "Uhlelo lwabaQeqeshiwe" },
+    { en: "Elite / Specialized", zu: "Izinga eliphakeme kakhulu" }
+  ];
+  const selectedDiff = difficultyLevels[i % difficultyLevels.length];
+  
+  const ratingVal = parseFloat((4.8 + (i % 3) * 0.08 + (i % 2) * 0.04).toFixed(2));
+  const studentCountVal = 850 + (i * 120);
+  
+  generatedCourses.push({
+    id: courseId,
+    title_en: `Academy Unit ${indexStr}: ${template.title_en} (${selectedDiff.en})`,
+    title_zu: `Isiqephu ${indexStr}: ${template.title_zu} (${selectedDiff.zu})`,
+    category_en: template.category_en,
+    category_zu: template.category_zu,
+    difficulty_en: selectedDiff.en,
+    difficulty_zu: selectedDiff.zu,
+    duration_en: template.duration_en,
+    duration_zu: template.duration_zu,
+    description_en: `${template.description_en} This accredited educational unit represents premium curriculum standard v3.2.`,
+    description_zu: `${template.description_zu} Leli thuba elifundiswayo limelwe amazinga aphezulu we-curriculum yezezimali nengqondo.`,
+    thumbnail: template.thumbnail,
+    instructorName: template.instructor,
+    rating: ratingVal > 5.0 ? 5.0 : ratingVal,
+    studentsCount: studentCountVal,
+    modules: [
+      {
+        id: `gen_mod_${courseId}_1`,
+        title_en: "Section A: Core Technical Framework",
+        title_zu: "Ingxenye A: Izisekelo Nebamba Lozazi",
+        lessons: [
+          {
+            id: `gen_lesson_${courseId}_1`,
+            title_en: `Class 1: ${template.lessonTitleEn} (Technical Diagnostics)`,
+            title_zu: `Isigaba 1: ${template.lessonTitleZu} (Amazinga Wezebalo)`,
+            duration: "1 Hour 10 Mins",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            imageUrl: template.thumbnail,
+            content_en: template.lessonContentEn,
+            content_zu: template.lessonContentZu,
+            resources: [
+              {
+                name_en: `ELITE-EDU_${courseId}_Standard_Manual.pdf`,
+                name_zu: `ELITE-EDU_${courseId}_Incwadi_Yezifundo.pdf`,
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   ELITE COURSES FINANCIAL EDUCATIONAL SYSTEM
+   HANDBOOK REFERENCE CODE: ${courseId.toUpperCase()}
+   TOPIC: ${template.title_en.toUpperCase()}
+==================================================================
+
+1. THE SYSTEMIC BASELINE
+This module provides the advanced conceptual framework for analyzing the price chart. To succeed, the student must apply quantitative risk guidelines and separate portfolio growth from daily emotional swings.
+
+2. EXECUTION PRINCIPLES
+- Restrict lot sizing dynamically based on margin free limits.
+- Set Stop Loss markers immediately upon trade placement inside the MT5 client terminal.
+- Never chase high-impact news releases without statistical backtesting buffers.`,
+                pdfContent_zu: `==================================================================
+   ELITE COURSES FINANCIAL EDUCATIONAL SYSTEM
+   UHLAKA LWEZITHEMBISO NEZIFUNDO REFERENCE: ${courseId.toUpperCase()}
+   TOPIC: ${template.title_zu.toUpperCase()}
+==================================================================
+
+1. IMITHETHO EBALULEKILEYO
+Leli qembu lezifundo likunika ulwazi olunzulu mayelana nezibalo zomthamo womhlaba jikelele. Vikela ama-capital yakho ngezibalo ezaziwayo ezingeni lamabhange amakhulu.
+
+2. ISINYATHELO EZIBALULEKILEYO
+- Misa i-stop loss sikhathi sonke lapho uvula i-trade lula ku-terminal.
+- Sebenza ngo sayizi ongamahlula (0.01 kuye ku 0.10 lots max) ukuvimbela redrawdown engadingeki ya-account.`
+              }
+            ],
+            quiz: {
+              id: `gen_quiz_${courseId}_1`,
+              title_en: "Core Technical Concepts evaluation",
+              title_zu: "Ukuhlaziywa kanye noKuhlolwa kweSifundo",
+              questions: [
+                {
+                  id: `gen_q_${courseId}_q1`,
+                  question_en: `What is the primary objective of this ${template.category_en} educational lesson?`,
+                  question_zu: `Yini inhloso enkulu yalesi sifundo se-${template.category_zu}?`,
+                  options_en: [
+                    template.qAnswerEn,
+                    "To locate daily leverage codes and broker bonus structures",
+                    "To connect external robotic servers to trigger automatic trades in MT5",
+                    "To copy professional signals from social networks and hope for easy wins"
+                  ],
+                  options_zu: [
+                    template.qAnswerZu,
+                    "Ukuthola ama-broker abeka amabonasi amaningi entengo",
+                    "Ukufaka amarobhothi azodlala ngokuzenzakalelayo kwi-terminal",
+                    "Ukukopisha ama-signals alula ezinkundleni zokuxhumana"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  });
+}
+
+export const coursesData: Course[] = [...staticCoursesData, ...generatedCourses];
+
+
+
