@@ -746,6 +746,17 @@ export default function App() {
   const [radioError, setRadioError] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Help Centre / Contact Us Modal State
+  const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(false);
+  const [contactName, setContactName] = useState<string>("");
+  const [contactSurname, setContactSurname] = useState<string>("");
+  const [contactTel, setContactTel] = useState<string>("");
+  const [contactEmail, setContactEmail] = useState<string>("");
+  const [contactMessage, setContactMessage] = useState<string>("");
+  const [contactSending, setContactSending] = useState<boolean>(false);
+  const [contactSuccess, setContactSuccess] = useState<boolean>(false);
+  const [contactFormError, setContactFormError] = useState<string>("");
+
   // Initialize and synchronize HTMLAudioElement
   useEffect(() => {
     const audio = new Audio();
@@ -827,6 +838,57 @@ export default function App() {
         console.warn("Playback initialization stream sync:", err);
         setIsPlaying(false);
       });
+  };
+
+  // Help Centre / Contact Us Portal Form Handlers
+  const handleContactSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!contactName.trim() || !contactEmail.trim() || !contactMessage.trim()) {
+      setContactFormError(language === "zu" ? "Sicela ugcwalise amabhokisi adingekayo (Igama, I-imeyili, nomlayezo)." : "Please fill in all required fields (Name, Email, and Message).");
+      return;
+    }
+    
+    setContactSending(true);
+    setContactFormError("");
+    
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: contactName,
+          surname: contactSurname,
+          tel: contactTel,
+          email: contactEmail,
+          message: contactMessage
+        })
+      });
+      
+      const data = await response.json();
+      if (response.ok) {
+        setContactSuccess(true);
+      } else {
+        setContactFormError(data.error || "Failed to submit request.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setContactFormError(language === "zu" ? "Sibe nenkinga yokuxhumana neseva. Sicela uzame futhi." : "Technical error connecting to server. Please try again or use direct email.");
+    } finally {
+      setContactSending(false);
+    }
+  };
+
+  const resetContactForm = () => {
+    setContactName("");
+    setContactSurname("");
+    setContactTel("");
+    setContactEmail("");
+    setContactMessage("");
+    setContactSuccess(false);
+    setContactFormError("");
+    setIsContactModalOpen(false);
   };
   
   // Courses & Student states
@@ -1958,6 +2020,20 @@ export default function App() {
                 <span className="text-[9px] text-[#D4AF37] bg-[#D4AF37]/10 border border-[#D4AF37]/20 px-1 py-0.2 rounded font-mono font-bold animate-pulse">FM</span>
               </button>
 
+              <button
+                id="nav_contact_us"
+                onClick={() => { setIsContactModalOpen(true); }}
+                className="w-full flex items-center justify-between p-3.5 rounded-xl border border-transparent text-zinc-400 hover:bg-white/5 hover:text-white transition-all text-left cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <HelpCircle className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-xs font-semibold tracking-wider uppercase font-serif">
+                    {language === "zu" ? "Xhumana Nathi / SoSizo" : "Help Centre • Contact"}
+                  </span>
+                </div>
+                <span className="text-[9px] text-[#D4AF37] bg-[#D4AF37]/10 border border-[#D4AF37]/20 px-1 py-0.2 rounded font-mono font-bold">HELP</span>
+              </button>
+
               {activeRole === Role.ADMIN && (
                 <button
                   id="nav_admin"
@@ -1974,6 +2050,28 @@ export default function App() {
                 </button>
               )}
             </nav>
+
+            {/* Sidebar Sponsor Banner (XM) */}
+            <div id="sidebar_affiliate_banner" className="pt-4 mt-4 border-t border-[#D4AF37]/15 flex flex-col items-center justify-center">
+              <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-[0.2em] mb-3">
+                STATION SPONSOR
+              </span>
+              <a 
+                href="https://clicks.pipaffiliates.com/c?m=150420&amp;c=662032" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                referrerPolicy="no-referrer-when-downgrade" 
+                className="block transition-transform duration-300 hover:scale-[1.03] max-w-[120px]"
+              >
+                <img 
+                  src="https://ads.pipaffiliates.com/i/150420?c=662032" 
+                  width="120" 
+                  referrerPolicy="no-referrer-when-downgrade" 
+                  alt="Partner Sponsor" 
+                  className="border border-zinc-850 rounded-xl shadow-[0_12px_44px_rgba(0,0,0,0.8)]" 
+                />
+              </a>
+            </div>
 
           </div>
 
@@ -4918,6 +5016,29 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Affiliate Platform Banner */}
+              <div id="radio_affiliate_banner" className="flex flex-col items-center justify-center pt-4">
+                <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-3">
+                  STATION SPONSOR
+                </span>
+                <a 
+                  href="https://clicks.pipaffiliates.com/c?m=150420&amp;c=662032" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  referrerPolicy="no-referrer-when-downgrade" 
+                  className="block transition-transform duration-300 hover:scale-[1.02]"
+                >
+                  <img 
+                    src="https://ads.pipaffiliates.com/i/150420?c=662032" 
+                    width="120" 
+                    height="600" 
+                    referrerPolicy="no-referrer-when-downgrade" 
+                    alt="Partner Sponsor" 
+                    className="border border-zinc-850 rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.7)]" 
+                  />
+                </a>
+              </div>
+
             </div>
           )}
 
@@ -5663,6 +5784,213 @@ export default function App() {
                 Understand & Return
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {isContactModalOpen && (
+        <div id="contact_us_portal" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl overflow-y-auto animate-fade-in shadow-2xl">
+          <div className="bg-[#0b0b0b] border-2 border-[#D4AF37] max-w-lg w-full rounded-2xl md:rounded-3xl p-5 md:p-8 relative overflow-hidden text-left space-y-6 shadow-[0_25px_60px_rgba(212,175,55,0.18)] animate-in fade-in zoom-in-95 duration-200 z-10 my-auto">
+            
+            {/* Header branding decorative bar */}
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-[#D4AF37] to-amber-600"></div>
+
+            {/* Title & Close */}
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="text-[10px] font-mono tracking-[0.3em] text-[#D4AF37] uppercase">
+                  {language === "zu" ? "ISIKHUNGO SOSIZO NOLWAZI" : "ACADEMIC SUPPORT HUB"}
+                </span>
+                <h3 className="text-xl md:text-2xl font-bold font-serif text-white uppercase mt-1 tracking-tight">
+                  {language === "zu" ? "Xhumana Nathi" : "Contact Us"}
+                </h3>
+              </div>
+              <button
+                onClick={resetContactForm}
+                className="p-1 px-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-xl text-xs font-mono tracking-widest uppercase transition-all cursor-pointer border border-zinc-800"
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans mt-1">
+              {language === "zu" 
+                ? "Thumela umlayezo ngqo kubaphathi be-IMALI Ngesizulu noma ujoyine isiteshi sethu se-Telegram sendlela elula yokuxhumana." 
+                : "Submit an official inquiry to the IMALI Ngesizulu academic syndicate board or connect instantly via Telegram for secure, direct resolution."}
+            </p>
+
+            {/* Main telegram highlight */}
+            <div className="p-4 bg-blue-950/20 border border-blue-500/20 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div className="space-y-1">
+                <p className="text-xs font-bold text-blue-400 font-mono uppercase tracking-wider">⚡ Instant Channel Desk:</p>
+                <p className="text-[11px] text-zinc-400 leading-snug">
+                  {language === "zu" ? "Xhumana bukhoma ku-Telegram ukuze uthole impendulo esheshayo." : "Chat live with our academic registrars on Telegram for prompt feedback."}
+                </p>
+              </div>
+              <a
+                href="https://t.me/Imalingesizulu"
+                target="_blank"
+                rel="noopener noreferrer"
+                referrerPolicy="no-referrer"
+                className="py-1.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-mono text-[10px] uppercase font-bold tracking-widest rounded-xl transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap self-stretch sm:self-auto justify-center cursor-pointer"
+              >
+                📱 Telegram Chat
+              </a>
+            </div>
+
+            {/* Error messaging inside form */}
+            {contactFormError && (
+              <div className="p-3 bg-red-950/40 border border-red-500/30 text-red-400 rounded-xl text-xs font-mono">
+                ⚠️ {contactFormError}
+              </div>
+            )}
+
+            {contactSuccess ? (
+              /* Success Stage */
+              <div className="space-y-5 py-4 text-center animate-fade-in">
+                <div className="w-12 h-12 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle className="w-6 h-6" />
+                </div>
+                <div className="space-y-2">
+                  <p className="font-bold text-white uppercase text-sm tracking-wider font-mono">
+                    {language === "zu" ? "UMLAYEZO UTHUNYELWE!" : "COMMUNICATION SUCCESSFUL"}
+                  </p>
+                  <p className="text-xs text-zinc-400 leading-relaxed max-w-sm mx-auto">
+                    {language === "zu" 
+                      ? "Siyabonga. Umlayezo wakho ufakwe ohlelweni lobulungu lwemiyalezo oluzofika ku info@imalingesizulu.com kanye ne khetho@imalingesizulu.com." 
+                      : "Your secure dispatch was registered successfully. It will be delivered to info@imalingesizulu.com and khetho@imalingesizulu.com."}
+                  </p>
+                </div>
+
+                <div className="border-t border-zinc-900 pt-4 space-y-3">
+                  <p className="text-[10px] text-zinc-500 font-mono uppercase">Alternative Native Client Dispatch Option:</p>
+                  <div className="flex gap-2">
+                    <a
+                      href={`mailto:info@imalingesizulu.com,khetho@imalingesizulu.com?subject=IMALI%20Ngesizulu%20Inquiry%20-%20${encodeURIComponent(contactName)}%20${encodeURIComponent(contactSurname)}&body=${encodeURIComponent(`Name: ${contactName} ${contactSurname}\nTel: ${contactTel}\nEmail: ${contactEmail}\n\nMessage:\n${contactMessage}`)}`}
+                      className="flex-1 py-1.5 px-4 bg-[#D4AF37] hover:bg-[#b5942b] text-black font-mono text-[10px] uppercase font-bold tracking-widest rounded-xl text-center transition-all cursor-pointer"
+                    >
+                      ✉️ Open in Mail App
+                    </a>
+                    <button
+                      onClick={resetContactForm}
+                      className="flex-1 py-1.5 px-4 bg-[#0b0b0b] hover:bg-zinc-900 text-zinc-300 font-mono text-[10px] uppercase font-bold tracking-widest rounded-xl border border-zinc-800 transition-all cursor-pointer"
+                    >
+                      Return
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Contact Form Input Block */
+              <form onSubmit={handleContactSubmit} className="space-y-4 font-sans text-left">
+                {/* Name / Surname Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-mono text-[#D4AF37] uppercase tracking-wider">
+                      {language === "zu" ? "Igama *" : "First Name *"}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      placeholder="e.g. Thomas"
+                      className="w-full bg-[#111] hover:bg-zinc-900 focus:bg-black border border-zinc-800 focus:border-[#D4AF37] px-3.5 py-2.5 rounded-xl text-xs text-white placeholder-zinc-600 transition-all outline-none"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-mono text-[#D4AF37] uppercase tracking-wider">
+                      {language === "zu" ? "Isibongo" : "Surname"}
+                    </label>
+                    <input
+                      type="text"
+                      value={contactSurname}
+                      onChange={(e) => setContactSurname(e.target.value)}
+                      placeholder="e.g. Mthembu"
+                      className="w-full bg-[#111] hover:bg-zinc-900 focus:bg-black border border-zinc-800 focus:border-[#D4AF37] px-3.5 py-2.5 rounded-xl text-xs text-white placeholder-zinc-600 transition-all outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Email / Phone Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-mono text-[#D4AF37] uppercase tracking-wider">
+                      {language === "zu" ? "I-imeyili *" : "Email Address *"}
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      placeholder="e.g. thomas@email.com"
+                      className="w-full bg-[#111] hover:bg-zinc-900 focus:bg-black border border-zinc-800 focus:border-[#D4AF37] px-3.5 py-2.5 rounded-xl text-xs text-white placeholder-zinc-600 transition-all outline-none"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-mono text-[#D4AF37] uppercase tracking-wider">
+                      {language === "zu" ? "Ucingo / Whatsapp" : "Contact Phone"}
+                    </label>
+                    <input
+                      type="tel"
+                      value={contactTel}
+                      onChange={(e) => setContactTel(e.target.value)}
+                      placeholder="e.g. +27 82 123 4567"
+                      className="w-full bg-[#111] hover:bg-zinc-900 focus:bg-black border border-zinc-800 focus:border-[#D4AF37] px-3.5 py-2.5 rounded-xl text-xs text-white placeholder-zinc-600 transition-all outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Message text area */}
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-mono text-[#D4AF37] uppercase tracking-wider">
+                    {language === "zu" ? "Umlayezo *" : "Your Message / Query *"}
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={contactMessage}
+                    onChange={(e) => setContactMessage(e.target.value)}
+                    placeholder={language === "zu" ? "Bhala umbuzo wakho lapha..." : "Explain your query or assistance request in full detail here..."}
+                    className="w-full bg-[#111] hover:bg-zinc-900 focus:bg-black border border-zinc-800 focus:border-[#D4AF37] px-3.5 py-2.5 rounded-xl text-xs text-white placeholder-zinc-650 transition-all outline-none resize-none"
+                  ></textarea>
+                </div>
+
+                {/* Submit Action buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <button
+                    type="submit"
+                    disabled={contactSending}
+                    className="flex-1 py-3 px-5 bg-[#D4AF37] hover:bg-amber-400 disabled:bg-[#D4AF37]/50 text-black font-mono text-xs uppercase font-extrabold tracking-widest rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+                  >
+                    {contactSending ? (
+                      <>
+                        <span className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+                        {language === "zu" ? "Ithumela..." : "Transmitting..."}
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-3.5 h-3.5" />
+                        {language === "zu" ? "Thumela" : "Submit Request"}
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetContactForm}
+                    className="py-3 px-5 bg-zinc-900 hover:bg-zinc-850 text-zinc-300 font-mono text-xs uppercase font-bold tracking-wider rounded-xl border border-zinc-800 transition-all cursor-pointer"
+                  >
+                    {language === "zu" ? "Khansela" : "Cancel"}
+                  </button>
+                </div>
+                
+                <p className="text-[9.5px] font-mono text-zinc-600 text-center uppercase tracking-tight">
+                  🔒 SECURED COMMS LINK • IMALI NGESIZULU
+                </p>
+              </form>
+            )}
+
           </div>
         </div>
       )}
