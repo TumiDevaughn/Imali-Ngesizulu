@@ -784,22 +784,12 @@ export default function App() {
       setRadioLoading(false);
       setRadioError(true);
     };
-    const handleStalled = () => {
-      setRadioError(true);
-    };
-    const handleAbort = () => {
-      setIsPlaying(false);
-      setRadioLoading(false);
-      setRadioError(true);
-    };
 
     audio.addEventListener("playing", handlePlaying);
     audio.addEventListener("pause", handlePause);
     audio.addEventListener("loadstart", handleLoadStart);
     audio.addEventListener("waiting", handleWaiting);
     audio.addEventListener("error", handleError);
-    audio.addEventListener("stalled", handleStalled);
-    audio.addEventListener("abort", handleAbort);
 
     return () => {
       audio.pause();
@@ -808,8 +798,6 @@ export default function App() {
       audio.removeEventListener("loadstart", handleLoadStart);
       audio.removeEventListener("waiting", handleWaiting);
       audio.removeEventListener("error", handleError);
-      audio.removeEventListener("stalled", handleStalled);
-      audio.removeEventListener("abort", handleAbort);
     };
   }, []);
 
@@ -822,21 +810,16 @@ export default function App() {
 
   const playStation = (station: RadioStation) => {
     if (!audioRef.current) return;
-
+    
     if (currentStation?.id === station.id) {
       if (isPlaying) {
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
-        setRadioLoading(true);
         audioRef.current.play().then(() => {
           setIsPlaying(true);
-          setRadioLoading(false);
-          setRadioError(false);
         }).catch(() => {
           setIsPlaying(false);
-          setRadioLoading(false);
-          setRadioError(true);
         });
       }
       return;
@@ -845,21 +828,15 @@ export default function App() {
     audioRef.current.pause();
     setCurrentStation(station);
     setIsPlaying(false);
-    setRadioLoading(true);
-    setRadioError(false);
     audioRef.current.src = station.url;
     audioRef.current.load();
     audioRef.current.play()
       .then(() => {
         setIsPlaying(true);
-        setRadioLoading(false);
-        setRadioError(false);
       })
       .catch((err) => {
         console.warn("Playback initialization stream sync:", err);
         setIsPlaying(false);
-        setRadioLoading(false);
-        setRadioError(true);
       });
   };
 
