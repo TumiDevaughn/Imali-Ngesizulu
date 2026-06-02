@@ -3,3 +3,12 @@
 @theme {
   --animate-spin-slow: spin 25s linear infinite;
 }
+
+/* Hide Bolt platform badge */
+a[href*="bolt.new"],
+div[class*="bolt-badge"],
+div[id*="bolt-badge"],
+#bolt-badge,
+.bolt-badge {
+  display: none !important;
+}
