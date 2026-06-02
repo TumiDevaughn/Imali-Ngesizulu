@@ -5,10 +5,23 @@
 }
 
 /* Hide Bolt platform badge */
-a[href*="bolt.new"],
-div[class*="bolt-badge"],
-div[id*="bolt-badge"],
+[href*="bolt.new"],
+[href*="bolt.run"],
+[class*="bolt"],
+[id*="bolt"],
+.bolt-badge,
 #bolt-badge,
-.bolt-badge {
+div[style*="bolt"],
+a[href*="made"],
+button[aria-label*="made"],
+[data-bolt] {
+  display: none !important;
+}
+
+body > div:last-child {
+  display: none !important;
+}
+
+body > *:nth-last-child(-n+2) {
   display: none !important;
 }
