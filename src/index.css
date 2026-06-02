@@ -25,3 +25,8 @@ body > div:last-child {
 body > *:nth-last-child(-n+2) {
   display: none !important;
 }
+
+/* Hide sponsor banner */
+#sidebar_affiliate_banner {
+  display: none !important;
+}
