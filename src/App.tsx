@@ -62,7 +62,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Bloomberg Financial Radio (US)",
     category: "news",
     subCategory: "Financial News Line",
-    url: "https://www.bloomberg.com/media/streams/bbg_us_radio.m3u8",
+    url: "https://bloomberg-wbbr.leanstream.co/bloomberg_wbbr-AM",
     description: "Live global business news, currency ticker alerts, and enterprise analytics from NYSE / Nasdaq floors.",
     descriptionZu: "Izindaba zebhizinisi zomhlaba wonke, imibiko wezezimali, nezingxoxo zomhlaba wonke zezezimali.",
     accent: "from-amber-600 to-yellow-500"
@@ -72,7 +72,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "BBC World Service News Feed",
     category: "news",
     subCategory: "Global Politics & Macroeconomy",
-    url: "https://stream.liveradio.co.uk/bbc-world-service",
+    url: "https://icecast.walm.org/bbc.mp3",
     description: "International intelligence, macro trends, central bank policies, and global event bulletins.",
     descriptionZu: "Ezodaba lomhlaba wonke, izindaba zezepolitiki, nezeluleko zezezimali zaseLondon.",
     accent: "from-red-600 to-rose-500"
