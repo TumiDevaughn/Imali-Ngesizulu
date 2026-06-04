@@ -6463,9 +6463,9 @@ export default function App() {
       </div>
 
       {/* Footer Branding section */}
-      <footer className="z-20 bg-black/85 border-t border-white/5 py-6 px-8 flex flex-col md:flex-row justify-between items-center text-center select-none gap-4">
-        <div className="text-[10px] text-zinc-500 font-serif italic uppercase tracking-wider">
-          © 2026 Elite Courses Premium Executive Academy • Perfect Dual Zulu & English Transliteration Active
+      <footer className="z-20 bg-black/85 border-t border-white/5 py-6 px-8 flex flex-col justify-center items-center text-center select-none gap-4">
+        <div className="w-full text-center text-[10px] text-zinc-500 font-serif italic uppercase tracking-wider">
+          © 2026 Imali NgesiZulu
         </div>
         
         {/* Mobile-only Sponsor/Partner Button */}
