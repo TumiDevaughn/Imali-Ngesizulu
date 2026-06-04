@@ -2046,6 +2046,110 @@ export default function App() {
     } catch (e) {}
     return "Cape Town, SA (GMT+2)";
   });
+
+  // Real-Time Location Tracker state
+  const [userLocation, setUserLocation] = useState<{
+    city?: string;
+    countryName?: string;
+    latitude?: number;
+    longitude?: number;
+    accuracy?: number;
+    principalSubdivision?: string;
+    ipDefault?: boolean;
+  } | null>(null);
+  const [locationStatus, setLocationStatus] = useState<'requesting' | 'active' | 'denied' | 'error' | 'idle'>('idle');
+
+  // Real-Time Geolocation tracking thread
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    setLocationStatus("requesting");
+
+    // Instantly try low-precision IP check using lightweight SSL Endpoint (CORS-friendly)
+    fetch("https://api.bigdatacloud.net/data/reverse-geocode-client")
+      .then((r) => r.ok ? r.json() : Promise.reject())
+      .then((ipData) => {
+        if (ipData && ipData.city) {
+          setUserLocation((prev) => {
+            // Keep actual GPS if already granted/acquired
+            if (prev && prev.latitude && !prev.ipDefault) return prev;
+            return {
+              city: ipData.city,
+              countryName: ipData.countryName,
+              latitude: ipData.latitude,
+              longitude: ipData.longitude,
+              principalSubdivision: ipData.principalSubdivision,
+              ipDefault: true
+            };
+          });
+        }
+      })
+      .catch((e) => console.log("Baseline IP Location lookup bypassed:", e));
+
+    if (!navigator.geolocation) {
+      setLocationStatus("error");
+      return;
+    }
+
+    // High accuracy watchPosition to capture active changes
+    const watchId = navigator.geolocation.watchPosition(
+      async (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
+        setLocationStatus("active");
+        
+        try {
+          const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+          if (res.ok) {
+            const data = await res.json();
+            setUserLocation({
+              city: data.city || data.locality || "Unknown Locality",
+              countryName: data.countryName || "Unknown Country",
+              latitude,
+              longitude,
+              accuracy,
+              principalSubdivision: data.principalSubdivision || "",
+              ipDefault: false
+            });
+          } else {
+            setUserLocation((prev) => ({
+              city: prev?.city || "Unknown",
+              countryName: prev?.countryName || "Unknown",
+              latitude,
+              longitude,
+              accuracy,
+              ipDefault: false
+            }));
+          }
+        } catch (err) {
+          setUserLocation((prev) => ({
+            city: prev?.city || "Unknown",
+            countryName: prev?.countryName || "Unknown",
+            latitude,
+            longitude,
+            accuracy,
+            ipDefault: false
+          }));
+        }
+      },
+      (error) => {
+        console.warn("Real-time Geolocation denied/unavailable:", error);
+        if (error.code === error.PERMISSION_DENIED) {
+          setLocationStatus("denied");
+        } else {
+          setLocationStatus("error");
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 10000
+      }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, []);
   const [simulatedTimeRemaining, setSimulatedTimeRemaining] = useState<{ [sess: string]: number | null }>({
     asian: null,
     china: null,
@@ -2536,32 +2640,32 @@ export default function App() {
 
           {/* Quick Simulated Role Toggle */}
           <div className="flex items-center bg-black/80 border border-zinc-800 rounded-full p-1 text-[11px] gap-1">
-            <span className="text-[9px] text-zinc-500 uppercase px-2 font-mono tracking-tighter">Role:</span>
+            <span className="text-[9px] text-zinc-500 uppercase px-2 font-mono tracking-tighter">{translateText("role_label_colon", language)}</span>
             <button 
               id="role_student_btn"
               onClick={() => setActiveRole(Role.STUDENT)}
               className={`px-3 py-1 rounded-full transition-all text-[10px] font-bold uppercase tracking-wider ${activeRole === Role.STUDENT ? "bg-gradient-to-r from-[#D4AF37] to-[#AA771C] text-black shadow-[0_0_10px_rgba(212,175,55,0.25)]" : "text-zinc-400 hover:text-white"}`}
             >
-              STUDENT
+              {translateText("role_student_abbr", language)}
             </button>
             <button 
               id="role_instructor_btn"
               onClick={() => setActiveRole(Role.INSTRUCTOR)}
               className={`px-3 py-1 rounded-full transition-all text-[10px] font-bold uppercase tracking-wider ${activeRole === Role.INSTRUCTOR ? "bg-gradient-to-r from-[#D4AF37] to-[#AA771C] text-black shadow-[0_0_10px_rgba(212,175,55,0.25)]" : "text-zinc-400 hover:text-white"}`}
             >
-              INSTR
+              {translateText("role_instructor_abbr", language)}
             </button>
             <button 
               id="role_admin_btn"
               onClick={() => setActiveRole(Role.ADMIN)}
               className={`px-3 py-1 rounded-full transition-all text-[10px] font-bold uppercase tracking-wider ${activeRole === Role.ADMIN ? "bg-gradient-to-r from-[#D4AF37] to-[#AA771C] text-black shadow-[0_0_10px_rgba(212,175,55,0.25)]" : "text-zinc-400 hover:text-white"}`}
             >
-              ADMIN
+              {translateText("role_admin_abbr", language)}
             </button>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline">Active Session:</span>
+            <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline">{translateText("active_session_label", language)}</span>
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse border border-emerald-900"></div>
           </div>
         </div>
@@ -2809,12 +2913,12 @@ export default function App() {
                 {translateText("brand_subtitle", language)}
               </p>
               <h1 className="text-3xl font-light tracking-tight mt-1 text-white uppercase font-serif">
-                {activeTab === "dashboard" && "Executive Academy Central Portal"}
-                {activeTab === "courses" && "Financial Education Curriculum"}
-                {activeTab === "classroom" && "Interactive Live Lecture Suite"}
-                {activeTab === "chat" && "Academic Discussion Forum"}
-                {activeTab === "blueprints" && "Curriculum Roadmap & Framework"}
-                {activeTab === "admin" && "Academy Management Console"}
+                {activeTab === "dashboard" && (language === "en" ? "Executive Academy Central Portal" : "Isikhungo Esiyisisekelo Sezemfundo")}
+                {activeTab === "courses" && (language === "en" ? "Financial Education Curriculum" : "Uhlelo Lwezifundo Lwezezimali")}
+                {activeTab === "classroom" && translateText("interactive_lecture_suite", language)}
+                {activeTab === "chat" && (language === "en" ? "Academic Discussion Forum" : "Inkundla Yezoxhumano Nezemfundo")}
+                {activeTab === "blueprints" && (language === "en" ? "Curriculum Roadmap & Framework" : "Umgudu Nomhlahlandlela Wezifundo")}
+                {activeTab === "admin" && (language === "en" ? "Academy Management Console" : "Iphaneli Yokuphathwa Kwezemfundo")}
               </h1>
               <p className="text-xs text-zinc-400 mt-1">
                 {language === "en" 
@@ -2841,19 +2945,36 @@ export default function App() {
               <div className="flex items-center gap-2 shrink-0">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span className="text-[10px] font-mono tracking-widest text-[#D4AF37] uppercase font-bold">
-                  Financial Clocks
+                  {translateText("financial_clocks_label", language)}
                 </span>
               </div>
               
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 w-full md:w-auto">
                 <span className="text-[10.5px] font-mono text-zinc-400 flex flex-wrap items-center gap-1.5">
-                  <span className="whitespace-nowrap">📍 DETECTED LOCATION:</span>
-                  <strong className="text-zinc-100 bg-zinc-900/60 px-2.5 py-1 rounded border border-zinc-800/60 whitespace-nowrap">{userTimezone}</strong>
+                  <span className="whitespace-nowrap">{translateText("detected_location_label", language)}</span>
+                  {userLocation ? (
+                    <strong className="text-zinc-100 bg-zinc-900/60 px-2.5 py-1 rounded border border-zinc-800/60 flex items-center gap-1.5 whitespace-nowrap">
+                      <span className={`w-1.5 h-1.5 rounded-full ${userLocation.ipDefault ? "bg-amber-400 animate-pulse" : "bg-emerald-400 animate-ping"}`}></span>
+                      <span>
+                        {userLocation.city ? `${userLocation.city}, ${userLocation.principalSubdivision || ""} (${userLocation.countryName})` : `${userLocation.latitude?.toFixed(4)}°, ${userLocation.longitude?.toFixed(4)}°`}
+                      </span>
+                      {!userLocation.ipDefault && userLocation.accuracy && (
+                        <span className="text-[9px] text-[#D4AF37] font-semibold tracking-wider font-mono bg-[#D4AF37]/10 px-1 rounded ml-1 animate-pulse">
+                          LIVE GPS ±{Math.round(userLocation.accuracy)}m
+                        </span>
+                      )}
+                    </strong>
+                  ) : (
+                    <strong className="text-zinc-100 bg-zinc-900/60 px-2.5 py-1 rounded border border-zinc-800/60 flex items-center gap-1.5 whitespace-nowrap">
+                      <span className="w-1.5 h-1.5 bg-zinc-500 animate-pulse rounded-full"></span>
+                      <span>{locationStatus === 'requesting' ? (language === "en" ? "CONNECTING SATELLITES..." : "KUXHUNYWA IZIKHUNDLA...") : userTimezone}</span>
+                    </strong>
+                  )}
                 </span>
                 <span className="text-[10.5px] font-mono text-[#D4AF37] flex flex-wrap items-center gap-1.5">
                   <span className="flex items-center gap-1.5 whitespace-nowrap">
                     <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full animate-pulse"></span>
-                    <span>YOUR LOCAL TIME:</span>
+                    <span>{translateText("your_local_time_label", language)}</span>
                   </span>
                   <strong className="text-white bg-zinc-900 px-2.5 py-1 rounded border border-[#D4AF37]/30 font-mono whitespace-nowrap">
                     {systimeUtc.toLocaleTimeString()}
@@ -3097,10 +3218,14 @@ export default function App() {
                   <div className="space-y-2 max-w-2xl text-left">
                     <span className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 w-fit">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                      Certified Private Local Session Active
+                      {translateText("certified_private_session_label", language)}
                     </span>
                     <h3 className="text-xl font-light tracking-wide text-white uppercase font-serif">
-                      Your Financial Education remains <span className="text-[#D4AF37] italic font-serif">Securely Yours</span>
+                      {language === "en" ? (
+                        <>Your Financial Education remains <span className="text-[#D4AF37] italic font-serif">Securely Yours</span></>
+                      ) : (
+                        <>Imfundo Yakho Yezezimali <span className="text-[#D4AF37] italic font-serif">Ihlala Iyakho Ngokuphephile</span></>
+                      )}
                     </h3>
                     <p className="text-xs text-zinc-400 leading-relaxed">
                       {language === "en"
@@ -3296,8 +3421,10 @@ export default function App() {
                         {/* Direct action links to simulated role join */}
                         <div className="pt-4 border-t border-zinc-850 flex flex-col sm:flex-row justify-between items-center gap-4 bg-zinc-950/40 p-4 rounded-xl">
                           <div className="text-left">
-                            <p className="text-xs text-zinc-400 font-medium">To join class as student, you will need the passcode:</p>
-                            <p className="text-[11px] text-zinc-500 font-mono mt-0.5">Active Class Passcode: <strong className="text-[#D4AF37] font-mono">{instructorDetails.classCode || "FOREX101"}</strong></p>
+                            <p className="text-xs text-zinc-400 font-medium">To join class as student, you will need the active authorization passcode:</p>
+                            <p className="text-[11px] text-zinc-500 font-sans mt-1 italic leading-relaxed">
+                              🔒 Note: Please request the active session passcode directly from your Instructor or the Admin.
+                            </p>
                           </div>
                           
                           <div className="flex gap-2 w-full sm:w-auto justify-end">
@@ -4470,36 +4597,40 @@ export default function App() {
               <div id="classroom_header_band" className="bg-gradient-to-r from-zinc-950 via-zinc-900 to-black p-6 rounded-3xl border border-[#D4AF37]/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-left shadow-lg">
                 <div className="space-y-1">
                   <span className="text-[9px] bg-[#D4AF37]/15 text-[#D4AF37] px-2.5 py-0.5 rounded font-mono font-bold uppercase tracking-widest block w-fit">
-                    🎙️ DROP-IN AUDIO SUITE
+                    {language === "en" ? "🎙️ DROP-IN AUDIO SUITE" : "🎙️ IGUMBI LOMSINDO OBUKHOMA"}
                   </span>
                   <h3 className="text-xl font-light tracking-wide text-white uppercase font-serif">
-                    IMALI <span className="text-[#D4AF37] italic font-serif">Clubhouse Forum</span>
+                    {language === "en" ? (
+                      <>IMALI <span className="text-[#D4AF37] italic font-serif">Clubhouse Forum</span></>
+                    ) : (
+                      <span className="text-[#D4AF37] italic font-serif">Inkundla ye-IMALI ye-Clubhouse</span>
+                    )}
                   </h3>
                   <p className="text-xs text-zinc-400 max-w-xl leading-relaxed">
-                    A zero-database drop-in audio space modeled after Clubhouse. Complete peer-to-peer lessons, choose among 6 custom class durations (30 min - 3 hrs), and download the class audio archive immediately upon session conclusion.
+                    {translateText("clubhouse_forum_desc", language)}
                   </p>
                 </div>
                 <div className="bg-white/5 border border-white/5 px-4 py-3 rounded-2xl flex items-center gap-3 shrink-0">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
                   <div className="text-left">
-                    <p className="text-[#D4AF37] text-[10px] font-mono">WORKSPACE SECURITY</p>
-                    <p className="text-xs text-zinc-200 font-bold">100% Private Session</p>
+                    <p className="text-[#D4AF37] text-[10px] font-mono">{translateText("workspace_security_label", language)}</p>
+                    <p className="text-xs text-zinc-200 font-bold">{translateText("private_session_label", language)}</p>
                   </div>
                 </div>
               </div>
 
               {!isAudioSessionActive ? (
                 /* ================= LOBBY ENTRANCE PRE-FLIGHT PAGE ================= */
-                <div id="lobby_preflight_page" className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div id="lobby_preflight_page" className="grid grid-cols-1 lg:col-span-12 lg:grid-cols-12 gap-6">
                   
                   {/* Left Column: 6 Categories of Audio Sessions (Span 7) */}
                   <div className="lg:col-span-7 space-y-4">
                     <div className="border-b border-zinc-800 pb-2 text-left">
                       <h4 className="text-sm font-bold uppercase tracking-widest text-[#D4AF37] font-serif">
-                        1. Select Your Academic Forum Class Topic
+                        1. {translateText("select_forum_topic", language)}
                       </h4>
                       <p className="text-[10px] text-zinc-500">
-                        Choose from exactly 6 distinct audio session ranges from 30 minutes to 3 hours max.
+                        {translateText("choose_session_ranges", language)}
                       </p>
                     </div>
 
@@ -4520,7 +4651,7 @@ export default function App() {
                             {/* Accent Glow for selected */}
                             {isSelected && (
                               <div className="absolute top-0 right-0 bg-[#D4AF37] text-black font-mono font-black text-[9px] uppercase px-3 py-1 rounded-bl-xl tracking-wider shadow">
-                                SELECTED
+                                {language === "en" ? "SELECTED" : "KUKHETHIWE"}
                               </div>
                             )}
 
@@ -4528,7 +4659,9 @@ export default function App() {
                               <div className="flex items-center gap-2 mb-1.5">
                                 <span className="text-lg">🎙️</span>
                                 <span className="text-[10px] font-mono text-[#D4AF37] uppercase font-bold tracking-wider">
-                                  {cls.duration} Session
+                                  {language === "en" 
+                                    ? `${cls.duration} Session` 
+                                    : `${cls.duration.replace("Min", "Miz").replace("Hours", "Amahora").replace("Hour", "Ihora")} Iseshini`}
                                 </span>
                               </div>
                               <h5 className="text-sm font-bold text-white uppercase font-serif tracking-wide leading-snug">
@@ -4540,7 +4673,7 @@ export default function App() {
                             </div>
 
                             <p className="text-[9px] font-mono text-zinc-500 uppercase mt-2 tracking-wider">
-                              MAX ACTIVE TIME LIMIT: {cls.maxHours} HOURS
+                              {language === "en" ? `MAX ACTIVE TIME LIMIT: ${cls.maxHours} HOURS` : `ISIKHATHI ESIPHEZULU SESESHINI: ${cls.maxHours} AMAHORA`}
                             </p>
                           </button>
                         );
@@ -4556,17 +4689,17 @@ export default function App() {
                       <div className="flex items-center gap-2.5 border-b border-zinc-800 pb-2">
                         <span className="text-lg">👤</span>
                         <h5 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-                          2. Fill Up Your Profile Details
+                          2. {translateText("fill_profile_details", language)}
                         </h5>
                       </div>
                       
                       <p className="text-[11px] text-zinc-400 leading-relaxed">
-                        Each student and speaker before joining must ensure their professional details are non-blank. Modify them on the fly below:
+                        {translateText("profile_instructions", language)}
                       </p>
 
                       <div className="space-y-3 bg-black/40 p-4 rounded-2xl border border-zinc-900">
                         <div className="space-y-1">
-                          <label className="text-[9px] text-[#D4AF37] font-mono uppercase tracking-wider block">Your Display Name</label>
+                          <label className="text-[9px] text-[#D4AF37] font-mono uppercase tracking-wider block">{translateText("your_display_name_label", language)}</label>
                           <input 
                             id="classroom_profile_name_input"
                             type="text"
@@ -4578,12 +4711,12 @@ export default function App() {
                               else setAdminDetails({ ...adminDetails, name: v });
                             }}
                             className="w-full bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37] font-sans"
-                            placeholder="Type your name..."
+                            placeholder={translateText("type_your_name_placeholder", language)}
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[9px] text-zinc-500 font-mono uppercase tracking-wider block">Your Biography Focus</label>
+                          <label className="text-[9px] text-zinc-500 font-mono uppercase tracking-wider block">{translateText("your_biography_focus_label", language)}</label>
                           <textarea 
                             id="classroom_profile_bio_input"
                             value={activeRole === Role.STUDENT ? studentDetails.bio : activeRole === Role.INSTRUCTOR ? instructorDetails.bio : adminDetails.bio}
@@ -4594,14 +4727,14 @@ export default function App() {
                               else setAdminDetails({ ...adminDetails, bio: v });
                             }}
                             className="w-full bg-zinc-900 border border-zinc-805 p-2 text-xs text-zinc-350 outline-none h-14 focus:border-[#D4AF37] rounded-xl"
-                            placeholder="Focus area..."
+                            placeholder={translateText("focus_area_placeholder", language)}
                           />
                         </div>
 
                         <div className="flex items-center justify-between pt-1 text-[10px]">
-                          <span className="text-zinc-550 font-mono">PROFILE VERIFIED:</span>
+                          <span className="text-zinc-550 font-mono">{translateText("profile_verified_label", language)}</span>
                           <span className="text-emerald-400 font-bold uppercase tracking-wider">
-                            ✓ READY (SAVED LOCALLY)
+                            {translateText("profile_ready_local", language)}
                           </span>
                         </div>
                       </div>
@@ -4612,14 +4745,14 @@ export default function App() {
                       <div className="flex items-center gap-2.5 border-b border-zinc-800 pb-2">
                         <span className="text-lg">🔑</span>
                         <h5 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-                          3. Enter Authorization Passcode
+                          3. {translateText("enter_auth_passcode_title", language)}
                         </h5>
                       </div>
 
                       {activeRole === Role.STUDENT ? (
                         <div className="space-y-3">
                           <p className="text-[11px] text-zinc-400 leading-relaxed">
-                            This live forum requires the active authorization session passcode. Please enter the code offered by your Instructor or Admin:
+                            {translateText("auth_passcode_desc", language)}
                           </p>
                           <input 
                             id="student_study_passcode_input"
@@ -4630,48 +4763,36 @@ export default function App() {
                               setClassCodeError("");
                             }}
                             className="w-full bg-zinc-900 border-2 border-[#D4AF37]/30 text-[#D4AF37] font-mono font-bold tracking-widest text-center py-2.5 rounded-xl outline-none focus:border-[#D4AF37] text-sm"
-                            placeholder="e.g. FOREX101"
+                            placeholder={translateText("placeholder_passcode", language)}
                           />
                           {classCodeError && (
                             <p id="passcode_err" className="text-[10px] text-red-400 font-bold font-mono">❌ {classCodeError}</p>
                           )}
                           
-                          <div className="bg-zinc-950 border border-zinc-900 p-2.5 rounded-xl flex items-center justify-between text-[11px] gap-2">
-                            <span className="text-zinc-500 font-mono">🔑 Active Issued Code:</span>
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[#D4AF37] font-mono bg-[#D4AF37]/10 border border-[#D4AF37]/25 px-1.5 py-0.5 rounded text-[10px] font-bold">{instructorDetails.classCode || "FOREX101"}</span>
-                              <button 
-                                onClick={() => {
-                                  setEnteredClassCode(instructorDetails.classCode || "FOREX101");
-                                  setClassCodeError("");
-                                }}
-                                className="bg-[#D4AF37] hover:bg-[#D4AF37]/80 text-black px-2 py-0.5 rounded text-[9px] font-mono uppercase font-bold transition cursor-pointer"
-                              >
-                                Autofill Code
-                              </button>
-                            </div>
+                          <div className="bg-zinc-950/60 border border-zinc-900 p-3 rounded-xl text-[11px] leading-relaxed text-zinc-400">
+                            🛡️ <span className="font-semibold text-zinc-300">{language === "en" ? "Administrative Gate Enforcement:" : "Ukuqinisekiswa Kwesango Lomlawuli:"}</span> {language === "en" ? "The active passcode is fully restricted. It is not listed on this screen. You must contact your instructor or administrator directly to obtain the active code of the hour." : "Iphasikhodi esebenzayo ivikelwe ngokuphelele. Ayibalwanga kuleli khasi. Kumele uthinte umfundisi noma umlawuli wakho ngqo ukuze uthole ikhodi esebenzayo yale hora."}
                           </div>
 
-                          <span className="text-[9px] text-zinc-500 block">
-                            💡 Use the code generated/offered by the Instructor. Switch roles above to configure profiles or issue new class codes!
+                          <span className="text-[9px] text-zinc-500 block leading-normal">
+                            💡 {language === "en" ? "Host/Instructors can configure and view the active passcode securely under their personal profile or dispatch panels." : "Ababungazi/Abafundisi bangamisa futhi babuke iphasikhodi esebenzayo ngokuphepha ngaphansi kwephrofayela yabo noma amaphaneli we-dispatch."}
                           </span>
                         </div>
                       ) : (
                         <div className="bg-black/60 p-4 rounded-2xl space-y-2.5">
                           <p className="text-[11px] text-[#D4AF37] font-bold font-mono uppercase">
-                            📢 YOU ARE THE HOST ({activeRole.toUpperCase()})
+                            📢 {language === "en" ? `YOU ARE THE HOST (${activeRole.toUpperCase()})` : `UNGUMPHATHI OMKHULU (${activeRole.toUpperCase()})`}
                           </p>
                           <p className="text-[11px] text-zinc-400 leading-normal">
-                            You are authorized to issue the following passcode to students to allow them into this class audio room:
+                            {language === "en" ? "You are authorized to issue the following passcode to students to allow them into this class audio room:" : "Uvunyelwe ukunikeza le phasikhodi elandelayo kubafundi ukuze ubavumele bangene kuleli gumbi:"}
                           </p>
                           <div className="bg-[#D4AF37]/15 border border-[#D4AF37]/40 py-2.5 px-4 rounded-xl flex justify-between items-center">
-                            <span className="text-xs font-mono text-zinc-500 uppercase font-black">ACTIVE PASSCODE:</span>
+                            <span className="text-xs font-mono text-zinc-500 uppercase font-black">{language === "en" ? "ACTIVE PASSCODE:" : "IPHASIKHODI ESEBENZAYO:"}</span>
                             <span className="text-base font-mono font-black text-[#D4AF37] tracking-widest bg-black px-3 py-1 rounded-lg border border-[#D4AF37]/20">
                               {instructorDetails.classCode || "FOREX101"}
                             </span>
                           </div>
                           <span className="text-[9px] text-zinc-500 block">
-                            Students will be blocked from joining the audio stream until they type this exact passcode.
+                            {language === "en" ? "Students will be blocked from joining the audio stream until they type this exact passcode." : "Abafundi bazovinjelwa ukuba bahlanganyele ekusakazweni komsindo baze bafake le phasikhodi ngqo."}
                           </span>
                         </div>
                       )}
@@ -4681,13 +4802,17 @@ export default function App() {
                         onClick={() => {
                           const nameVal = activeRole === Role.STUDENT ? studentDetails.name : activeRole === Role.INSTRUCTOR ? instructorDetails.name : adminDetails.name;
                           if (!nameVal.trim()) {
-                            alert("Please fill up your display name under core profile first!");
+                            alert(language === "en" ? "Please fill up your display name under core profile first!" : "Sicela uqale ugcwalise igama lakho ngaphansi kwephrofayela eyinhloko!");
                             return;
                           }
 
                           if (activeRole === Role.STUDENT) {
                             if (enteredClassCode !== instructorDetails.classCode) {
-                              setClassCodeError(`Passcode Mismatch. The active class code offered by instructor ${instructorDetails.name} is needed.`);
+                              setClassCodeError(
+                                language === "en"
+                                  ? `Passcode Mismatch. The active class code offered by instructor ${instructorDetails.name} is needed.`
+                                  : `Iphasikhodi Ayifanani. Ikhodi esebenzayo ekhishwe ngumfundisi u-${instructorDetails.name} iyadingeka.`
+                              );
                               return;
                             }
                           }
@@ -4699,10 +4824,9 @@ export default function App() {
                         }}
                         className="w-full py-3 bg-gradient-to-r from-[#D4AF37] to-[#996515] hover:brightness-110 text-black text-xs font-black uppercase tracking-widest rounded-2xl shadow-[0_4px_24px_rgba(212,175,55,0.2)] transition-all duration-300"
                       >
-                        🎙️ Join Live Audio Session ({AUDIO_CLASS_TYPES[selectedAudioClassIndex].duration})
+                        🎙️ {translateText("join_live_audio", language)} ({language === "en" ? AUDIO_CLASS_TYPES[selectedAudioClassIndex].duration : AUDIO_CLASS_TYPES[selectedAudioClassIndex].duration.replace("Min", "Miz").replace("Hours", "Amahora").replace("Hour", "Ihora")})
                       </button>
                     </div>
-
                   </div>
 
                 </div>
@@ -6863,6 +6987,12 @@ export default function App() {
                 <span>LATENCY: 0.12s</span>
                 <span>•</span>
                 <span>TIMEZONE: {userTimezone.toUpperCase()}</span>
+                {userLocation && (
+                  <>
+                    <span>•</span>
+                    <span className="text-[#D4AF37] animate-pulse">GPS POSITION: {userLocation.latitude?.toFixed(4)}°, {userLocation.longitude?.toFixed(4)}°{userLocation.city ? ` (${userLocation.city.toUpperCase()})` : ""}</span>
+                  </>
+                )}
               </div>
               <span>REGISTRY HASH VERIFIED: LUXE-FM</span>
             </div>

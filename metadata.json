@@ -1,6 +1,6 @@
 {
   "name": "IMALI Ngesizulu LMS",
   "description": "A luxury modern Learning Management System branded for IMALI Ngesizulu, styled with a high-end Black & Gold theme, featuring perfect dual English and Zulu support, interactive live classrooms, smart analytics, and advanced Gemini-driven scholastic AI elements.",
-  "requestFramePermissions": ["camera", "microphone"],
+  "requestFramePermissions": ["camera", "microphone", "geolocation"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

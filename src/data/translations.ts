@@ -107,7 +107,44 @@ export const translations = {
     
     // Blueprints
     blueprints_title: "Global Financial Radio Room",
-    blueprints_desc: "Tune in to real-time premium news streams, corporate audio feeds (BBC, Bloomberg) or relax with deep-focus study rhythms."
+    blueprints_desc: "Tune in to real-time premium news streams, corporate audio feeds (BBC, Bloomberg) or relax with deep-focus study rhythms.",
+    
+    // Newly Added for Total Translation Coverage
+    new_scholar: "New Scholar",
+    interactive_lecture_suite: "Interactive Live Lecture Suite",
+    detected_location_label: "DETECTED LOCATION:",
+    your_local_time_label: "YOUR LOCAL TIME:",
+    role_label_colon: "Role:",
+    role_student_abbr: "STUDENT",
+    role_instructor_abbr: "INSTR",
+    role_admin_abbr: "ADMIN",
+    active_session_label: "Active Session:",
+    workspace_security_label: "WORKSPACE SECURITY",
+    private_session_label: "100% Private Session",
+    clubhouse_forum_title: "IMALI Clubhouse Forum",
+    clubhouse_forum_desc: "A zero-database drop-in audio space modeled after Clubhouse. Complete peer-to-peer lessons, choose among 6 custom class durations (30 min - 3 hrs), and download the class audio archive immediately upon session conclusion.",
+    select_forum_topic: "Select Your Academic Forum Class Topic",
+    choose_session_ranges: "Choose from exactly 6 distinct audio session ranges from 30 minutes to 3 hours max.",
+    fill_profile_details: "Fill Up Your Profile Details",
+    profile_instructions: "Each student and speaker before joining must ensure their professional details are non-blank. Modify them on the fly below:",
+    your_display_name_label: "Your Display Name",
+    type_your_name_placeholder: "Type your name...",
+    your_biography_focus_label: "Your Biography Focus",
+    focus_area_placeholder: "Focus area...",
+    profile_verified_label: "PROFILE VERIFIED:",
+    profile_ready_local: "✓ READY (SAVED LOCALLY)",
+    enter_auth_passcode_title: "Enter Authorization Passcode",
+    auth_passcode_desc: "This live forum requires the active authorization session passcode. Please enter the code offered by your Instructor or Admin:",
+    placeholder_passcode: "e.g. FOREX101",
+    admin_gate_enforcement: "🛡️ Administrative Gate Enforcement: The active passcode is fully restricted. It is not listed on this screen. You must contact your instructor or administrator directly to obtain the active code of the hour.",
+    host_instructors_tip: "💡 Host/Instructors can configure and view the active passcode securely under their personal profile or dispatch panels.",
+    join_live_audio: "Join Live Audio Session",
+    financial_clocks_label: "Financial Clocks",
+    certified_private_session_label: "Certified Private Local Session Active",
+    financial_education_secure_title: "Your Financial Education remains Securely Yours",
+    hour_session_suffix: "Hour Session",
+    hours_session_suffix: "Hours Session",
+    min_session_suffix: "Min Session"
   },
   
   zu: {
@@ -209,7 +246,44 @@ export const translations = {
     
     // Blueprints
     blueprints_title: "Igumbi Lomsakazo Wezomnotho nemicabango",
-    blueprints_desc: "Lalela iziteshi ezibukhoma ze-Bloomberg, i-BBC World Service, ne-CNBC noma uphumule ngomculo ojulile we-jazz ne-chillout ukhulise ulwazi."
+    blueprints_desc: "Lalela iziteshi ezibukhoma ze-Bloomberg, i-BBC World Service, ne-CNBC noma uphumule ngomculo ojulile we-jazz ne-chillout ukhulise ulwazi.",
+    
+    // Newly Added for Total Translation Coverage
+    new_scholar: "Umfundi Omusha",
+    interactive_lecture_suite: "Igumbi Lezinkulumo Ezibukhoma Ezisebenzisanayo",
+    detected_location_label: "INDAWO ETHOLAKELE:",
+    your_local_time_label: "ISIKHATHI SAKHO SASEKHAYA:",
+    role_label_colon: "Indima:",
+    role_student_abbr: "UMFUNDI",
+    role_instructor_abbr: "UTHISHA",
+    role_admin_abbr: "ADMIN",
+    active_session_label: "Iseshini Esebenzayo:",
+    workspace_security_label: "UKUPHEPHA KWE-WORKSPACE",
+    private_session_label: "100% Iseshini Eyimfihlo",
+    clubhouse_forum_title: "Inkundla we-IMALI ye-Clubhouse",
+    clubhouse_forum_desc: "Indawo yomsindo engenayo datha eyenziwe ngephethini ye-Clubhouse. Qedela izifundo phakathi kwababili, khetha phakathi kwezikhathi eziyisithupha zezifundo ezenziwe ngokwezifiso (imizuzu engama-30 kuya emahoreni ama-3), bese ulanda ingobo yomlando yomsindo wekilasi ngokushesha ngemuva kokuphela kweseshini.",
+    select_forum_topic: "Khetha Isihloko Sekilasi Senkundla Yezemfundo",
+    choose_session_ranges: "Khetha phakathi kwezikhathi eziyisithupha zomsindo ezihlukene kusukela emizuzwini engama-30 kuya emahoreni ama-3 max.",
+    fill_profile_details: "Gcwalisa Imininingwane Yakho Yephrofayili",
+    profile_instructions: "Umfundi ngamunye kanye nesikhulumi ngaphambi kokuhlanganyela kumele baqinisekise ukuthi imininingwane yabo yobungcweti ayinalutho. Shintsha lapha ngezansi:",
+    your_display_name_label: "Igama Lakho Eliboniswayo",
+    type_your_name_placeholder: "Bhala igama lakho...",
+    your_biography_focus_label: "Ukugxila Kwe-Biografi Yakho",
+    focus_area_placeholder: "Indawo yokugxila...",
+    profile_verified_label: "IPHROFAYILI IQINISEKISWE:",
+    profile_ready_local: "✓ LULUNGILE (LULONDOLOZWE KASEKHAYA)",
+    enter_auth_passcode_title: "Faka Iphasikhodi Yokugunyaza",
+    auth_passcode_desc: "Le nkundla ebukhoma idinga iphasikhodi yeseshini yokugunyaza esebenzayo. Sicela ufake ikhodi enikezwe uMfundisi wakho noma uMlawuli:",
+    placeholder_passcode: "isib. FOREX101",
+    admin_gate_enforcement: "🛡️ Ukuqinisekiswa Kwesango Lomlawuli: Iphasikhodi esebenzayo ivinjelwe ngokuphelele. Ayiveli kulesi sikrini. Kumele uxhumane nomfundisi noma nomlawuli yakho ngqo ukuze uthole ikhodi esebenzayo yale hora.",
+    host_instructors_tip: "💡 Abaphathi/Abafundisi bangamisa futhi babuke iphasikhodi esebenzayo ngokuphepha ngaphansi kwephrofayili yabo noma amaphaneli okuthumela.",
+    join_live_audio: "Ngena Iseshini Yomsindo Ebukhoma",
+    financial_clocks_label: "Amawashi Wezezimali",
+    certified_private_session_label: "Iseshini Yasekhaya Eyimfihlo Eqinisekisiwe Isebenza Manje",
+    financial_education_secure_title: "Imfundo Yakho Yezezimali Ihlala Iyakho Ngokuphephile",
+    hour_session_suffix: "Iseshini Yehora",
+    hours_session_suffix: "Iseshini Yamahora",
+    min_session_suffix: "Iseshini Yemizuzu"
   }
 };
 
