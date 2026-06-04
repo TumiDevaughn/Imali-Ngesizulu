@@ -10,8 +10,8 @@ export type TranslationKey = keyof typeof translations.en;
 export const translations = {
   en: {
     // Brand
-    brand_name: "Elite Courses",
-    brand_subtitle: "EXECUTIVE FINANCIAL & TECHNICAL LMS",
+    brand_name: "IMALI NgesiZulu",
+    brand_subtitle: "Your strategic partner in the global markets",
     
     // Roles & Switching
     role_admin: "Administrator",
@@ -28,6 +28,7 @@ export const translations = {
     nav_analytics: "Executive Analytics",
     nav_admin: "Syndicate Admin",
     nav_blueprints: "Radio News Room",
+    nav_drive: "Google Drive Sync",
 
     // General Actions
     btn_translate: "Translate to Zulu",
@@ -111,8 +112,8 @@ export const translations = {
   
   zu: {
     // Brand
-    brand_name: "Elite Courses",
-    brand_subtitle: "IKHAMBALI ELIPHEZULU LEZEZIMALI NOKUPHATHA YEZIFUNDO",
+    brand_name: "IMALI NgesiZulu",
+    brand_subtitle: "Uzakwethu wamasu ezimakethe zomhlaba wonke",
     
     // Roles & Switching
     role_admin: "Umlawuli Wendlela",
@@ -129,6 +130,7 @@ export const translations = {
     nav_analytics: "Izibalo Zababusi",
     nav_admin: "Umlawuli we-Syndicate",
     nav_blueprints: "Igumbi Ledaba Lomsakazo",
+    nav_drive: "Ezokugcina ku-Drive",
 
     // General Actions
     btn_translate: "Humusha ngesiZulu",
