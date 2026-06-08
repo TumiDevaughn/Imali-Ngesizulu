@@ -13,6 +13,7 @@ import {
   MessageSquare, 
   Video, 
   Globe, 
+  Calendar,
   Activity, 
   FileText, 
   CheckCircle2, 
@@ -38,7 +39,8 @@ import {
   Pause,
   Volume2,
   VolumeX,
-  Cloud
+  Cloud,
+  Youtube
 } from "lucide-react";
 import { Role, User, Course, Lesson, Language, ChatMessage, Notification } from "./types";
 import { coursesData } from "./data/courses";
@@ -1267,6 +1269,13 @@ export default function App() {
 
   // Help Centre / Contact Us Modal State
   const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState<boolean>(false);
+  const [isCalendarMaximized, setIsCalendarMaximized] = useState<boolean>(false);
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<number>(5); // June 5, 2026 (current default date)
+  const [customCalendarEvents, setCustomCalendarEvents] = useState<Array<{ day: number; time: string; type: string; titleEn: string; titleZu: string; impact?: string }>>([]);
+  const [newEventTitle, setNewEventTitle] = useState<string>("");
+  const [newEventTime, setNewEventTime] = useState<string>("12:00");
+  const [newEventType, setNewEventType] = useState<string>("personal");
   const [contactName, setContactName] = useState<string>("");
   const [contactSurname, setContactSurname] = useState<string>("");
   const [contactTel, setContactTel] = useState<string>("");
@@ -1275,6 +1284,165 @@ export default function App() {
   const [contactSending, setContactSending] = useState<boolean>(false);
   const [contactSuccess, setContactSuccess] = useState<boolean>(false);
   const [contactFormError, setContactFormError] = useState<string>("");
+
+  // Floating AI Support Support Chatbot State
+  const [isSupportBotOpen, setIsSupportBotOpen] = useState<boolean>(false);
+  const [supportInput, setSupportInput] = useState<string>("");
+  const [supportTyping, setSupportTyping] = useState<boolean>(false);
+  const [supportMessages, setSupportMessages] = useState<Array<{ id: string; sender: "user" | "bot"; textEn: string; textZu: string; timestamp: Date }>>([
+    {
+      id: "welcome-msg",
+      sender: "bot",
+      textEn: "Greetings from IMALI NgesiZulu Support Desk! 🌟 I am your dedicated AI Assistant. Ask me anything about our Academy, Elite Syllabus pathways, Virtual Classroom, drop-in audio forums, live multi-feed Radio Room, or administrative features. If I cannot help with something specific, I will forward you to our direct Help Centre instantly!",
+      textZu: "Sanibonani abavela kwi-IMALI NgesiZulu Support Desk! 🌟 Ngiwumsizi wakho o-AI onikeziwe. Ngingabuza noma yini mayelana ne-Academy, izifundo ezivelele, iKilasi Elibonakalayo, inkundla yethu yezwi, noma igumbi le-Radio. Uma ngingakwazi ukukusiza, ngizokuqondisa kwi-Help Centre yethu ngokushesha!",
+      timestamp: new Date()
+    }
+  ]);
+
+  const supportMessagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Auto scroll support chatbot messages
+  useEffect(() => {
+    if (supportMessagesEndRef.current) {
+      supportMessagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [supportMessages, isSupportBotOpen, supportTyping]);
+
+  const handleSupportBotQuery = (text: string) => {
+    const query = text.toLowerCase().trim();
+    let responseEn = "";
+    let responseZu = "";
+    let shouldOpenContact = false;
+
+    // 1. Check if empty or too short
+    if (query.length < 2) {
+      responseEn = "Please formulate a clear question, and I will gladly guide you through all the features of the IMALI NgesiZulu Financial Academy!";
+      responseZu = "Sicela ubhale umbuzo osebenzayo nosebenza kahle, futhi ngizokukhombisa ngomoya ophiwe ze-IMALI NgesiZulu Financial Academy!";
+      return { responseEn, responseZu, shouldOpenContact };
+    }
+
+    // 2. Greetings (Human-like responses)
+    const isGreeting = ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening", "howdy", "hola", "sawubona", "sanibonani", "ezethu", "molo"].some(g => query.includes(g)) || query === "hi" || query === "hello" || query === "hey";
+
+    if (isGreeting) {
+      responseEn = "Hello there! 🌟 It is so wonderful to connect with you. I am your personal, warm academic companion here at IMALI NgesiZulu. I can perfectly explain any part of our platform—including our Elite Courses, the Live Classroom, Audio Suite forums, Financial Clocks, or direct emails. How may I assist you today?";
+      responseZu = "Yebo, sawubona! 🌟 Kuyinto enhle kakhulu ukuxhumana nawe. Ngiwumsizi wakho nomngane wakho wezemfundo lapha e-IMALI NgesiZulu. Ngingakuchasisela kahle noma iyiphi ingxenye yesikhulumi sethu—kuhlanganise nezifundo zethu ezivelele, iKilasi Elibukhoma, inkundla yethu yezwi, noma imeyili. Ngingakusiza ngani namuhla?";
+      return { responseEn, responseZu, shouldOpenContact };
+    }
+
+    // 3. Specific App Feature Queries (check keywords to see if they are asking about the app)
+    const appKeywords = [
+      "what is", "about", "imali", "website", "platform", "purpose", "app", 
+      "course", "syllabus", "module", "learn", "teach", "lesson", "candlestick", "physics", "analysis", "forex", "gold", "crypto", "study", "pathway", "masterclass",
+      "classroom", "forum", "live room", "audio", "microphone", "mic", "lecture", "passcode", "lounge", 
+      "radio", "bloomberg", "bbc", "music", "lofi", "news room", "newsroom", "jazz", "ambient", "stream",
+      "role", "switch", "admin", "instructor", "student", "credentials", "lock", "unlock", "syndicate", "profile",
+      "cert", "assessment", "quiz", "award", "pass", "score",
+      "clock", "time", "london", "new york", "kill zone", "asia", "utc", "zone",
+      "contact", "help", "ticket", "support", "email", "whatsapp", "phone"
+    ];
+
+    const isAppRelated = appKeywords.some(keyword => query.includes(keyword));
+
+    if (!isAppRelated) {
+      // Anything unrelated to the app redirects to help centre
+      responseEn = "Since this inquiry appears unrelated to our financial academy features, let me guide you directly to our Customer Help & Contacts Portal so a human representative can assist you. Our support coordinators are ready to help via email!";
+      responseZu = "Njengoba lolu daba lungahlobene ngqo nezifundo zethu zezezimali, let me guide you ngqo kwi-Customer Help & Contacts Portal yethu ukuze uthole usizo lomuntu ngqo!";
+      shouldOpenContact = true;
+      return { responseEn, responseZu, shouldOpenContact };
+    }
+
+    // Now, run specific app feature routing
+    // Help / Contact
+    if (query.includes("contact") || query.includes("help") || query.includes("ticket") || query.includes("support") || query.includes("email") || query.includes("whatsapp") || query.includes("phone")) {
+      responseEn = "I am routing your request to our official Customer Help & Contacts Portal right away! You can also email us directly at info@imalingesizulu.com. We are ready to assist you!";
+      responseZu = "Ngiqondisa isicelo sakho kwi-Customer Help & Contacts Portal yethu yesikhathi sangempela manje! Ungasithumela ne-imeyili ngqo ku-info@imalingesizulu.com. Silungele ukukusiza!";
+      shouldOpenContact = true;
+    }
+    // What is this / About
+    else if (query.includes("what is") || query.includes("about") || query.includes("imali") || query.includes("website") || query.includes("platform") || query.includes("purpose") || query.includes("app")) {
+      responseEn = "IMALI NgesiZulu is an elite premium Financial Academy and strategic resource partner for global markets. Styled in high-contrast prestige gold branding, the platform is designed to provide full-fledged professional technical courses in forex, technical indicator wicks, and intermarket correlation analysis, accessible in both English and Zulu.";
+      responseZu = "I-IMALI NgesiZulu isikhungo semfundo yezezimali esiphezulu kanye nokuphathwa kwamasu ezimakethe zomhlaba wonke. Iklanywe ngombala wegolide othandekayo, le nkundla inikezela ngezifundo zobuchwepheshe kwi-Forex, candlestick mechanics, kanye nokuhlaziya kwe-intermarket correlation, kutholakale ngesiNgisi nangesiZulu.";
+    }
+    // Courses / Syllabus / Study / Modules
+    else if (query.includes("course") || query.includes("syllabus") || query.includes("module") || query.includes("learn") || query.includes("teach") || query.includes("lesson") || query.includes("candlestick") || query.includes("physics") || query.includes("analysis") || query.includes("forex") || query.includes("gold") || query.includes("crypto") || query.includes("study") || query.includes("pathway") || query.includes("masterclass")) {
+      responseEn = "We offer premium masterclass tracks: (1) 'The Master Guide to Institutional Candlestick Physics & Liquidity Analysis', teaching Open-High-Low-Close (OHLC) mechanics, wick sweeps, and Fair Value Gaps (FVG). (2) 'The Master Trader Pathway: Beginner-to-Expert' with over 40 hours of training on interbank price delivery (DXY, FTSE, correlations) and mathematical risk standards (the 1% risk rules). Feel free to click on the 'Elite Courses' tab in the sidebar navigation to start learning!";
+      responseZu = "Siphakela izifundo eziphezulu zekhwalithi: (1) 'Incwadi Engezamabhange Emakethe Nomthetho Wentengo Wamakhandlela' efundisa nge-OHLC physics, wick sweeps, ne-Fair Value Gaps (FVG). (2) 'Ukuphumela Kwezohwebo: Isinyathelo Ngesinyathelo' esinama-40 hours wokufunda ama-order books, amabhange we-Tier-1, nokusebenzisa ama-DXY nengozi ka-1%. Chofoza inkinobho 'Izifundo Ezivelele' kwi-sidebar ukuze uqale!";
+    }
+    // Classroom / Live Room / Virtual Classroom / Forum
+    else if (query.includes("classroom") || query.includes("forum") || query.includes("live room") || query.includes("audio") || query.includes("microphone") || query.includes("mic") || query.includes("lecture") || query.includes("passcode") || query.includes("lounge")) {
+      responseEn = "The 'Virtual Classroom' hosts our immersive live room with dynamic analysis boards, and our exclusive 'IMALI Audio Suite Forum' - a zero-database peer-to-peer audio space. Students can join sessions from 30 minutes key ranges up to 3 hours, enter the active passcode provided securely by instructors/administrators, turn on their microphone (simulated local loopback), and download high-uptime class audio archives immediately afterwards.";
+      responseZu = "I-'Ikilasi Elibonakalayo' linesikhumulo sokuxhumana semfundo ebukhoma nebhodi lokubambisana, kanye ne-'Inkundla Yezwi ye-IMALI'—indawo yomsindo engenayo datha. Abafundi bangakhetha phakathi kwemizuzu engama-30 kuya emahoreni ama-3, bafake iphasikhodi esebenzayo enikezwe ngothisha noma umlawuli, bavule imakrofoni, baphinde balande i-archive yomsindo walelo hlelo.";
+    }
+    // Radio / Bloomberg / BBC / Music / Lofi / News Room
+    else if (query.includes("radio") || query.includes("bloomberg") || query.includes("bbc") || query.includes("music") || query.includes("lofi") || query.includes("news room") || query.includes("newsroom") || query.includes("jazz") || query.includes("ambient") || query.includes("stream")) {
+      responseEn = "The 'Radio News Room' tab offers a highly interactive audio broadcasting center. You can stream live global business and economics feeds like Bloomberg Financial Radio (US), BBC World Service, NPR USA, RFI English, Deutsche Welle, CapeTalk South Africa, or relax with deep-cognitive lofi study beats and afro house progressive rhythms to increase dynamic focus!";
+      responseZu = "Uthebhu 'Igumbi Ledaba Lomsakazo' unikeza isiteshi sokusakaza esisebenzisanayo lapho ungalalela khona izindaba zomhlaba bukhoma (Bloomberg Radio, BBC World, CapeTalk, RFI, Deutsche Welle), noma uplozole ngomsindo opholile we-jazz, progressive house ne-lofi focus beats ezandisa ingqondo yezemfundo!";
+    }
+    // Roles / Switch / Admin / Instructor / Student / Credentials
+    else if (query.includes("role") || query.includes("switch") || query.includes("admin") || query.includes("instructor") || query.includes("student") || query.includes("credentials") || query.includes("lock") || query.includes("unlock") || query.includes("syndicate") || query.includes("profile")) {
+      responseEn = "IMALI NgesiZulu supports 3 roles: (1) Executive Student (unlocked by default), (2) Lead Instructor (unlocked via identity verified email 'info@imalingesizulu.com' under Academic Profiles Manager in dashboard), and (3) Administrator (unlocked via 'admin@imalingesizulu.com'). Instructors and Admins receive exclusive access to the 'Syndicate Admin' panel to issue passcodes, register users, audit courses, and generate Gemini AI strategic diagnostic reports.";
+      responseZu = "I-IMALI NgesiZulu isekela izindima ezi-3: (1) Umfundi Ongumphathi, (2) Uthisha Omkhulu (uyaluqaqwa kwi-Academic Profiles Manager ngokubhala i-imeyili ethi 'info@imalingesizulu.com'), (3) Umlawuli we-Syndicate (uyaluqaqwa ngo-imeyili 'admin@imalingesizulu.com'). Labahwebi abaphezulu bayakwazi ukubona iphaneli lomlawuli bamise amaphasikhodi bafunde i-Gemini AI Operation diagnostics.";
+    }
+    // Quizzes / Certificates / Award / Cert
+    else if (query.includes("cert") || query.includes("assessment") || query.includes("quiz") || query.includes("award") || query.includes("pass") || query.includes("score")) {
+      responseEn = "We verify learning and grant qualified proof of achievement! Each Premium course syllabus contains a dedicated Pathway Verification Quiz (with institutional OHLC, 1% risk compound formulas, etc.). Clearing the quiz unlocks standard Authorized Digital Certificates that can be verified in real-time or stored under our secure digital ledger.";
+      responseZu = "Siqinisekisa ulwazi olunikeziwe futhi sinikeze isitifiketi sokuhlonishwa esivikelekile! Umfundi ngamunye ophumelela ukuhlola kwemibuzo yemfundo yezezimali uyakwazi ukuvula indlela yezitifiketi djedjithali zase-IMALI NgesiZulu ezinamalogo amancane nezimpawu zegolide.";
+    }
+    // Financial Clocks / Clocks / Times / Sessions / Kill Zone / Asian
+    else if (query.includes("clock") || query.includes("time") || query.includes("london") || query.includes("new york") || query.includes("kill zone") || query.includes("asia") || query.includes("utc") || query.includes("zone")) {
+      responseEn = "We integrate real-time Financial Clocks tracking UTC/local offsets for London Open (06:00-09:00), New York Open (12:00-15:00), and Asian sessions (22:00-06:00). These are visible at the top of your Academy Dashboard to ensure you execute trades inside high-volume liquidity sweep hours!";
+      responseZu = "Sinamasistimu eWashi lezezimali aphatha futhi alandele umnyakazo wentengo (UTC/Local) kwisikhathi se-London Open, New York Open ne-Asian Range. Lokhu kusiza wonke abahwebi ukuthi bagade ama-Kill Zones abalulekile phezulu kwedeshibhodi yabo.";
+    }
+    // Fallback: Routing to Help Center
+    else {
+      responseEn = "Since this inquiry is beyond my preloaded capabilities, I am forwarding you to our Customer Help & Contact Centre right now where your concerns will be directly logged. You can also email our coordinators at info@imalingesizulu.com.";
+      responseZu = "Uxolo, lolu daba lungaphezulu komkhawulo wami wolwazi emshinini ophelele we-IMALI NgesiZulu. Ngikuqondisa kwi-Xhumana Nathi / SoSizo manje ukuze usizwe ngothisha ngqo! Ungasi-imeyilela ne-imeyili ku-info@imalingesizulu.com.";
+      shouldOpenContact = true;
+    }
+
+    return {
+      responseEn,
+      responseZu,
+      shouldOpenContact
+    };
+  };
+
+  const handleSendSupportMessage = (userQueryText: string) => {
+    if (!userQueryText.trim()) return;
+
+    const newUserMsg = {
+      id: `msg-${Date.now()}-user`,
+      sender: "user" as const,
+      textEn: userQueryText,
+      textZu: userQueryText,
+      timestamp: new Date()
+    };
+
+    setSupportMessages(prev => [...prev, newUserMsg]);
+    setSupportInput("");
+    setSupportTyping(true);
+
+    setTimeout(() => {
+      const responseData = handleSupportBotQuery(userQueryText);
+      const newBotMsg = {
+        id: `msg-${Date.now()}-bot`,
+        sender: "bot" as const,
+        textEn: responseData.responseEn,
+        textZu: responseData.responseZu,
+        timestamp: new Date()
+      };
+
+      setSupportMessages(prev => [...prev, newBotMsg]);
+      setSupportTyping(false);
+
+      if (responseData.shouldOpenContact) {
+        setTimeout(() => {
+          setIsContactModalOpen(true);
+        }, 1800);
+      }
+    }, 1000);
+  };
 
   // Initialize and synchronize HTMLAudioElement
   useEffect(() => {
@@ -1537,7 +1705,7 @@ export default function App() {
           lowerName.includes("mthembu") ||
           avatar.includes("unsplash.com")
         ) {
-          return { name: "", avatar: "", specialty: "", experience: "", bio: "", classCode: "FOREX101" };
+          return { name: "", avatar: "", specialty: "", experience: "", bio: "", classCode: "FOREX101", email: "info@imalingesizulu.com" };
         }
         return {
           name,
@@ -1545,10 +1713,11 @@ export default function App() {
           specialty: parsed.specialty || "",
           experience: parsed.experience || "",
           bio: parsed.bio || "",
-          classCode: parsed.classCode || "FOREX101"
+          classCode: parsed.classCode || "FOREX101",
+          email: parsed.email || "info@imalingesizulu.com"
         };
       } catch (e) {
-        return { name: "", avatar: "", specialty: "", experience: "", bio: "", classCode: "FOREX101" };
+        return { name: "", avatar: "", specialty: "", experience: "", bio: "", classCode: "FOREX101", email: "info@imalingesizulu.com" };
       }
     }
     return {
@@ -1557,7 +1726,8 @@ export default function App() {
       specialty: "",
       experience: "",
       bio: "",
-      classCode: "FOREX101"
+      classCode: "FOREX101",
+      email: "info@imalingesizulu.com"
     };
   });
 
@@ -1579,26 +1749,34 @@ export default function App() {
           lowerName.includes("lind") ||
           avatar.includes("unsplash.com")
         ) {
-          return { name: "", avatar: "", title: "", email: "", bio: "" };
+          return { name: "", avatar: "", title: "", email: "admin@imalingesizulu.com", bio: "" };
         }
         return {
           name,
           avatar,
           title: parsed.title || "",
-          email: parsed.email || "",
+          email: parsed.email || "admin@imalingesizulu.com",
           bio: parsed.bio || ""
         };
       } catch (e) {
-        return { name: "", avatar: "", title: "", email: "", bio: "" };
+        return { name: "", avatar: "", title: "", email: "admin@imalingesizulu.com", bio: "" };
       }
     }
     return {
       name: "",
       avatar: "",
       title: "",
-      email: "",
+      email: "admin@imalingesizulu.com",
       bio: ""
     };
+  });
+
+  // Role unlock state variables to separate Admin and Instructor by verified email
+  const [isInstructorUnlocked, setIsInstructorUnlocked] = useState<boolean>(() => {
+    return localStorage.getItem("imali_instructor_unlocked") === "true";
+  });
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState<boolean>(() => {
+    return localStorage.getItem("imali_admin_unlocked") === "true";
   });
 
   // Helper to render user avatars with nice dynamic initials fallback
@@ -1725,7 +1903,7 @@ export default function App() {
       return {
         id: "usr_exec_01",
         name: studentDetails.name,
-        email: "thomas@elitecourses.edu",
+        email: "student@imalingesizulu.com",
         role: Role.STUDENT,
         avatar: studentDetails.avatar,
         enrolledCourses: studentProgress.enrolledCourses,
@@ -1738,7 +1916,7 @@ export default function App() {
       return {
         id: "usr_inst_01",
         name: instructorDetails.name,
-        email: "thabo.cele@elitecourses.edu",
+        email: "info@imalingesizulu.com",
         role: Role.INSTRUCTOR,
         avatar: instructorDetails.avatar,
         enrolledCourses: [],
@@ -1751,7 +1929,7 @@ export default function App() {
       return {
         id: "usr_admin_01",
         name: adminDetails.name,
-        email: "sarah.admin@elitecourses.edu",
+        email: "admin@imalingesizulu.com",
         role: Role.ADMIN,
         avatar: adminDetails.avatar,
         enrolledCourses: [],
@@ -1827,7 +2005,7 @@ export default function App() {
       {
         id: "usr_admin_01",
         name: adminDetails.name || "Sarah Mthembu",
-        email: "sarah.admin@elitecourses.edu",
+        email: "admin@imalingesizulu.com",
         role: Role.ADMIN,
         avatar: adminDetails.avatar || "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200",
         enrolledCourses: [],
@@ -1839,7 +2017,7 @@ export default function App() {
       {
         id: "usr_inst_01",
         name: instructorDetails.name || "Thabiso Cele",
-        email: "thabo.cele@elitecourses.edu",
+        email: "info@imalingesizulu.com",
         role: Role.INSTRUCTOR,
         avatar: instructorDetails.avatar || "https://images.unsplash.com/photo-1628157582853-a796fa650a6a?q=80&w=200",
         enrolledCourses: [],
@@ -2224,7 +2402,7 @@ export default function App() {
   const [classroomCamActive, setClassroomCamActive] = useState(true);
   const [classroomMicActive, setClassroomMicActive] = useState(true);
 
-  // Clubhouse Drop-In Audio Suite States
+  // Audio Suite Drop-In States
   const [selectedAudioClassIndex, setSelectedAudioClassIndex] = useState<number>(0);
   const [isAudioSessionActive, setIsAudioSessionActive] = useState<boolean>(false);
   const [classroomListeners, setClassroomListeners] = useState<any[]>([]);
@@ -2600,7 +2778,7 @@ export default function App() {
   };
 
   return (
-    <div id="luxe_root" className="min-h-screen bg-[#030303] text-zinc-100 flex flex-col font-sans relative overflow-x-hidden selection:bg-[#D4AF37] selection:text-black">
+    <div id="luxe_root" className="min-h-screen bg-[#030303] text-zinc-100 flex flex-col font-sans relative overflow-x-hidden pb-16 md:pb-0 selection:bg-[#D4AF37] selection:text-black">
       
       {/* Dynamic Gold liquid background ambient canvas glows */}
       <div className="absolute top-[-250px] right-[-150px] w-[600px] h-[600px] bg-gradient-to-br from-[#D4AF37]/15 to-[#996515]/0 rounded-full blur-[140px] pointer-events-none"></div>
@@ -2638,6 +2816,18 @@ export default function App() {
             </span>
           </button>
 
+          {/* Desktop/Web About Us Button */}
+          <button 
+            id="header_about_us_btn"
+            onClick={() => setIsAboutModalOpen(true)}
+            className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-black/80 to-zinc-900 border border-[#D4AF37]/40 rounded-full px-4 py-1.5 text-xs text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_0_10px_rgba(212,175,55,0.15)] transition-all cursor-pointer font-medium"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span className="uppercase text-[10px] tracking-widest font-black">
+              {language === "en" ? "About Us" : "Mayelana Nathi"}
+            </span>
+          </button>
+
           {/* Quick Simulated Role Toggle */}
           <div className="flex items-center bg-black/80 border border-zinc-800 rounded-full p-1 text-[11px] gap-1">
             <span className="text-[9px] text-zinc-500 uppercase px-2 font-mono tracking-tighter">{translateText("role_label_colon", language)}</span>
@@ -2648,16 +2838,36 @@ export default function App() {
             >
               {translateText("role_student_abbr", language)}
             </button>
-            <button 
+             <button 
               id="role_instructor_btn"
-              onClick={() => setActiveRole(Role.INSTRUCTOR)}
+              onClick={() => {
+                if (!isInstructorUnlocked) {
+                  setActiveTab("dashboard");
+                  setVisibleProfileTab(Role.INSTRUCTOR);
+                  alert(language === "en" 
+                    ? "Instructor credentials required. Please authenticate under Academic Profiles Manager!" 
+                    : "Kudingeka imininingwane yomfundisi. Sicela uqinisekise ngaphansi koMphathi Weziphrofayili!");
+                } else {
+                  setActiveRole(Role.INSTRUCTOR);
+                }
+              }}
               className={`px-3 py-1 rounded-full transition-all text-[10px] font-bold uppercase tracking-wider ${activeRole === Role.INSTRUCTOR ? "bg-gradient-to-r from-[#D4AF37] to-[#AA771C] text-black shadow-[0_0_10px_rgba(212,175,55,0.25)]" : "text-zinc-400 hover:text-white"}`}
             >
               {translateText("role_instructor_abbr", language)}
             </button>
             <button 
               id="role_admin_btn"
-              onClick={() => setActiveRole(Role.ADMIN)}
+              onClick={() => {
+                if (!isAdminUnlocked) {
+                  setActiveTab("dashboard");
+                  setVisibleProfileTab(Role.ADMIN);
+                  alert(language === "en" 
+                    ? "Administrator credentials required. Please authenticate under Academic Profiles Manager!" 
+                    : "Kudingeka imininingwane yomlawuli. Sicela uqinisekise ngaphansi koMphathi Weziphrofayili!");
+                } else {
+                  setActiveRole(Role.ADMIN);
+                }
+              }}
               className={`px-3 py-1 rounded-full transition-all text-[10px] font-bold uppercase tracking-wider ${activeRole === Role.ADMIN ? "bg-gradient-to-r from-[#D4AF37] to-[#AA771C] text-black shadow-[0_0_10px_rgba(212,175,55,0.25)]" : "text-zinc-400 hover:text-white"}`}
             >
               {translateText("role_admin_abbr", language)}
@@ -2728,7 +2938,7 @@ export default function App() {
                   {renderAvatar(currentUser.avatar, currentUser.name)}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-xs font-bold text-white tracking-wide truncate">{currentUser.name || "New Scholar"}</h4>
+                  <h4 className="text-xs font-bold text-white tracking-wide truncate">{currentUser.name || translateText("new_scholar", language)}</h4>
                   <p className="text-[9px] text-[#D4AF37] uppercase font-mono tracking-widest mt-0.5">
                     {activeRole === Role.STUDENT && translateText("role_student", language)}
                     {activeRole === Role.INSTRUCTOR && translateText("role_instructor", language)}
@@ -2942,11 +3152,27 @@ export default function App() {
           {/* ================= ROYAL TRADING SESSIONS DESK (ANALOG & DIGITAL CODES) ================= */}
           <section id="sessions_trading_desk_clocks" className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-zinc-950/40 p-4 px-5 rounded-2xl border border-zinc-900">
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="text-[10px] font-mono tracking-widest text-[#D4AF37] uppercase font-bold">
-                  {translateText("financial_clocks_label", language)}
-                </span>
+              <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="text-[10px] font-mono tracking-widest text-[#D4AF37] uppercase font-bold text-nowrap">
+                    {translateText("financial_clocks_label", language)}
+                  </span>
+                </div>
+                
+                {/* Minimizable / Maximizable Academy & Market Calendar button */}
+                <button
+                  id="clocks_calendar_toggle"
+                  onClick={() => setIsCalendarMaximized(!isCalendarMaximized)}
+                  className="flex items-center gap-1.5 px-3 py-1 bg-black/90 hover:bg-[#D4AF37]/10 border border-[#D4AF37]/45 text-[#D4AF37] hover:text-white rounded-lg text-[9.5px] font-mono uppercase tracking-wider transition-all cursor-pointer shadow-sm shadow-[#D4AF37]/10 active:scale-95 shrink-0"
+                >
+                  <Calendar className="w-3 h-3 text-[#D4AF37] shrink-0" />
+                  <span>
+                    {isCalendarMaximized 
+                      ? (language === "en" ? "MINIMIZE CALENDAR" : "NCIPHISE IKHALENDA") 
+                      : (language === "en" ? "MAXIMIZE CALENDAR" : "KHULISA IKHALENDA")}
+                  </span>
+                </button>
               </div>
               
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 w-full md:w-auto">
@@ -2982,6 +3208,233 @@ export default function App() {
                 </span>
               </div>
             </div>
+
+            {/* Collapsed/Maximized Calendar Desk Container */}
+            {isCalendarMaximized && (() => {
+              const getEventsForDay = (day: number) => {
+                return customCalendarEvents.filter(e => e.day === day);
+              };
+
+              const currentDayEvents = getEventsForDay(selectedCalendarDate);
+
+              return (
+                <div 
+                  id="interactive_calendar_desk" 
+                  className="bg-[#090909] border-2 border-[#D4AF37]/60 rounded-2xl md:rounded-3xl p-3 sm:p-5 md:p-6 space-y-4 md:space-y-5 animate-fade-in shadow-[0_10px_40px_rgba(212,175,55,0.08)]"
+                >
+                  {/* Desk Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-900">
+                    <div>
+                      <span className="text-[9px] font-mono tracking-[0.25em] text-[#D4AF37] uppercase">
+                        {language === "en" ? "Interactive Custom Academy Ledger" : "Ikhalenda Lemfundo Elisebenzisanayo Zami"}
+                      </span>
+                      <h4 className="text-sm font-bold font-serif text-white tracking-tight uppercase flex items-center gap-2 mt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-ping"></span>
+                        <span>June 2026 — {language === "en" ? "TRADING ACADEMY PORTAL" : "ISIQONDISO SECALENDAR LABAHWEBINGI"}</span>
+                      </h4>
+                    </div>
+                    
+                    <button
+                      onClick={() => setIsCalendarMaximized(false)}
+                      className="self-end sm:self-center px-3 py-1 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-lg text-[9px] font-mono uppercase tracking-widest border border-zinc-800 transition-all cursor-pointer"
+                    >
+                      {language === "en" ? "✕ Minimize" : "✕ Nciphise"}
+                    </button>
+                  </div>
+
+                  {/* Calendar Layout: Grid on left, Sidebar Details on right */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 animate-fade-in text-left">
+                    
+                    {/* Left Column: 30-day Month Grid */}
+                    <div className="lg:col-span-7 space-y-3">
+                      <div className="grid grid-cols-7 gap-1 text-center font-mono text-[9px] font-bold text-zinc-500 uppercase tracking-widest pb-1 border-b border-zinc-900">
+                        <span>{language === "en" ? "Mon" : "Mso"}</span>
+                        <span>{language === "en" ? "Tue" : "Bil"}</span>
+                        <span>{language === "en" ? "Wed" : "Tha"}</span>
+                        <span>{language === "en" ? "Thu" : "Sih"}</span>
+                        <span>{language === "en" ? "Fri" : "Hla"}</span>
+                        <span>{language === "en" ? "Sat" : "Mqe"}</span>
+                        <span>{language === "en" ? "Sun" : "Son"}</span>
+                      </div>
+
+                      <div className="grid grid-cols-7 gap-1.5">
+                        {Array.from({ length: 30 }, (_, index) => {
+                          const day = index + 1;
+                          const dayEvents = getEventsForDay(day);
+                          const isSelected = selectedCalendarDate === day;
+                          const isToday = day === 5; // Current time is Friday June 5, 2026.
+                          
+                          return (
+                            <button
+                              key={day}
+                              onClick={() => setSelectedCalendarDate(day)}
+                              className={`aspect-square p-1.5 rounded-xl border flex flex-col justify-between transition-all relative group cursor-pointer ${
+                                isSelected 
+                                  ? "bg-amber-600/10 border-[#D4AF37] text-white shadow-[0_0_12px_rgba(212,175,55,0.15)] z-10" 
+                                  : isToday 
+                                  ? "bg-zinc-900 border-zinc-700 text-[#D4AF37]" 
+                                  : "bg-black/40 border-zinc-900/80 hover:border-[#D4AF37]/35 text-zinc-400 hover:bg-zinc-900/40"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between w-full">
+                                <span className={`text-[10px] font-mono font-bold ${isToday && !isSelected ? "text-yellow-400 outline outline-1 outline-yellow-400/30 rounded px-1" : ""}`}>
+                                  {day}
+                                </span>
+                                {isToday && (
+                                  <span className="text-[7px] font-sans font-extrabold tracking-tighter text-[#D4AF37] bg-[#D4AF37]/10 px-1 rounded scale-90 sm:scale-100">
+                                    TODAY
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Small event markers */}
+                              <div className="flex gap-0.5 mt-1 overflow-hidden max-w-full justify-start items-center">
+                                {dayEvents.map((ev, i) => {
+                                  let badgeColor = "bg-[#D4AF37]";
+                                  if (ev.type === "class") badgeColor = "bg-[#D4AF37]";
+                                  if (ev.type === "macro") badgeColor = "bg-rose-500 animate-pulse";
+                                  if (ev.type === "personal") badgeColor = "bg-amber-400";
+                                  return (
+                                    <span 
+                                      key={i} 
+                                      className={`w-1.5 h-1.5 rounded-full ${badgeColor} inline-block shrink-0`}
+                                      title={language === "en" ? ev.titleEn : ev.titleZu}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Right Column: Event Details & Custom Add */}
+                    <div className="lg:col-span-5 bg-black/60 border border-zinc-900 rounded-2xl p-4 flex flex-col justify-between space-y-4 text-left">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between pb-2 border-b border-zinc-900">
+                          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
+                            {language === "en" ? `DATE: JUNE ${selectedCalendarDate}, 2026` : `USUKU: ILANGA ${selectedCalendarDate} KULOMASI`}
+                          </span>
+                          <span className="text-[9.5px] text-[#D4AF37] font-mono font-bold bg-[#D4AF37]/15 px-2 py-0.5 rounded-full border border-[#D4AF37]/20 uppercase">
+                            {currentDayEvents.length} {language === "en" ? "EVENT(S)" : "IMIHLANGANO"}
+                          </span>
+                        </div>
+
+                        {/* Events List */}
+                        <div className="space-y-2.5 max-h-[160px] overflow-y-auto pr-1">
+                          {currentDayEvents.length > 0 ? (
+                            currentDayEvents.map((ev, i) => (
+                              <div key={i} className="p-2.5 bg-[#0a0a0a] rounded-xl border border-zinc-850 flex items-start gap-2.5 text-left">
+                                <div className="mt-1 flex-shrink-0">
+                                  {ev.type === "class" && <span className="text-xs">🕯️</span>}
+                                  {ev.type === "macro" && <span className="text-xs text-rose-500">🔴</span>}
+                                  {ev.type === "personal" && <span className="text-xs">📌</span>}
+                                </div>
+                                <div className="flex-1 space-y-0.5 text-left">
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-[9.5px] font-semibold text-[#D4AF37] font-mono">{ev.time}</span>
+                                    {ev.type === "macro" && (
+                                      <span className="text-[7.5px] font-mono text-rose-400 bg-rose-500/10 px-1.5 py-0.2 rounded border border-rose-500/20 font-bold uppercase tracking-widest scale-90">
+                                        ECONOMIC NEWS
+                                      </span>
+                                    )}
+                                    {ev.type === "class" && (
+                                      <span className="text-[7.5px] font-mono text-[#D4AF37] bg-[#D4AF37]/10 px-1.5 py-0.2 rounded border border-[#D4AF37]/10 font-bold uppercase tracking-widest scale-90">
+                                        ACADEMY SESSION
+                                      </span>
+                                    )}
+                                    {ev.type === "personal" && (
+                                      <span className="text-[7.5px] font-mono text-amber-400 bg-amber-500/10 px-1.5 py-0.2 rounded border border-amber-500/10 font-bold uppercase tracking-widest scale-90">
+                                        PERSONAL
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-[11.5px] text-zinc-100 font-sans font-bold leading-snug">
+                                    {language === "en" ? ev.titleEn : ev.titleZu}
+                                  </p>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="py-8 text-center bg-black/20 rounded-xl border border-dashed border-zinc-900">
+                              <Calendar className="w-5 h-5 text-zinc-700 mx-auto mb-1.5" />
+                              <p className="text-[10.5px] text-zinc-500 font-mono">
+                                {language === "en" ? "NO EVENTS SCHEDULED FOR THIS DATE" : "AYIKHO IMIHLANGANO ESEDAYINI LO"}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Interactive Custom Add Form */}
+                      <div className="pt-3 border-t border-zinc-900 space-y-2.5 bg-black/30 p-3 rounded-xl border border-zinc-805 w-full text-left">
+                        <span className="text-[9.5px] font-mono text-zinc-400 uppercase tracking-widest block font-bold">
+                          ➕ {language === "en" ? "SCHEDULE ACADEMY MILESTONE" : "Faka Umhlangano Wakho"}
+                        </span>
+                        
+                        <div className="space-y-2">
+                          <input
+                            type="text"
+                            value={newEventTitle}
+                            onChange={(e) => setNewEventTitle(e.target.value)}
+                            placeholder={language === "en" ? "e.g., USDZAR Breakout Review" : "isib., Ukuhlaziywa kwe-USDZAR"}
+                            className="w-full text-xs bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-[#D4AF37]/50 p-2 rounded-lg text-zinc-100 focus:outline-none transition-all placeholder:text-zinc-650 font-sans"
+                          />
+
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[8px] font-mono text-zinc-500 uppercase tracking-wider block mb-1">Time (Local)</span>
+                              <input
+                                type="time"
+                                value={newEventTime}
+                                onChange={(e) => setNewEventTime(e.target.value)}
+                                className="w-full text-xs font-mono bg-zinc-950 border border-zinc-800 p-1.5 rounded-lg text-zinc-100 focus:outline-none"
+                              />
+                            </div>
+
+                            <div>
+                              <span className="text-[8px] font-mono text-zinc-500 uppercase tracking-wider block mb-1">Category</span>
+                              <select
+                                value={newEventType}
+                                onChange={(e) => setNewEventType(e.target.value)}
+                                className="w-full text-xs bg-zinc-950 border border-zinc-800 p-1.5 rounded-lg text-zinc-100 focus:outline-none cursor-pointer"
+                              >
+                                <option value="personal">{language === "en" ? "Personal Note" : "Inothi Lami"}</option>
+                                <option value="class">{language === "en" ? "Webinar Session" : "Isifundo Selikhono"}</option>
+                                <option value="macro">{language === "en" ? "Economic News" : "Isimemezelo"}</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            disabled={!newEventTitle.trim()}
+                            onClick={() => {
+                              if (!newEventTitle.trim()) return;
+                              const newEv = {
+                                day: selectedCalendarDate,
+                                time: newEventTime,
+                                type: newEventType,
+                                titleEn: newEventTitle,
+                                titleZu: newEventTitle, // Let it be bilingual
+                              };
+                              setCustomCalendarEvents(prev => [...prev, newEv]);
+                              setNewEventTitle("");
+                            }}
+                            className="w-full text-center py-2 bg-[#D4AF37] hover:bg-amber-500 text-black font-semibold rounded-lg font-mono text-[9px] uppercase tracking-widest transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-[0_0_10px_rgba(212,175,55,0.2)]"
+                          >
+                            {language === "en" ? "ADD TO LEDGER" : "FAKA ELIKHAKEDINI"}
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })()}
 
             {/* Clocks Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -3446,177 +3899,392 @@ export default function App() {
 
                     {visibleProfileTab === Role.INSTRUCTOR && (
                       <div className="space-y-6 text-left">
-                        <div className="bg-amber-500/10 border border-[#D4AF37]/30 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                          <div>
-                            <p className="text-xs text-[#D4AF37] font-mono font-bold uppercase tracking-wider">🎓 REPRESENTING TEACHER / SPEAKER</p>
-                            <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
-                              Configure core session credentials and access codes. This code locks/unlocks the audio suite lobby for your students.
-                            </p>
-                          </div>
-                          
-                          <button
-                            onClick={() => {
-                              const randomCodes = ["GOLD777", "BTC360", "FOREX101", "SCALP05", "ZULU99", "IMALI888"];
-                              const randomSel = randomCodes[Math.floor(Math.random() * randomCodes.length)];
-                              setInstructorDetails({ ...instructorDetails, classCode: randomSel });
-                              alert(`Successfully issued new classroom passcode: '${randomSel}'! Give this code to students.`);
-                            }}
-                            className="py-1.5 px-3 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/45 text-[#D4AF37] text-[10px] font-mono tracking-wider font-bold uppercase rounded-lg shrink-0 cursor-pointer"
-                          >
-                            🎲 Generate New Code
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-1">
-                            <label className="text-[10px] text-zinc-400 font-mono uppercase block">Instructor Name</label>
-                            <input 
-                              type="text" 
-                              value={instructorDetails.name}
-                              onChange={(e) => setInstructorDetails({ ...instructorDetails, name: e.target.value })}
-                              className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37] transition-all"
-                              placeholder="e.g. Professor Smith"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <label className="text-[10px] text-[#D4AF37] font-mono uppercase block font-bold">Define Private Class Access Code</label>
-                            <input 
-                              type="text" 
-                              value={instructorDetails.classCode}
-                              onChange={(e) => {
-                                const nextCode = e.target.value.toUpperCase();
-                                setInstructorDetails({ ...instructorDetails, classCode: nextCode });
-                              }}
-                              className="w-full bg-[#1e1a0b] border-2 border-[#D4AF37]/40 p-3 rounded-xl text-xs text-[#D4AF37] font-bold outline-none focus:border-[#D4AF37] transition-all"
-                              placeholder="e.g. FOREX101"
-                            />
-                            <span className="text-[9px] text-zinc-500 block">Students will have to type this passcode to enter the Clubhouse space.</span>
-                          </div>
-                        </div>
-
-                        <div className="space-y-1">
-                          <label className="text-[10px] text-zinc-400 font-mono uppercase block">Instructor Photo (Upload file)</label>
-                          <div className="flex gap-2.5 items-center bg-zinc-900 border border-zinc-805 p-2 rounded-xl">
-                            <label className="inline-flex items-center gap-1.5 cursor-pointer bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/35 py-1.5 px-3 rounded-lg text-[10px] font-mono uppercase tracking-wider font-bold transition-all shrink-0">
-                              📁 Choose Photo
-                              <input 
-                                type="file" 
-                                accept="image/*"
-                                className="hidden"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = (event) => {
-                                      if (event.target?.result) {
-                                        setInstructorDetails({ ...instructorDetails, avatar: event.target.result as string });
-                                      }
-                                    };
-                                    reader.readAsDataURL(file);
-                                  }
-                                }}
-                              />
-                            </label>
-                            <div className="text-[9px] text-zinc-500 font-mono truncate w-full">
-                              {instructorDetails.avatar ? "Custom Photo Loaded" : "No custom file chosen"}
+                        {!isInstructorUnlocked ? (
+                          <div className="bg-black/60 border border-[#D4AF37]/35 rounded-2xl p-6 space-y-4 shadow-[0_4px_20px_rgba(212,175,55,0.05)]">
+                            <div className="flex items-center gap-3 border-b border-zinc-800 pb-3">
+                              <span className="text-2xl">🎓</span>
+                              <div>
+                                <h4 className="text-sm font-serif font-bold text-[#D4AF37] uppercase tracking-wider">
+                                  {language === "en" ? "Instructor Verification Gate" : "Isango Lomfundisi Eliqinisekisiwe"}
+                                </h4>
+                                <p className="text-[10px] text-zinc-500 uppercase font-mono tracking-wider">
+                                  {language === "en" ? "Designated Credentials Required" : "Kudingeka Imininingwane Yomfundisi Ezifanele"}
+                                </p>
+                              </div>
                             </div>
+                            <p className="text-xs text-zinc-300 leading-relaxed">
+                              {language === "en" 
+                                ? "This professional workspace is reserved for the designated Academy Instructor. Please authenticate using your registered instructor email address (info@imalingesizulu.com):" 
+                                : "Le ndawo yomsebenzi obuchwepheshe ibekelwe uMfundisi we-Academy oqokiwe. Sicela ungene usebenzisa i-imeyili yomfundisi ebhalisiwe (info@imalingesizulu.com):"}
+                            </p>
+                            <div className="space-y-2">
+                              <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
+                                {language === "en" ? "Registered Instructor Email" : "I-imeyili Yomfundisi Ebhalisiwe"}
+                              </label>
+                              <div className="flex flex-col sm:flex-row gap-2">
+                                <input 
+                                  type="email"
+                                  id="instructor_gate_email_input"
+                                  placeholder="e.g. info@imalingesizulu.com"
+                                  value={instructorDetails.email}
+                                  onChange={(e) => setInstructorDetails({ ...instructorDetails, email: e.target.value })}
+                                  className="flex-1 bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37]"
+                                />
+                                <button
+                                  onClick={() => {
+                                    if (instructorDetails.email.trim().toLowerCase() === "info@imalingesizulu.com") {
+                                      setIsInstructorUnlocked(true);
+                                      localStorage.setItem("imali_instructor_unlocked", "true");
+                                      alert(language === "en" 
+                                        ? "Instructor Identity Verified! Workspace unlocked." 
+                                        : "Ubunikazi Bomfundisi Buqinisekisiwe! Ukufinyelela kuvuliwe.");
+                                    } else {
+                                      alert(language === "en" 
+                                        ? "Access Denied. For authorization as Instructor, the email must correspond to info@imalingesizulu.com." 
+                                        : "Ukufinyelela Kunqatshiwe. Ukuze ugunyazwe njengoMfundisi, i-imeyili kumele ihambisane ne-info@imalingesizulu.com.");
+                                    }
+                                  }}
+                                  className="py-2.5 px-5 bg-[#D4AF37] hover:brightness-110 text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl transition shrink-0 cursor-pointer"
+                                >
+                                  {language === "en" ? "Verify Identity" : "Qinisekisa"}
+                                </button>
+                              </div>
+                            </div>
+                            <span className="text-[9px] text-[#D4AF37]/75 block leading-normal italic">
+                              {language === "en" 
+                                ? "🔒 Educational credentials lock automatically if other non-registered accounts attempt access." 
+                                : "🔒 Imininingwane yezezemfundo ivaleka ngokuzenzakalelayo uma amanye ama-akhawunti angabhalisiwe ezama ukungena."}
+                            </span>
                           </div>
-                        </div>
+                        ) : (
+                          <>
+                            <div className="bg-amber-500/10 border border-[#D4AF37]/30 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                              <div>
+                                <p className="text-xs text-[#D4AF37] font-mono font-bold uppercase tracking-wider">
+                                  {language === "en" ? "🎓 REPRESENTING TEACHER / SPEAKER" : "🎓 UKUMELELA UTHISHA / ISIKHULUMI"}
+                                </p>
+                                <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                                  {language === "en"
+                                    ? "Configure core session credentials and access codes. This code locks/unlocks the audio suite lobby for your students."
+                                    : "Misa amapharamitha eseshini nezikhodi zokungena datha. Le khodi ivala/ivula igumbi lomsindo labafundi bakho."}
+                                </p>
+                              </div>
+                              
+                              <button
+                                onClick={() => {
+                                  const randomCodes = ["GOLD777", "BTC360", "FOREX101", "SCALP05", "ZULU99", "IMALI888"];
+                                  const randomSel = randomCodes[Math.floor(Math.random() * randomCodes.length)];
+                                  setInstructorDetails({ ...instructorDetails, classCode: randomSel });
+                                  alert(language === "en"
+                                    ? `Successfully issued new classroom passcode: '${randomSel}'! Give this code to students.`
+                                    : `Iphasikhodi entsha yekilasi ikhishiwe ngempumelelo: '${randomSel}'! Nikeza abafundi le khodi.`);
+                                }}
+                                className="py-1.5 px-3 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/45 text-[#D4AF37] text-[10px] font-mono tracking-wider font-bold uppercase rounded-lg shrink-0 cursor-pointer"
+                              >
+                                {language === "en" ? "🎲 Generate New Code" : "🎲 Sungula Ikhodi Entsha"}
+                              </button>
+                            </div>
 
-                        {/* Direct action links to simulated role join */}
-                        <div className="pt-4 border-t border-zinc-850 flex flex-col sm:flex-row justify-between items-center bg-zinc-950/40 p-4 rounded-xl">
-                          <p className="text-[11px] text-zinc-400 max-w-sm">
-                            Switching to instructor role will let you act as the host on stage, muting/unmuting and presenting lessons.
-                          </p>
-                          
-                          <div className="flex flex-wrap gap-2 justify-end w-full sm:w-auto">
-                            <button
-                              onClick={() => {
-                                setActiveRole(Role.INSTRUCTOR);
-                                localStorage.setItem("imali_instructor_profile", JSON.stringify(instructorDetails));
-                                alert(instructorDetails.name ? `Designated as current live instructor: ${instructorDetails.name}. Entering the classroom!` : "Designated as current live instructor. Entering the classroom!");
-                                setActiveTab("classroom");
-                              }}
-                              className="py-2.5 px-5 bg-gradient-to-r from-[#D4AF37] to-[#996515] hover:brightness-110 text-black text-[10px] font-mono font-black uppercase tracking-widest rounded-xl transition shadow cursor-pointer"
-                            >
-                              🎓 Activate Instructor Role
-                            </button>
-                          </div>
-                        </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <div className="space-y-1">
+                                <label className="text-[10px] text-zinc-400 font-mono uppercase block">
+                                  {language === "en" ? "Instructor Name" : "Igama Lomfundisi"}
+                                </label>
+                                <input 
+                                  type="text" 
+                                  value={instructorDetails.name}
+                                  onChange={(e) => setInstructorDetails({ ...instructorDetails, name: e.target.value })}
+                                  className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37] transition-all"
+                                  placeholder="e.g. Professor Smith"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-[10px] text-[#D4AF37] font-mono uppercase block font-bold">
+                                  {language === "en" ? "Define Private Class Access Code" : "Misa Iphasikhodi Yomgudu Eyimfihlo"}
+                                </label>
+                                <input 
+                                  type="text" 
+                                  value={instructorDetails.classCode}
+                                  onChange={(e) => {
+                                    const nextCode = e.target.value.toUpperCase();
+                                    setInstructorDetails({ ...instructorDetails, classCode: nextCode });
+                                  }}
+                                  className="w-full bg-[#1e1a0b] border-2 border-[#D4AF37]/40 p-3 rounded-xl text-xs text-[#D4AF37] font-bold outline-none focus:border-[#D4AF37] transition-all"
+                                  placeholder="e.g. FOREX101"
+                                />
+                                <span className="text-[9px] text-zinc-500 block">
+                                  {language === "en"
+                                    ? "Students will have to type this passcode to enter the Audio space."
+                                    : "Abafundi kuzofanele babhale le phasikhodi ukuze bangene enkundleni ye-Audio."}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="space-y-1">
+                              <label className="text-[10px] text-zinc-400 font-mono uppercase block">
+                                {language === "en" ? "Instructor Photo (Upload file)" : "Isithombe Somfundisi (Landa ifayela)"}
+                              </label>
+                              <div className="flex gap-2.5 items-center bg-zinc-900 border border-zinc-805 p-2 rounded-xl">
+                                <label className="inline-flex items-center gap-1.5 cursor-pointer bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/35 py-1.5 px-3 rounded-lg text-[10px] font-mono uppercase tracking-wider font-bold transition-all shrink-0">
+                                  📁 {language === "en" ? "Choose Photo" : "Kheta Ifayela"}
+                                  <input 
+                                    type="file" 
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = (event) => {
+                                          if (event.target?.result) {
+                                            setInstructorDetails({ ...instructorDetails, avatar: event.target.result as string });
+                                          }
+                                        };
+                                        reader.readAsDataURL(file);
+                                      }
+                                    }}
+                                  />
+                                </label>
+                                <div className="text-[9px] text-zinc-500 font-mono truncate w-full">
+                                  {instructorDetails.avatar 
+                                    ? (language === "en" ? "Custom Photo Loaded" : "Isithombe Esifakwe Ngokwezifiso Silayishiwe")
+                                    : (language === "en" ? "No custom file chosen" : "Alukho ifayela elikhethiwe")}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Direct action links to simulated role join */}
+                            <div className="pt-4 border-t border-zinc-850 flex flex-col sm:flex-row justify-between items-center bg-zinc-950/40 p-4 rounded-xl gap-4">
+                              <p className="text-[11px] text-zinc-400 max-w-sm">
+                                {language === "en"
+                                  ? "Switching to instructor role will let you act as the host on stage, muting/unmuting and presenting lessons."
+                                  : "Ukushintshela endimeni yomfundisi kuzokuvumela ukuthi usebenze njengomsingathi esiteji, uvale/uvule imibhobho futhi unikeze izifundo."}
+                              </p>
+                              
+                              <div className="flex flex-wrap gap-2 justify-end w-full sm:w-auto">
+                                <button
+                                  onClick={() => {
+                                    setIsInstructorUnlocked(false);
+                                    localStorage.removeItem("imali_instructor_unlocked");
+                                    setActiveRole(Role.STUDENT);
+                                    alert(language === "en" ? "Instructor credentials locked." : "Imininingwane yomfundisi ivalwe.");
+                                  }}
+                                  className="py-2 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[9px] font-mono uppercase tracking-wider rounded-xl transition cursor-pointer"
+                                >
+                                  🔒 {language === "en" ? "Lock Credentials" : "Vala Imininingwane"}
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setActiveRole(Role.INSTRUCTOR);
+                                    localStorage.setItem("imali_instructor_profile", JSON.stringify(instructorDetails));
+                                    alert(instructorDetails.name 
+                                      ? (language === "en" ? `Designated as current live instructor: ${instructorDetails.name}. Entering classroom!` : `Ubekwe njengomfundisi wamanje obukhoma: ${instructorDetails.name}. Ungena eklasini!`)
+                                      : (language === "en" ? "Designated as current live instructor. Entering classroom!" : "Ubekwe njengomfundisi wamanje obukhoma. Ungena eklasini!"));
+                                    setActiveTab("classroom");
+                                  }}
+                                  className="py-2.5 px-5 bg-gradient-to-r from-[#D4AF37] to-[#996515] hover:brightness-110 text-black text-[10px] font-mono font-black uppercase tracking-widest rounded-xl transition shadow cursor-pointer"
+                                >
+                                  🎓 {language === "en" ? "Activate Instructor Role" : "Ngena Njengomfundisi"}
+                                </button>
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     )}
 
                     {visibleProfileTab === Role.ADMIN && (
                       <div className="space-y-6 text-left">
-                        <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-xl">
-                          <p className="text-xs text-emerald-400 font-mono font-bold uppercase tracking-wider">🛡️ DEAN / ADMINISTRATOR PROFILE</p>
-                          <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
-                            Chief operating officer oversees schedules, registers students, and keeps study records securely running.
-                          </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-4">
-                          <div className="space-y-1">
-                            <label className="text-[10px] text-zinc-400 font-mono uppercase block">Administrator Name</label>
-                            <input 
-                              type="text" 
-                              value={adminDetails.name}
-                              onChange={(e) => setAdminDetails({ ...adminDetails, name: e.target.value })}
-                              className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37]"
-                              placeholder="e.g. Audrey Lind"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-1">
-                          <label className="text-[10px] text-zinc-400 font-mono uppercase block">Dean Photo (Upload file)</label>
-                          <div className="flex gap-2.5 items-center bg-zinc-900 border border-zinc-805 p-2 rounded-xl">
-                            <label className="inline-flex items-center gap-1.5 cursor-pointer bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/35 py-1.5 px-3 rounded-lg text-[10px] font-mono uppercase tracking-wider font-bold transition-all shrink-0">
-                              📁 Choose Photo
-                              <input 
-                                type="file" 
-                                accept="image/*"
-                                className="hidden"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = (event) => {
-                                      if (event.target?.result) {
-                                        setAdminDetails({ ...adminDetails, avatar: event.target.result as string });
-                                      }
-                                    };
-                                    reader.readAsDataURL(file);
-                                  }
-                                }}
-                              />
-                            </label>
-                            <div className="text-[9px] text-zinc-500 font-mono truncate w-full">
-                              {adminDetails.avatar ? "Custom Photo Loaded" : "No custom file chosen"}
+                        {!isAdminUnlocked ? (
+                          <div className="bg-black/60 border border-emerald-500/35 rounded-2xl p-6 space-y-4 shadow-[0_4px_20px_rgba(16,185,129,0.05)]">
+                            <div className="flex items-center gap-3 border-b border-zinc-800 pb-3">
+                              <span className="text-2xl">🛡️</span>
+                              <div>
+                                <h4 className="text-sm font-serif font-bold text-emerald-400 uppercase tracking-wider">
+                                  {language === "en" ? "Dean / Administrator Verification Gate" : "Isango Lomlawuli Eliqinisekisiwe"}
+                                </h4>
+                                <p className="text-[10px] text-zinc-500 uppercase font-mono tracking-wider">
+                                  {language === "en" ? "Chief Syndicate Operations Credentials" : "Imininingwane Yomlawuli Omkhulu"}
+                                </p>
+                              </div>
                             </div>
+                            <p className="text-xs text-zinc-300 leading-relaxed">
+                              {language === "en" 
+                                ? "This executive operations workspace is reserved for the Chief Syndicate Administrator. Please authenticate using your registered administrator email address (admin@imalingesizulu.com):" 
+                                : "Le ndawo yokusebenza ibekelwe uMlawulu woMkhulu. Sicela uqinisekise usebenzisa i-imeyili yomlawuli ebhalisiwe (admin@imalingesizulu.com):"}
+                            </p>
+                            <div className="space-y-2">
+                              <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
+                                {language === "en" ? "Registered Administrator Email" : "I-imeyili Yomlawuli Ebhalisiwe"}
+                              </label>
+                              <div className="flex flex-col sm:flex-row gap-2">
+                                <input 
+                                  type="email"
+                                  id="admin_gate_email_input"
+                                  placeholder="e.g. admin@imalingesizulu.com"
+                                  value={adminDetails.email}
+                                  onChange={(e) => setAdminDetails({ ...adminDetails, email: e.target.value })}
+                                  className="flex-1 bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-xs text-emerald-400 font-mono outline-none focus:border-emerald-400"
+                                />
+                                <button
+                                  onClick={() => {
+                                    if (adminDetails.email.trim().toLowerCase() === "admin@imalingesizulu.com") {
+                                      setIsAdminUnlocked(true);
+                                      localStorage.setItem("imali_admin_unlocked", "true");
+                                      alert(language === "en" 
+                                        ? "Administrator Level Cleared! Workspace authorized." 
+                                        : "Izinginga Lomlawuli Liphumelele! Ukufinyelela kuvunyelwe.");
+                                    } else {
+                                      alert(language === "en" 
+                                        ? "Access Denied. For authorization as Admin, the email must correspond to admin@imalingesizulu.com." 
+                                        : "Ukufinyelela Kunqatshiwe. Ukuze ugunyazwe njengoMlawuli, i-imeyili kumele ihambisane ne-admin@imalingesizulu.com.");
+                                    }
+                                  }}
+                                  className="py-2.5 px-5 bg-emerald-500 hover:bg-emerald-600 text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl transition shrink-0 cursor-pointer"
+                                >
+                                  {language === "en" ? "Verify Identity" : "Qinisekisa"}
+                                </button>
+                              </div>
+                            </div>
+                            <span className="text-[9px] text-emerald-400/75 block leading-normal italic">
+                              {language === "en" 
+                                ? "🔒 Access locks immediately if other email parameter is used. Students should bypass and use the Student tab." 
+                                : "🔒 Ukufinyelela kuvaleka ngokushesha uma kusetshenziswa enye i-imeyili. Abafundi kufanele badlule basebenzise \"Tab\" kaMfundi."}
+                            </span>
                           </div>
-                        </div>
+                        ) : (
+                          <>
+                            <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                              <div>
+                                <p className="text-xs text-emerald-400 font-mono font-bold uppercase tracking-wider">
+                                  {language === "en" ? "🛡️ DEAN / ADMINISTRATOR PROFILE" : "🛡️ IPHROFAYILI YOMLAWULI OMKHULU"}
+                                </p>
+                                <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                                  {language === "en"
+                                    ? "Chief operating officer oversees schedules, registers students, and keeps study records securely running."
+                                    : "Umlawuli mkhulu obhekele ukuhlelwa, ukubhalisa abafundi, nokugcina amarekhodi okufunda ephephile."}
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => {
+                                  const randomCodes = ["GOLD777", "BTC360", "FOREX101", "SCALP05", "ZULU99", "IMALI888"];
+                                  const randomSel = randomCodes[Math.floor(Math.random() * randomCodes.length)];
+                                  setInstructorDetails({ ...instructorDetails, classCode: randomSel });
+                                  alert(language === "en"
+                                    ? `As Admin, successfully issued new classroom passcode: '${randomSel}'!`
+                                    : `Njengomlawuli, kukhishwe iphasikhodi entsha yekilasi ngempumelelo: '${randomSel}'!`);
+                                }}
+                                className="py-1.5 px-3 bg-emerald-500/10 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono tracking-wider font-bold uppercase rounded-lg shrink-0 cursor-pointer"
+                              >
+                                {language === "en" ? "🎲 Override Passcode" : "🎲 Bhala Ngaphezulu Iphasikhodi"}
+                              </button>
+                            </div>
 
-                        {/* Direct action links to admin */}
-                        <div className="pt-4 border-t border-zinc-850 flex flex-col sm:flex-row justify-between items-center gap-4 bg-zinc-950/40 p-4 rounded-xl">
-                          <p className="text-[11px] text-zinc-400 max-w-sm">
-                            Switching to administrator role activates the exclusive 'Administrative Console' sidebar tab and grants class moderation authority.
-                          </p>
-                          
-                          <div className="flex flex-wrap gap-2 justify-end w-full sm:w-auto">
-                            <button
-                              onClick={() => {
-                                setActiveRole(Role.ADMIN);
-                                localStorage.setItem("imali_admin_profile", JSON.stringify(adminDetails));
-                                alert(adminDetails.name ? `Welcome to corporate administrator console: ${adminDetails.name}!` : "Welcome to corporate administrator console!");
-                                setActiveTab("admin");
-                              }}
-                              className="py-2.5 px-5 bg-gradient-to-r from-[#D4AF37] to-[#996515] hover:brightness-110 text-black text-[10px] font-mono font-black uppercase tracking-widest rounded-xl transition shadow cursor-pointer"
-                            >
-                              🛡️ Activate Admin Console
-                            </button>
-                          </div>
-                        </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <div className="space-y-1">
+                                <label className="text-[10px] text-zinc-400 font-mono uppercase block">
+                                  {language === "en" ? "Administrator Name" : "Igama Lomlawuli"}
+                                </label>
+                                <input 
+                                  type="text" 
+                                  value={adminDetails.name}
+                                  onChange={(e) => setAdminDetails({ ...adminDetails, name: e.target.value })}
+                                  className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37]"
+                                  placeholder="e.g. Audrey Lind"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-[10px] text-emerald-400 font-mono uppercase block font-bold">
+                                  {language === "en" ? "Allocate Live Class Passcode" : "Nika Iphasikhodi Yekilasi Ebukhoma"}
+                                </label>
+                                <input 
+                                  type="text" 
+                                  value={instructorDetails.classCode}
+                                  onChange={(e) => {
+                                    const nextCode = e.target.value.toUpperCase();
+                                    setInstructorDetails({ ...instructorDetails, classCode: nextCode });
+                                  }}
+                                  className="w-full bg-[#102a1e] border-2 border-emerald-500/40 p-3 rounded-xl text-xs text-emerald-400 font-bold outline-none focus:border-emerald-500 transition-all"
+                                  placeholder="e.g. FOREX101"
+                                />
+                                <span className="text-[9px] text-zinc-500 block">
+                                  {language === "en"
+                                    ? "As Chief Admin, you can directly override and allocate the active live classroom passcode here."
+                                    : "Njenge-Admin Enkulu, ungakwazi ukubhala ngaphezulu futhi unikeze iphasikhodi yekilasi esebenzayo lapha ngqo."}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="space-y-1">
+                              <label className="text-[10px] text-zinc-400 font-mono uppercase block">
+                                {language === "en" ? "Dean Photo (Upload file)" : "Isithombe Somlawuli (Landa ifayela)"}
+                              </label>
+                              <div className="flex gap-2.5 items-center bg-zinc-900 border border-zinc-805 p-2 rounded-xl">
+                                <label className="inline-flex items-center gap-1.5 cursor-pointer bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/35 py-1.5 px-3 rounded-lg text-[10px] font-mono uppercase tracking-wider font-bold transition-all shrink-0">
+                                  📁 {language === "en" ? "Choose Photo" : "Kheta Ifayela"}
+                                  <input 
+                                    type="file" 
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = (event) => {
+                                          if (event.target?.result) {
+                                            setAdminDetails({ ...adminDetails, avatar: event.target.result as string });
+                                          }
+                                        };
+                                        reader.readAsDataURL(file);
+                                      }
+                                    }}
+                                  />
+                                </label>
+                                <div className="text-[9px] text-zinc-500 font-mono truncate w-full">
+                                  {adminDetails.avatar 
+                                    ? (language === "en" ? "Custom Photo Loaded" : "Isithombe Esifakwe Ngokwezifiso Silayishiwe")
+                                    : (language === "en" ? "No custom file chosen" : "Alukho ifayela elikhethiwe")}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Direct action links to admin */}
+                            <div className="pt-4 border-t border-zinc-850 flex flex-col sm:flex-row justify-between items-center gap-4 bg-zinc-950/40 p-4 rounded-xl">
+                              <p className="text-[11px] text-zinc-400 max-w-sm">
+                                {language === "en"
+                                  ? "Switching to administrator role activates the exclusive 'Syndicate Admin' sidebar tab and grants class moderation authority."
+                                  : "Ukushintshela endimeni yomlawuli kuvula i-tab ekhethekile 'Umlawuli' ohlangothini futhi kunikeze igunya lokumodareyitha."}
+                              </p>
+                              
+                              <div className="flex flex-wrap gap-2 justify-end w-full sm:w-auto">
+                                <button
+                                  onClick={() => {
+                                    setIsAdminUnlocked(false);
+                                    localStorage.removeItem("imali_admin_unlocked");
+                                    setActiveRole(Role.STUDENT);
+                                    alert(language === "en" ? "Administrator credentials locked." : "Imininingwane yomlawuli ivalwe.");
+                                  }}
+                                  className="py-2 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[9px] font-mono uppercase tracking-wider rounded-xl transition cursor-pointer"
+                                >
+                                  🔒 {language === "en" ? "Lock Credentials" : "Vala Imininingwane"}
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setActiveRole(Role.ADMIN);
+                                    localStorage.setItem("imali_admin_profile", JSON.stringify(adminDetails));
+                                    alert(adminDetails.name 
+                                      ? (language === "en" ? `Welcome to corporate administrator console: ${adminDetails.name}!` : `Siyakwamukela kuphaneli yomlawuli wenhlangano: ${adminDetails.name}!`)
+                                      : (language === "en" ? "Welcome to corporate administrator console!" : "Siyakwamukela kuphaneli yomlawuli wenhlangano!"));
+                                    setActiveTab("admin");
+                                  }}
+                                  className="py-2.5 px-5 bg-gradient-to-r from-[#D4AF37] to-[#996515] hover:brightness-110 text-black text-[10px] font-mono font-black uppercase tracking-widest rounded-xl transition shadow cursor-pointer"
+                                >
+                                  🛡️ {language === "en" ? "Activate Admin Console" : "Vula Iphaneli Yomlawuli"}
+                                </button>
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     )}
 
@@ -4601,9 +5269,9 @@ export default function App() {
                   </span>
                   <h3 className="text-xl font-light tracking-wide text-white uppercase font-serif">
                     {language === "en" ? (
-                      <>IMALI <span className="text-[#D4AF37] italic font-serif">Clubhouse Forum</span></>
+                      <>IMALI <span className="text-[#D4AF37] italic font-serif">Audio Forum</span></>
                     ) : (
-                      <span className="text-[#D4AF37] italic font-serif">Inkundla ye-IMALI ye-Clubhouse</span>
+                      <span className="text-[#D4AF37] italic font-serif">Inkundla Yezwi ye-IMALI</span>
                     )}
                   </h3>
                   <p className="text-xs text-zinc-400 max-w-xl leading-relaxed">
@@ -4831,7 +5499,7 @@ export default function App() {
 
                 </div>
               ) : (
-                /* ================= ACTIVE CLUBHOUSE AUDIO ROOM WORKSPACE ================= */
+                /* ================= ACTIVE AUDIO ROOM WORKSPACE ================= */
                 <div id="active_audio_room_component" className="space-y-6">
                   
                   {/* Active room indicator band */}
@@ -4928,13 +5596,15 @@ export default function App() {
                           </div>
                           <div>
                             <p className="text-xs font-bold text-white flex items-center justify-center gap-1.5">
-                              {studentDetails.name || "New Scholar"} {raisedHand && <span className="text-yellow-400" title="Hand Raised">✋</span>}
+                              {studentDetails.name || translateText("new_scholar", language)} {raisedHand && <span className="text-yellow-400" title="Hand Raised">✋</span>}
                             </p>
                             <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest mt-0.5">{studentDetails.specialty || "Forex & Candlesticks"}</p>
                             <p className={`text-[9px] px-2 py-0.5 rounded mt-1.5 font-mono inline-block ${
                               classroomMicActive ? "bg-emerald-500/10 text-emerald-400 font-black animate-pulse" : "bg-zinc-900 text-zinc-500"
                             }`}>
-                              {classroomMicActive ? "Your Mic is LIVE [Spkr]" : "Your Mic is Muted"}
+                              {classroomMicActive 
+                                ? (language === "en" ? "Your Mic is LIVE [Spkr]" : "Imakrofoni Yakho ISEBENZA [Khuluma]") 
+                                : (language === "en" ? "Your Mic is Muted" : "Imakrofoni Yakho Ivaliwe")}
                             </p>
                           </div>
                         </div>
@@ -6398,33 +7068,41 @@ export default function App() {
                     <div className="flex items-center justify-between border-b border-zinc-850 pb-2.5">
                       <div>
                         <h4 className="text-sm font-serif font-bold text-[#D4AF37] uppercase tracking-widest">
-                          🔑 Academic Lounge & Code Dispatch Panel
+                          {language === "en" ? "🔑 Academic Lounge & Code Dispatch Panel" : "🔑 Akadeyimi nePhaneli yoKhipha amakhodi"}
                         </h4>
-                        <p className="text-[10px] text-zinc-500 uppercase font-mono">Real-Time Core Lock System</p>
+                        <p className="text-[10px] text-zinc-500 uppercase font-mono">
+                          {language === "en" ? "Real-Time Core Lock System" : "Uhlelo Lokukhiya Lwesikhathi Sangempela"}
+                        </p>
                       </div>
                       <span className="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded font-mono font-bold">
-                        ✓ ACTIVE SYNC
+                        {language === "en" ? "✓ ACTIVE SYNC" : "✓ UKUVUMELANISA OKUSEBENZAYO"}
                       </span>
                     </div>
 
                     <p className="text-xs text-zinc-300 leading-normal font-sans">
-                      The chief administrator handles student registration keys. Modify details, generate authorization codes, and input your executive email below to synchronize credentials. Students will gain immediate admission to academic drop-in study rooms upon using the matched passcode.
+                      {language === "en" 
+                        ? "The chief administrator handles student registration keys. Modify details, generate authorization codes, and input your executive email below to synchronize credentials. Students will gain immediate admission to academic drop-in study rooms upon using the matched passcode."
+                        : "Umlawuli omkhulu uphatha okhiye bokubhalisa babafundi. Shintsha imininingwane, sungula amakhodi okugunyaza, futhi ufake i-imeyili yakho ngezansi ukuze uvumelanise imininingwane. Abafundi bazothola ukungena ngokushesha emakilasini wokufunda lapho besebenzisa iphasikhodi efanayo."}
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-[10px] text-zinc-400 font-mono uppercase block">Admin Verification Email</label>
+                        <label className="text-[10px] text-zinc-400 font-mono uppercase block text-zinc-400 font-semibold">
+                          {language === "en" ? "Admin Verification Email" : "I-imeyili Yokuqinisekisa YoMlawuli"}
+                        </label>
                         <input 
                           type="email" 
                           value={adminDetails.email || ""}
                           onChange={e => setAdminDetails({ ...adminDetails, email: e.target.value })}
-                          placeholder="e.g. Travelwildshow@gmail.com"
+                          placeholder="e.g. admin@imalingesizulu.com"
                           className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37]"
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-[10px] text-zinc-400 font-mono uppercase block">Active Lounge Passcode</label>
+                        <label className="text-[10px] text-zinc-400 font-mono uppercase block text-zinc-400 font-semibold">
+                          {language === "en" ? "Active Lounge Passcode" : "Iphasikhodi ye-Lounge Esebenzayo"}
+                        </label>
                         <div className="flex gap-2">
                           <input 
                             type="text" 
@@ -6441,7 +7119,7 @@ export default function App() {
                             className="px-3 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/35 text-[#D4AF37] font-mono text-[10px] uppercase font-bold rounded-xl transition cursor-pointer shrink-0"
                             title="Generate a random secure passcode"
                           >
-                            🎲 Random
+                            {language === "en" ? "🎲 Random" : "🎲 Ngahleliwe"}
                           </button>
                         </div>
                       </div>
@@ -6529,13 +7207,13 @@ export default function App() {
                           onClick={() => setNewUserRole(Role.STUDENT)}
                           className={`flex-1 py-1 px-2.5 rounded text-[9px] font-bold border ${newUserRole === Role.STUDENT ? "bg-[#D4AF37] text-black border-transparent" : "border-zinc-800 text-zinc-400"}`}
                         >
-                          STUDENT
+                          {translateText("role_student_abbr", language)}
                         </button>
                         <button 
                           onClick={() => setNewUserRole(Role.INSTRUCTOR)}
                           className={`flex-1 py-1 px-2.5 rounded text-[9px] font-bold border ${newUserRole === Role.INSTRUCTOR ? "bg-[#D4AF37] text-black border-transparent" : "border-zinc-800 text-zinc-400"}`}
                         >
-                          INSTR
+                          {translateText("role_instructor_abbr", language)}
                         </button>
                       </div>
 
@@ -6590,6 +7268,17 @@ export default function App() {
       <footer className="z-20 bg-black/85 border-t border-white/5 py-6 px-8 flex flex-col justify-center items-center text-center select-none gap-4">
         <div className="w-full text-center text-[10px] text-zinc-500 font-serif italic uppercase tracking-wider">
           © 2026 Imali NgesiZulu
+        </div>
+        
+        {/* Enterprise Credentials */}
+        <div className="text-[9px] font-mono text-zinc-400 tracking-wider flex flex-wrap justify-center gap-x-4 gap-y-1.5 max-w-3xl uppercase opacity-85">
+          <span>Enterprise number: <strong className="text-zinc-200">K2024003562</strong></span>
+          <span className="hidden sm:inline text-zinc-700">•</span>
+          <span>Status: <strong className="text-emerald-400">In Business</strong></span>
+          <span className="hidden sm:inline text-zinc-700">•</span>
+          <span>Incorporation Date: <strong className="text-zinc-200">05 Jan 2024</strong></span>
+          <span className="hidden sm:inline text-zinc-700">•</span>
+          <span>Jurisdiction: <strong className="text-zinc-200">South Africa</strong></span>
         </div>
         
         {/* Mobile-only Sponsor/Partner Button */}
@@ -7001,7 +7690,7 @@ export default function App() {
       )}
 
       {activePdfResource && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in" id="pdf_reader_modal">
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in" id="pdf_reader_modal">
           <div className="bg-zinc-950 border border-zinc-800 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-[0_0_50px_rgba(212,175,55,0.15)]">
             {/* Header */}
             <div className="p-5 border-b border-zinc-900 bg-zinc-900/40 flex justify-between items-center">
@@ -7061,7 +7750,7 @@ export default function App() {
       )}
 
       {isContactModalOpen && (
-        <div id="contact_us_portal" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl overflow-y-auto animate-fade-in shadow-2xl">
+        <div id="contact_us_portal" className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl overflow-y-auto animate-fade-in shadow-2xl">
           <div className="bg-[#0b0b0b] border-2 border-[#D4AF37] max-w-lg w-full rounded-2xl md:rounded-3xl p-5 md:p-8 relative overflow-hidden text-left space-y-6 shadow-[0_25px_60px_rgba(212,175,55,0.18)] animate-in fade-in zoom-in-95 duration-200 z-10 my-auto">
             
             {/* Header branding decorative bar */}
@@ -7266,6 +7955,356 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* AI Support Bot floating circular button on the left */}
+      <button
+        id="ai_support_bot_btn"
+        onClick={() => {
+          setIsSupportBotOpen(!isSupportBotOpen);
+        }}
+        className="fixed bottom-20 md:bottom-6 left-6 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#AA771C] text-black shadow-[0_4px_22px_rgba(212,175,55,0.45)] hover:shadow-[0_0_25px_rgba(212,175,55,0.65)] hover:scale-105 active:scale-95 transition-all outline-none border border-[#D4AF37]/50 group cursor-pointer"
+        title={language === "en" ? "Chat with Support AI" : "Khuluma ne-AI Yesizo"}
+      >
+        <MessageSquare className="w-5 h-5 group-hover:rotate-12 transition-transform text-black" />
+        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full border border-black flex items-center justify-center text-[8px] text-white font-black animate-pulse">1</span>
+      </button>
+
+      {/* AI Support Bot drawer/panel on the left */}
+      {isSupportBotOpen && (
+        <div 
+          id="ai_support_bot_drawer" 
+          className="fixed bottom-36 md:bottom-22 left-4 right-4 sm:left-6 sm:right-auto sm:w-96 z-50 max-h-[420px] sm:max-h-[500px] bg-black/95 backdrop-blur-2xl border border-[#D4AF37]/35 rounded-2xl shadow-[0_15px_50px_rgba(212,175,55,0.15)] flex flex-col overflow-hidden animate-fade-in font-sans"
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 p-4 border-b border-[#D4AF37]/20 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/40 flex items-center justify-center">
+                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] animate-pulse" />
+              </div>
+              <div>
+                <h4 className="text-xs font-serif font-black uppercase text-[#D4AF37] tracking-wider text-left">
+                  {language === "en" ? "Imali AI Support" : "Umdidiyeli we-Imali"}
+                </h4>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="text-[7.5px] text-zinc-400 font-mono tracking-widest uppercase text-left">
+                    {language === "en" ? "ACTIVE CHATBOT • ONLINE" : "USEBENZA MANJE • KU-INTHANETHI"}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => setIsSupportBotOpen(false)}
+              className="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer text-xs font-bold"
+              title={language === "en" ? "Close Support Desk" : "Vala Isango"}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Messages Container body */}
+          <div className="flex-1 p-4 overflow-y-auto space-y-3.5 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent text-left max-h-[290px] min-h-[180px]">
+            {supportMessages.map((msg) => (
+              <div 
+                key={msg.id}
+                className={`flex flex-col max-w-[85%] ${msg.sender === "user" ? "ml-auto items-end" : "mr-auto items-start"}`}
+              >
+                <span className="text-[7.5px] text-zinc-500 font-mono uppercase tracking-widest mb-1 px-1">
+                  {msg.sender === "user" ? (language === "en" ? "You" : "Wena") : (language === "en" ? "Imali Assistant" : "Umsizi we-Imali")}
+                </span>
+                
+                <div className={`p-3 rounded-2xl text-xs leading-relaxed ${
+                  msg.sender === "user" 
+                    ? "bg-gradient-to-br from-[#D4AF37]/20 to-[#996515]/10 border border-[#D4AF37]/30 text-white rounded-tr-none" 
+                    : "bg-zinc-900/90 border border-zinc-800/80 text-zinc-200 rounded-tl-none"
+                }`}>
+                  <p className="font-sans whitespace-pre-wrap text-left">
+                    {msg.sender === "bot" 
+                      ? (language === "en" ? msg.textEn : msg.textZu) 
+                      : msg.textEn
+                    }
+                  </p>
+                  
+                  {/* Dynamic Help Center Button indicator inside the bubble */}
+                  {msg.sender === "bot" && (msg.textEn.includes("routing") || msg.textEn.includes("apologize") || msg.textEn.includes("Customer Help")) && (
+                    <button
+                      onClick={() => {
+                        setIsContactModalOpen(true);
+                        setIsSupportBotOpen(false);
+                      }}
+                      className="mt-2.5 w-full py-1.5 px-3 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/30 rounded-lg text-[9px] font-mono uppercase font-bold text-[#D4AF37] tracking-wider transition-all cursor-pointer text-center block"
+                    >
+                      ✉️ {language === "en" ? "Open Help Centre Now" : "Vula Isikhumulo Sokusiza"}
+                    </button>
+                  )}
+                </div>
+                
+                <span className="text-[7px] text-zinc-650 font-mono mt-0.5 px-1">
+                  {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                </span>
+              </div>
+            ))}
+
+            {supportTyping && (
+              <div className="flex flex-col mr-auto items-start max-w-[85%] animate-pulse">
+                <span className="text-[7.5px] text-zinc-500 font-mono uppercase tracking-widest mb-1 px-1">
+                  {language === "en" ? "Imali Assistant is typing..." : "Umsizi we-Imali uyabhala..."}
+                </span>
+                <div className="p-3 bg-zinc-900 border border-zinc-805 text-zinc-500 rounded-2xl rounded-tl-none flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                  <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                  <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                </div>
+              </div>
+            )}
+            
+            <div ref={supportMessagesEndRef} />
+          </div>
+
+          {/* Quick Suggestions scroll box */}
+          <div className="px-3.5 py-1.5 bg-zinc-950 border-t border-zinc-900/60 flex gap-2 overflow-x-auto scrollbar-none shrink-0 scroll-smooth items-center">
+            {[
+              {
+                en: "What is IMALI NgesiZulu?",
+                zu: "Yini i-IMALI NgesiZulu?",
+                query: "What is IMALI NgesiZulu?"
+              },
+              {
+                en: "Which courses are offered?",
+                zu: "Yiziphi izifundo ezikhona?",
+                query: "Which courses are offered?"
+              },
+              {
+                en: "How does the Audio Forum work?",
+                zu: "Isebenza kanjani i-Audio Forum?",
+                query: "How does the Audio Forum work?"
+              },
+              {
+                en: "How can I contact support?",
+                zu: "Ngingaxhumana kanjani losizo?",
+                query: "How can I contact direct support?"
+              }
+            ].map((sug, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleSendSupportMessage(sug.query)}
+                className="whitespace-nowrap px-2.5 py-1 bg-zinc-900 hover:bg-zinc-800 hover:text-white text-zinc-400 border border-zinc-800 rounded-full text-[9px] tracking-wider transition-all cursor-pointer font-sans"
+              >
+                {language === "en" ? sug.en : sug.zu}
+              </button>
+            ))}
+          </div>
+
+          {/* Form input footer */}
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendSupportMessage(supportInput);
+            }}
+            className="p-3 bg-zinc-950 border-t border-zinc-900 flex gap-2 items-center"
+          >
+            <input 
+              type="text"
+              value={supportInput}
+              onChange={(e) => setSupportInput(e.target.value)}
+              placeholder={language === "en" ? "Ask a question about the App..." : "Buza umbuzo mayelana nalolu hlelo..."}
+              className="flex-1 bg-zinc-900 hover:bg-zinc-850 focus:bg-black border border-zinc-800 focus:border-[#D4AF37] rounded-xl px-3.5 py-2 text-xs text-white outline-none placeholder-zinc-500 transition-all font-sans"
+            />
+            <button 
+              type="submit"
+              className="p-2 bg-gradient-to-r from-[#D4AF37] to-[#AA771C] hover:scale-105 active:scale-95 text-black rounded-xl transition-all cursor-pointer"
+              title={language === "en" ? "Send Message" : "Thumela"}
+            >
+              <Send className="w-3.5 h-3.5" />
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* About Us Modal and Sourced Info on Imali NgesiZulu */}
+      {isAboutModalOpen && (
+        <div id="about_us_portal" className="absolute inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl overflow-y-auto animate-fade-in shadow-2xl">
+          <div className="bg-[#0b0b0b] border-2 border-[#D4AF37] max-w-2xl w-full rounded-2xl md:rounded-3xl p-5 md:p-8 relative overflow-hidden text-left space-y-6 shadow-[0_25px_60px_rgba(212,175,55,0.18)] animate-in fade-in zoom-in-95 duration-200 z-10 my-auto">
+            
+            {/* Header branding decorative bar */}
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-[#D4AF37] to-amber-600"></div>
+
+            {/* Title & Close */}
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="text-[10px] font-mono tracking-[0.3em] text-[#D4AF37] uppercase">
+                  {language === "zu" ? "MAYELANA NESIKHUNGO" : "ABOUT THE ACADEMY"}
+                </span>
+                <h3 className="text-xl md:text-2xl font-bold font-serif text-white uppercase mt-1 tracking-tight">
+                  {language === "zu" ? "Imali NgesiZulu Academy" : "Imali NgesiZulu Academy"}
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsAboutModalOpen(false)}
+                className="p-1 px-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-xl text-xs font-mono tracking-widest uppercase transition-all cursor-pointer border border-zinc-800"
+              >
+                ✕ {language === "zu" ? "Vala" : "Close"}
+              </button>
+            </div>
+
+            {/* Intro Content */}
+            <div className="space-y-4 text-xs sm:text-sm text-zinc-300 leading-relaxed font-sans">
+              <p>
+                {language === "zu" ? (
+                  "I-IMALI NgesiZulu Academy iyisikhungo esiphambili sezezimali eNingizimu Afrika esizinikele ekufundiseni ngezohwebo lwemali (Forex Market), i-candlestick mechanics, i-liquidity sweeps, kanye nezinqubo zezimali zamazwe ngamazwe. Siletha zonke izifundo ngesiZulu nangesiNgisi ukuze sifake intsha nabo bonke abantu emhlabeni wezezimali."
+                ) : (
+                  "IMALI NgesiZulu Academy is South Africa's premier financial literacy and forex masterclass institution. We are dedicated to translating complex algorithmic market structures, institutional candlestick physics, and premium technical analysis into NgesiZulu and English, bridging the gap between high finance and retail market enthusiasts."
+                )}
+              </p>
+
+              {/* Core Pillars */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="bg-zinc-900/60 p-3.5 rounded-xl border border-zinc-800/80">
+                  <span className="text-[#D4AF37] font-serif font-bold text-xs uppercase block tracking-wider mb-1">
+                    🕯️ {language === "zu" ? "Izifundo eziphezulu" : "Elite Curricula"}
+                  </span>
+                  <p className="text-[11px] text-zinc-400">
+                    {language === "zu" ? "Funda institutional orderblocks, Fair Value Gaps (FVG) kanye ne-physics yamakhandlela ye-OHLC." : "Study institutional order blocks, Fair Value Gaps (FVG), and OHLC candlestick physics in perfect detail."}
+                  </p>
+                </div>
+
+                <div className="bg-zinc-900/60 p-3.5 rounded-xl border border-zinc-800/80">
+                  <span className="text-[#D4AF37] font-serif font-bold text-xs uppercase block tracking-wider mb-1">
+                    🛡️ {language === "zu" ? "Ukulawulwa Kwengozi" : "Mathematical Risk Standards"}
+                  </span>
+                  <p className="text-[11px] text-zinc-400">
+                    {language === "zu" ? "Ngena ngqo emthethweni we-1% risk, compounding kanye ne-market drawdowns zangempela." : "Implement structured risk profiles utilizing strict 1% compounding laws and protective capital safeguards."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Official YouTube Channel Section */}
+              <div className="pt-2">
+                <h4 className="text-xs font-mono font-bold text-[#D4AF37] uppercase tracking-wider mb-2">
+                  🎥 {language === "zu" ? "UMSAKAZO WE-YOUTUBE BUXHOMA" : "OFFICIAL YOUTUBE CHANNEL & LECTURES"}
+                </h4>
+                <div className="bg-amber-500/5 hover:bg-amber-500/10 border border-[#D4AF37]/35 rounded-xl p-4 transition-all">
+                  <p className="text-xs text-zinc-200 mb-3">
+                    {language === "zu" ? (
+                      "Kwenziwe ama-webinars amaningi nezifundo eziwusizo kakhulu. Joyina umphakathi wethu oguqukayo phezulu kwe-YouTube:"
+                    ) : (
+                      "Access step-by-step masterclass videos on live analysis, premium market setups, and daily market breakdowns on our channel:"
+                    )}
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <span className="text-[11px] font-mono text-zinc-400 break-all bg-black/40 px-3 py-1.5 rounded-lg border border-zinc-850 w-full sm:w-auto">
+                      youtube.com/@ImaliNgesiZulu
+                    </span>
+                    <a
+                      href="https://www.youtube.com/@ImaliNgesiZulu"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="whitespace-nowrap w-full sm:w-auto px-4 py-2 bg-red-650 hover:bg-red-700 text-white font-mono text-[10px] uppercase font-black tracking-wider rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_2px_10px_rgba(239,68,68,0.2)]"
+                    >
+                      <Youtube className="w-3.5 h-3.5 text-white animate-pulse" />
+                      {language === "zu" ? "BHALISA KU-YOUTUBE" : "SUBSCRIBE ON YOUTUBE"}
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Enterprise Info Box */}
+              <div className="pt-2 border-t border-zinc-850">
+                <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block mb-1">
+                  🏢 {language === "zu" ? "IMINININGWANE YENKAMPANI EGCOKILE" : "REGISTRATION & CORPORATE JURISDICTION"}
+                </span>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-zinc-950 p-3 rounded-lg border border-zinc-900 text-[10px] sm:text-xs">
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-mono">Enterprise No:</span>
+                    <strong className="text-zinc-300 font-mono">K2024003562</strong>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-mono">Status:</span>
+                    <strong className="text-[#D4AF37] font-mono uppercase">In Business</strong>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-mono">Incorporated:</span>
+                    <strong className="text-zinc-300 font-mono">05 Jan 2024</strong>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 block text-[9px] uppercase font-mono">Jurisdiction:</span>
+                    <strong className="text-zinc-300 font-mono">South Africa</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Branding info */}
+            <p className="text-[9.5px] font-mono text-zinc-600 text-center uppercase tracking-tight border-t border-zinc-850 pt-4">
+              🏢 VERIFIED SYSTEM IDENTITY • IMALI NGESIZULU
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile-only Persistent Navigation Footer (Shows on screens under md) */}
+      <div 
+        id="device_mobile_navigation_footer" 
+        className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#070707]/95 backdrop-blur-xl border-t border-[#D4AF37]/25 z-40 flex items-center justify-around px-4 select-none"
+      >
+        <button
+          onClick={() => {
+            setActiveRole(Role.STUDENT);
+            setActiveTab("dashboard");
+            setVisibleProfileTab(Role.STUDENT);
+          }}
+          className={`flex flex-col items-center justify-center transition-all ${activeRole === Role.STUDENT ? "text-[#D4AF37]" : "text-zinc-400 hover:text-white"}`}
+        >
+          <Users className="w-5 h-5" />
+          <span className="text-[9px] font-mono uppercase tracking-wider mt-1">Student</span>
+        </button>
+
+        <button
+          onClick={() => {
+            if (!isInstructorUnlocked) {
+              setActiveTab("dashboard");
+              setVisibleProfileTab(Role.INSTRUCTOR);
+              alert(language === "en" 
+                ? "Instructor credentials required. Please authenticate under Academic Profiles Manager in dashboard." 
+                : "Kudingeka imininingwane yomfundisi. Sicela uqinisekise ngaphansi koMphathi Weziphrofayili kudeshibhodi.");
+            } else {
+              setActiveRole(Role.INSTRUCTOR);
+            }
+          }}
+          className={`flex flex-col items-center justify-center transition-all ${activeRole === Role.INSTRUCTOR ? "text-[#D4AF37]" : "text-zinc-400 hover:text-white"}`}
+        >
+          <Award className="w-5 h-5" />
+          <span className="text-[9px] font-mono uppercase tracking-wider mt-1">Instructor</span>
+        </button>
+
+        <button
+          onClick={() => {
+            if (!isAdminUnlocked) {
+              setActiveTab("dashboard");
+              setVisibleProfileTab(Role.ADMIN);
+              alert(language === "en" 
+                ? "Administrator credentials required. Please authenticate under Academic Profiles Manager in dashboard." 
+                : "Kudingeka imininingwane yomlawuli. Sicela uqinisekise ngaphansi koMphathi Weziphrofayili kudeshibhodi.");
+            } else {
+              setActiveRole(Role.ADMIN);
+            }
+          }}
+          className={`flex flex-col items-center justify-center transition-all ${activeRole === Role.ADMIN ? "text-[#D4AF37]" : "text-zinc-400 hover:text-white"}`}
+        >
+          <Settings className="w-5 h-5" />
+          <span className="text-[9px] font-mono uppercase tracking-wider mt-1">Admin</span>
+        </button>
+
+        <button
+          onClick={() => setIsAboutModalOpen(true)}
+          className="flex flex-col items-center justify-center text-zinc-400 hover:text-[#D4AF37] transition-all"
+        >
+          <Globe className="w-5 h-5" />
+          <span className="text-[9px] font-mono uppercase tracking-wider mt-1">About Us</span>
+        </button>
+      </div>
 
     </div>
   );
