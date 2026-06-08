@@ -7513,6 +7513,24 @@ export default function App() {
           © 2026 Imali NgesiZulu
         </div>
         
+        {/* Footer Quick Action Buttons */}
+        <div className="flex flex-wrap justify-center gap-3 my-1">
+          <button
+            type="button"
+            onClick={() => setIsAboutModalOpen(true)}
+            className="px-4 py-2 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-[#D4AF37]/50 text-[#D4AF37] font-mono text-[9px] uppercase tracking-widest rounded-xl cursor-pointer transition-all duration-200 shadow-md"
+          >
+            {language === "en" ? "About Our Academy" : "Mayelana Ne-Academy"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsContactModalOpen(true)}
+            className="px-4 py-2 bg-zinc-950 hover:bg-zinc-900 border border-zinc-850 hover:border-[#D4AF37]/50 text-white hover:text-[#D4AF37] font-mono text-[9px] uppercase tracking-widest rounded-xl cursor-pointer transition-all duration-200 shadow-md"
+          >
+            {language === "en" ? "Help Centre & Support" : "Xhumana Nathi / SoSizo"}
+          </button>
+        </div>
+
         {/* Enterprise Credentials */}
         <div className="text-[9px] font-mono text-zinc-400 tracking-wider flex flex-wrap justify-center gap-x-4 gap-y-1.5 max-w-3xl uppercase opacity-85">
           <span>Enterprise number: <strong className="text-zinc-200">K2024003562</strong></span>
@@ -7982,7 +8000,7 @@ export default function App() {
       )}
 
       {isContactModalOpen && (
-        <div id="contact_us_portal" className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl overflow-y-auto animate-fade-in shadow-2xl">
+        <div id="contact_us_portal" className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl overflow-y-auto animate-fade-in shadow-2xl">
           <div className="bg-[#0b0b0b] border-2 border-[#D4AF37] max-w-lg w-full rounded-2xl md:rounded-3xl p-5 md:p-8 relative overflow-hidden text-left space-y-6 shadow-[0_25px_60px_rgba(212,175,55,0.18)] animate-in fade-in zoom-in-95 duration-200 z-10 my-auto">
             
             {/* Header branding decorative bar */}
@@ -8357,7 +8375,7 @@ export default function App() {
 
       {/* About Us Modal and Sourced Info on Imali NgesiZulu */}
       {isAboutModalOpen && (
-        <div id="about_us_portal" className="absolute inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl overflow-y-auto animate-fade-in shadow-2xl">
+        <div id="about_us_portal" className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl overflow-y-auto animate-fade-in shadow-2xl">
           <div className="bg-[#0b0b0b] border-2 border-[#D4AF37] max-w-2xl w-full rounded-2xl md:rounded-3xl p-5 md:p-8 relative overflow-hidden text-left space-y-6 shadow-[0_25px_60px_rgba(212,175,55,0.18)] animate-in fade-in zoom-in-95 duration-200 z-10 my-auto">
             
             {/* Header branding decorative bar */}
