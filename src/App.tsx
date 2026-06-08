@@ -55,6 +55,7 @@ export interface RadioStation {
   name: string;
   category: "news" | "music";
   subCategory: string;
+  region?: "global" | "americas" | "europe" | "africa" | "asia";
   url: string;
   fallbackUrl?: string;
   description: string;
@@ -68,10 +69,11 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Bloomberg Financial Radio (US)",
     category: "news",
     subCategory: "USA Financial News",
-    url: "https://bloomberg-wbbr.leanstream.co/bloomberg_wbbr-AM",
-    fallbackUrl: "https://ice1.somafm.com/groovesalad-128-mp3",
-    description: "Live global business news, currency ticker alerts, and enterprise analytics from NYSE / Nasdaq floors.",
-    descriptionZu: "Izindaba zebhizinisi zomhlaba wonke, imibiko wezezimali, nezingxoxo zomhlaba wonke zezezimali.",
+    region: "americas",
+    url: "https://bloomberg-wbbr.leanstream.co/bloomberg_wbbr-AM?args=tunein_mp3",
+    fallbackUrl: "https://npr-ice.streamguys1.com/live.mp3",
+    description: "Live global business news, currency ticker alerts, and enterprise analytics from NYSE / Nasdaq floors with premium delivery.",
+    descriptionZu: "Izindaba zebhizinisi zomhlaba wonke, imibiko wezezimali, nezingxoxo zomhlaba wonke zezezimali ze-Bloomberg.",
     accent: "from-amber-600 to-yellow-500"
   },
   {
@@ -79,9 +81,10 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "BBC World Service News Feed (Europe)",
     category: "news",
     subCategory: "Global Politics & Macro",
+    region: "europe",
     url: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
     fallbackUrl: "https://rfien.ice.infomaniak.ch/rfien-128.mp3",
-    description: "International intelligence, macro trends, central bank policies, and global event bulletins.",
+    description: "International intelligence, macro trends, central bank policies, and global event bulletins from London.",
     descriptionZu: "Ezodaba lomhlaba wonke, izindaba zezepolitiki, nezeluleko zezezimali zaseLondon.",
     accent: "from-red-600 to-rose-500"
   },
@@ -90,6 +93,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "NPR USA Markets & News (US)",
     category: "news",
     subCategory: "Global Macro Analysis",
+    region: "americas",
     url: "https://npr-ice.streamguys1.com/live.mp3",
     fallbackUrl: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
     description: "Real-time global market insights, Wall Street desks bulletins, and core macroeconomics analytics.",
@@ -97,10 +101,23 @@ export const RADIO_STATIONS: RadioStation[] = [
     accent: "from-sky-600 to-blue-500"
   },
   {
+    id: "france24_news",
+    name: "France 24 English Radio (Europe)",
+    category: "news",
+    subCategory: "Global Affairs & Politics",
+    region: "europe",
+    url: "https://audio.france24.com/f24_live_en.mp3",
+    fallbackUrl: "https://rfien.ice.infomaniak.ch/rfien-128.mp3",
+    description: "In-depth international news coverage, European market indices, African updates, and French diplomatic analysis.",
+    descriptionZu: "Izindaba zomhlaba ezinesithunzi, ezomnotho waseYurophu, nemicimbi eqondile ye-France 24.",
+    accent: "from-blue-600 to-indigo-500"
+  },
+  {
     id: "rfi_africa",
     name: "RFI English Radio (Africa & Europe)",
     category: "news",
     subCategory: "Pan-African & EU Affairs",
+    region: "africa",
     url: "https://rfien.ice.infomaniak.ch/rfien-128.mp3",
     fallbackUrl: "https://icecast.dwcdn.de/dwradio.mp3",
     description: "Live dynamic reporting on Pan-African socioeconomic developments, geopolitical shifts, and EU financial affairs.",
@@ -109,9 +126,10 @@ export const RADIO_STATIONS: RadioStation[] = [
   },
   {
     id: "dw_news",
-    name: "Deutsche Welle (DW) World News (Europe)",
+    name: "Deutsche Welle (DW) World News",
     category: "news",
     subCategory: "EU Markets & Politics",
+    region: "europe",
     url: "https://icecast.dwcdn.de/dwradio.mp3",
     fallbackUrl: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
     description: "Independent global journalistic feed focusing on European Union markets, industrial tech sectors, and international policy.",
@@ -119,10 +137,23 @@ export const RADIO_STATIONS: RadioStation[] = [
     accent: "from-blue-700 to-cyan-500"
   },
   {
+    id: "safm_news",
+    name: "SABC SAfm News Radio (Africa)",
+    category: "news",
+    subCategory: "Southern African Politics",
+    region: "africa",
+    url: "https://edge.soundon.co.za/safm",
+    fallbackUrl: "https://primemedia.streamguys1.com/capetalk",
+    description: "South Africa's premier national news, economics bulletins, and public discourse from the South African Broadcasting Corporation.",
+    descriptionZu: "Umsakazo kazwelonke wezindaba, umnyakazo wentengo nepolitiki e-South Africa ezakhayo no-SABC.",
+    accent: "from-yellow-600 to-orange-500"
+  },
+  {
     id: "capetalk_news",
-    name: "CapeTalk National News & Talk (Africa)",
+    name: "CapeTalk National News (Africa)",
     category: "news",
     subCategory: "Southern Africa Dispatch",
+    region: "africa",
     url: "https://primemedia.streamguys1.com/capetalk",
     fallbackUrl: "https://rfien.ice.infomaniak.ch/rfien-128.mp3",
     description: "Official high-uptime national and international talk news broadcasting from Cape Town & Johannesburg networks.",
@@ -134,6 +165,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Radio Free Asia News (Asia)",
     category: "news",
     subCategory: "East Asia Supply Chains",
+    region: "asia",
     url: "https://streaming.rfa.org/eng/live/english.mp3",
     fallbackUrl: "https://icecast.dwcdn.de/dwradio.mp3",
     description: "Live breaking commentary on East Asian supply chains, regional policy shifts, technology hubs, and Pacific Rim security.",
@@ -141,10 +173,35 @@ export const RADIO_STATIONS: RadioStation[] = [
     accent: "from-purple-700 to-indigo-600"
   },
   {
+    id: "aljazeera_news",
+    name: "Al Jazeera English Live (Asia)",
+    category: "news",
+    subCategory: "Middle East & Asia Focus",
+    region: "asia",
+    url: "https://stream.zeno.fm/vszbdtvvf2zuv",
+    fallbackUrl: "https://stream.zeno.fm/g6tcz32v24zuv",
+    description: "Unbiased geopolitical reports, Asian economic developments, and live journalism from Doha and regional bureaus.",
+    descriptionZu: "Izindaba zomhlaba wonke ezivela e-Middle East ne-Asia ezihlaziya kahle ezomnotho nezepolitiki bukhoma.",
+    accent: "from-yellow-700 to-amber-600"
+  },
+  {
+    id: "world_audio_news",
+    name: "Global Affairs Dispatch Radio (Global)",
+    category: "news",
+    subCategory: "Global Macro Rundown",
+    region: "global",
+    url: "https://stream.zeno.fm/g6tcz32v24zuv",
+    fallbackUrl: "https://rfien.ice.infomaniak.ch/rfien-128.mp3",
+    description: "High-uptime aggregated global political economy newsletters, central bank rate reports, and geopolitical summaries.",
+    descriptionZu: "Inhlanganisela yezindaba zomhlaba mayelana nepolitiki, ukuhwebelana kwamazwe, nesigqi sezimali.",
+    accent: "from-zinc-600 to-neutral-500"
+  },
+  {
     id: "study_lofi",
     name: "Lofi Focus Brainwave Beats (US)",
     category: "music",
     subCategory: "SomaFM Groove Salad",
+    region: "americas",
     url: "https://ice1.somafm.com/groovesalad-128-mp3",
     description: "Relaxed low-fidelity ambient beat stream customized to reduce cortisol and increase cognitive focus.",
     descriptionZu: "Amanani womculo opholile nonyakazayo ukukusiza ube nomoya ozo wezemfundo.",
@@ -155,6 +212,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Deep House Learning Lounge (US)",
     category: "music",
     subCategory: "SomaFM Fluid Progressive",
+    region: "americas",
     url: "https://ice1.somafm.com/fluid-128-mp3",
     description: "Atmospheric, deep vocal house sequences and progressive rhythms suitable for analytical focus.",
     descriptionZu: "Umculo ohamba kahle, obanzi we-Deep house ofanele ukuqinisekisa ukusebenza kwe-logic nodatha.",
@@ -165,6 +223,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Beat Blender Deep Tech House (Europe)",
     category: "music",
     subCategory: "Deep House & Techno",
+    region: "europe",
     url: "https://ice1.somafm.com/beatblender-128-mp3",
     description: "A sophisticated blend of European deep tech house, minimal techno beats, and deep rhythmic syncopation.",
     descriptionZu: "Uhlobo oluthile lomsindo we-deep house waseYurophu oklanyelwe ukuletha ugqozi emsebenzini wezibalo.",
@@ -175,6 +234,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Limbik Afro-Deep House Radio (Africa)",
     category: "music",
     subCategory: "Afro House Beats",
+    region: "africa",
     url: "https://stream.zeno.fm/s49f82dwyh8uv",
     fallbackUrl: "https://ice1.somafm.com/fluid-128-mp3",
     description: "Warm polyrhythmic African kick drums, soulful vocal samples, and classic Durban & Johannesburg suburban house loops.",
@@ -186,6 +246,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Classic Soul & Motown Hits (US)",
     category: "music",
     subCategory: "Retro Soul / Motown",
+    region: "americas",
     url: "https://ice1.somafm.com/7inchsoul-128-mp3",
     description: "Golden era of retro soul tracks, vintage blues elements, and R&B classics for cognitive rest.",
     descriptionZu: "Amaculo akudala aretro ne-soul azolile asiza ukuphumula ukhumbule kahle imibono.",
@@ -196,6 +257,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Classic Neo-Soul & Ambient R&B (US)",
     category: "music",
     subCategory: "SomaFM Lush Ambient",
+    region: "americas",
     url: "https://ice1.somafm.com/lush-128-mp3",
     description: "Silky vocals and smooth lounge neo-soul elements to promote mental calm and logical focus.",
     descriptionZu: "Amazinga womculo we-R&B omnandi kakhulu asiza ukupholisa inyongo namandla omkhondo wokufunda.",
@@ -206,6 +268,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Urban R&B & Neo-Soul Network (Africa/Global)",
     category: "music",
     subCategory: "Neo-Soul & R&B",
+    region: "africa",
     url: "https://stream.zeno.fm/v9uap9gfe8quv",
     fallbackUrl: "https://ice1.somafm.com/lush-128-mp3",
     description: "A masterfully selected sequence of late-night R&B classics, modern neo-soul grooves, and deep urban baseline harmonies.",
@@ -217,6 +280,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Premium Jazz Radio Swiss (Europe)",
     category: "music",
     subCategory: "Traditional Jazz",
+    region: "europe",
     url: "https://stream.srg-ssr.ch/m/rsj/mp3_128",
     fallbackUrl: "https://ice1.somafm.com/sonicuniverse-128-mp3",
     description: "Acoustic basslines, brass melodies, and world-class smooth jazz from the Swiss Broadcast Corporation.",
@@ -228,6 +292,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Jazz24 NPR Seattle (US)",
     category: "music",
     subCategory: "Classic Jazz & Blues",
+    region: "americas",
     url: "https://jazz24.live-streams.astound.com/jazz24",
     fallbackUrl: "https://stream.srg-ssr.ch/m/rsj/mp3_128",
     description: "Legendary jazz acts including Miles Davis, Billie Holiday, and John Coltrane live from Seattle's premier jazz broadcast desk.",
@@ -239,6 +304,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Sonic Universe Jazz-Fusion (Europe/US)",
     category: "music",
     subCategory: "Avant-Garde & Fusion",
+    region: "europe",
     url: "https://ice1.somafm.com/sonicuniverse-128-mp3",
     description: "Nu-Jazz, progressive jazz fusion, and electronic global acoustic textures for cerebral stimulation during trade designs.",
     descriptionZu: "Umculo we-Jazz uhlanganiswe ne-Electronic eguqukayo ukusiza ukuhlela kahle ingqondo nemigqa.",
@@ -249,6 +315,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Cliqhop IDM & Electro (Europe)",
     category: "music",
     subCategory: "IDM & Electro Chill",
+    region: "europe",
     url: "https://ice1.somafm.com/cliqhop-128-mp3",
     description: "Glitch-hop, minimalist European industrial electro, and intelligent IDM soundscapes optimized for quantitative analytics.",
     descriptionZu: "Umsindo we-electro ne-glitch-hop yaseYurophu ofanele abantu abathanda ukubala nokuhlaziya idatha enkulu.",
@@ -259,6 +326,7 @@ export const RADIO_STATIONS: RadioStation[] = [
     name: "Suburbs of Goa Asian Electro Chill (Asia)",
     category: "music",
     subCategory: "Asian Ambient Fusion",
+    region: "asia",
     url: "https://ice1.somafm.com/suburbsofgoa-128-mp3",
     description: "High-prestige blend of traditional Asian sitars, tablas, and Indian acoustic rhythms with futuristic European electro-basses.",
     descriptionZu: "Umculo oyingxubevange wamathuluzi we-sitar, tablas zesi-Indian ehlobiswe nge-electro yesimanje.",
@@ -1252,6 +1320,7 @@ export default function App() {
   const [radioMuted, setRadioMuted] = useState<boolean>(false);
   const [isRadioModalOpen, setIsRadioModalOpen] = useState<boolean>(false);
   const [radioActiveCategory, setRadioActiveCategory] = useState<"news" | "music" | "all">("all");
+  const [radioActiveRegion, setRadioActiveRegion] = useState<"all" | "americas" | "europe" | "africa" | "asia" | "global">("all");
   const [radioLoading, setRadioLoading] = useState<boolean>(false);
   const [radioError, setRadioError] = useState<boolean>(false);
   const [radioUsingFallback, setRadioUsingFallback] = useState<boolean>(false);
@@ -6625,7 +6694,10 @@ export default function App() {
                     ].map(cat => (
                       <button
                         key={cat.id}
-                        onClick={() => setRadioActiveCategory(cat.id as any)}
+                        onClick={() => {
+                          setRadioActiveCategory(cat.id as any);
+                          setRadioActiveRegion("all");
+                        }}
                         className={`px-4 py-1.5 rounded-xl border font-mono text-xs uppercase transition-all tracking-wider ${
                           radioActiveCategory === cat.id
                             ? "bg-[#D4AF37]/20 border-[#D4AF37] text-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.1)]"
@@ -6638,13 +6710,45 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* Secondary Geographic Sub-Filtration row */}
+                <div className="bg-black/40 p-4 rounded-2xl border border-zinc-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-[#D4AF37] bg-[#D4AF37]/5 border border-[#D4AF37]/20 px-2 py-0.5 rounded font-mono uppercase tracking-widest font-bold">
+                      {language === "en" ? "Filter by Geography / Location:" : "Hlunga Ngendawo / Izwekazi:"}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      { id: "all", labelEn: "🌐 All Regions", labelZu: "Izindawo Zonke" },
+                      { id: "americas", labelEn: "🇺🇸 Americas", labelZu: "Americas" },
+                      { id: "europe", labelEn: "🇪🇺 Europe", labelZu: "Europe" },
+                      { id: "africa", labelEn: "🇿🇦 Africa", labelZu: "Africa" },
+                      { id: "asia", labelEn: "🌏 Asia / Pacific", labelZu: "Asia" },
+                      { id: "global", labelEn: "🌍 Global Feed", labelZu: "Global" }
+                    ].map(regionOption => (
+                      <button
+                        key={regionOption.id}
+                        onClick={() => setRadioActiveRegion(regionOption.id as any)}
+                        className={`px-3 py-1 rounded-lg border font-mono text-[10px] uppercase transition-all tracking-wider cursor-pointer ${
+                          radioActiveRegion === regionOption.id
+                            ? "bg-[#D4AF37]/25 border-[#D4AF37] text-[#D4AF37] font-bold shadow-[0_0_8px_rgba(212,175,55,0.05)]"
+                            : "bg-zinc-950/40 border-zinc-850/60 text-zinc-400 hover:text-white hover:border-zinc-700"
+                        }`}
+                      >
+                        {language === "en" ? regionOption.labelEn : regionOption.labelZu}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Stations Main Grid Feed */}
                   <div className="lg:col-span-2 space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {RADIO_STATIONS.filter(st => {
-                        if (radioActiveCategory === "all") return true;
-                        return st.category === radioActiveCategory;
+                        if (radioActiveCategory !== "all" && st.category !== radioActiveCategory) return false;
+                        if (radioActiveRegion !== "all" && st.region !== radioActiveRegion) return false;
+                        return true;
                       }).map(station => {
                         const isThisPlaying = currentStation?.id === station.id && isPlaying;
                         return (
@@ -7760,21 +7864,78 @@ export default function App() {
               
               {/* Left Column: List select fast-switch */}
               <div className="md:col-span-2 space-y-3">
-                <span className="text-[9px] text-[#D4AF37] font-mono uppercase tracking-widest block font-bold">
-                  FAST CHANNEL TUNER
-                </span>
-                <div className="space-y-2 max-h-[250px] overflow-y-auto pr-1.5 custom-scrollbar">
-                  {RADIO_STATIONS.map(st => {
+                <div className="flex flex-col gap-2">
+                  <span className="text-[9px] text-[#D4AF37] font-mono uppercase tracking-widest block font-bold">
+                    FAST CHANNEL TUNER
+                  </span>
+                  
+                  {/* Category switcher inside popup modal */}
+                  <div className="grid grid-cols-3 gap-1 bg-[#050505] p-1 rounded-xl border border-zinc-900">
+                    {[
+                      { id: "all", label: "All" },
+                      { id: "news", label: "News" },
+                      { id: "music", label: "Music" }
+                    ].map(cat => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => {
+                          setRadioActiveCategory(cat.id as any);
+                          setRadioActiveRegion("all");
+                        }}
+                        className={`text-[9px] uppercase font-mono py-1 rounded-lg transition-all cursor-pointer ${
+                          radioActiveCategory === cat.id
+                            ? "bg-[#D4AF37]/20 text-[#D4AF37] font-bold"
+                            : "text-zinc-500 hover:text-white"
+                        }`}
+                      >
+                        {cat.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Geographic Switcher inside modal (with tiny flags/prefixes!) */}
+                  <div className="flex flex-wrap gap-1 bg-zinc-950 p-1.5 rounded-xl border border-[#D4AF37]/20">
+                    {[
+                      { id: "all", label: "🌐 All" },
+                      { id: "americas", label: "🇺🇸 US" },
+                      { id: "europe", label: "🇪🇺 EU" },
+                      { id: "africa", label: "🇿🇦 AF" },
+                      { id: "asia", label: "🌏 AS" },
+                      { id: "global", label: "🌍 GL" }
+                    ].map(reg => (
+                      <button
+                        key={reg.id}
+                        type="button"
+                        onClick={() => setRadioActiveRegion(reg.id as any)}
+                        className={`text-[8.5px] font-mono px-2 py-0.5 rounded-md border transition-all cursor-pointer ${
+                          radioActiveRegion === reg.id
+                            ? "bg-[#D4AF37]/25 border-[#D4AF37] text-[#D4AF37] font-bold"
+                            : "bg-[#050505]/40 border-zinc-900 text-zinc-550 hover:text-zinc-300"
+                        }`}
+                      >
+                        {reg.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1.5 custom-scrollbar">
+                  {RADIO_STATIONS.filter(st => {
+                    if (radioActiveCategory !== "all" && st.category !== radioActiveCategory) return false;
+                    if (radioActiveRegion !== "all" && st.region !== radioActiveRegion) return false;
+                    return true;
+                  }).map(st => {
                     const isSelfPlaying = currentStation?.id === st.id && isPlaying;
                     const isSelfSelected = currentStation?.id === st.id;
                     return (
                       <button
                         key={st.id}
                         onClick={() => playStation(st)}
-                        className={`w-full p-2.5 rounded-xl border text-left font-mono transition-all flex items-center justify-between gap-2.5 ${
+                        className={`w-full p-2.5 rounded-xl border text-left font-mono transition-all flex items-center justify-between gap-2.5 cursor-pointer ${
                           isSelfSelected 
                             ? "bg-[#D4AF37]/10 border-[#D4AF37] text-[#D4AF37] shadow-[0_0_10px_rgba(212,175,55,0.05)]" 
-                            : "bg-black/50 border-zinc-905 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-white/5"
+                            : "bg-black/50 border-zinc-905 text-zinc-405 hover:text-white hover:border-zinc-700 hover:bg-white/5"
                         }`}
                       >
                         <div className="truncate text-left">
@@ -7785,6 +7946,15 @@ export default function App() {
                       </button>
                     );
                   })}
+                  {RADIO_STATIONS.filter(st => {
+                    if (radioActiveCategory !== "all" && st.category !== radioActiveCategory) return false;
+                    if (radioActiveRegion !== "all" && st.region !== radioActiveRegion) return false;
+                    return true;
+                  }).length === 0 && (
+                    <div className="text-center py-8 text-zinc-650 text-[10px] font-mono uppercase">
+                      No channels found in this region.
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -8516,9 +8686,12 @@ export default function App() {
             if (!isInstructorUnlocked) {
               setActiveTab("dashboard");
               setVisibleProfileTab(Role.INSTRUCTOR);
-              alert(language === "en" 
-                ? "Instructor credentials required. Please authenticate under Academic Profiles Manager in dashboard." 
-                : "Kudingeka imininingwane yomfundisi. Sicela uqinisekise ngaphansi koMphathi Weziphrofayili kudeshibhodi.");
+              setActivePushAlert({
+                title_en: "Authentication Locked",
+                title_zu: "Ukuqinisekiswa Kuvaliwe",
+                message_en: "Instructor credentials required. Please authenticate under Academic Profiles Manager in dashboard.",
+                message_zu: "Kudingeka imininingwane yomfundisi. Sicela uqinisekise ngaphansi koMphathi Weziphrofayili kudeshibhodi."
+              });
             } else {
               setActiveRole(Role.INSTRUCTOR);
             }
@@ -8534,9 +8707,12 @@ export default function App() {
             if (!isAdminUnlocked) {
               setActiveTab("dashboard");
               setVisibleProfileTab(Role.ADMIN);
-              alert(language === "en" 
-                ? "Administrator credentials required. Please authenticate under Academic Profiles Manager in dashboard." 
-                : "Kudingeka imininingwane yomlawuli. Sicela uqinisekise ngaphansi koMphathi Weziphrofayili kudeshibhodi.");
+              setActivePushAlert({
+                title_en: "Authentication Locked",
+                title_zu: "Ukuqinisekiswa Kuvaliwe",
+                message_en: "Administrator credentials required. Please authenticate under Academic Profiles Manager in dashboard.",
+                message_zu: "Kudingeka imininingwane yomlawuli. Sicela uqinisekise ngaphansi koMphathi Weziphrofayili kudeshibhodi."
+              });
             } else {
               setActiveRole(Role.ADMIN);
             }
