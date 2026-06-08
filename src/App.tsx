@@ -2963,7 +2963,7 @@ export default function App() {
       {/* Floating Header */}
       <header className="sticky top-0 z-40 bg-black/60 backdrop-blur-xl border-b border-[#D4AF37]/20 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <ImaliLogo size={46} className="shrink-0" />
+          <ImaliLogo size={46} className="shrink-0 animate-spin-slow" />
           <div>
             <div className="flex items-center gap-2">
               <span className="text-lg font-light tracking-[0.2em] uppercase text-[#D4AF37] font-serif">
