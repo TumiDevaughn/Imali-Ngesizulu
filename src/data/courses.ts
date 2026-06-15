@@ -8,8 +8,8 @@ import { Course } from "../types";
 const staticCoursesData: Course[] = [
   {
     id: "elite_onedrive_video_masterclass",
-    title_en: "Presidential Elite Market Masterclass & Live Execution Guide",
-    title_zu: "I-Presidential Elite Market Masterclass ne-Live Execution Guide",
+    title_en: "IMALI Elite Strategy 1: Market Masterclass & Live Execution Guide",
+    title_zu: "I-IMALI Elite Strategy 1: Market Masterclass ne-Live Execution Guide",
     category_en: "Elite Algorithmic Trading",
     category_zu: "Ukuhweba Okuphezulu we-Algorithmic",
     difficulty_en: "VVIP Elite to Expert",
@@ -21,7 +21,7 @@ const staticCoursesData: Course[] = [
     thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
     instructorName: "Jean-Louis Cele & Thabiso Khumalo",
     rating: 5.0,
-    studentsCount: 1420,
+    studentsCount: 0,
     modules: [
       {
         id: "elite_onedrive_mod_1",
@@ -34,8 +34,8 @@ const staticCoursesData: Course[] = [
             title_zu: "Isigaba 1: Ividiyo ye-Master Class - Advanced Market Structure ne-High-Precision Order Flows",
             duration: "45 Mins",
             videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQRlLF-meXf7RrxN2FOqjNwiAYmyTq3MadN3q8ozLB_JIxY",
-            imageUrl: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
-            content_en: "Welcome to this exclusive, premier video masterclass of IMALI NgesiZulu Academy. This video unveils high-precision algorithmic order delivery mechanics. You will learn to decode structural shifts, trade in alignment with interbank liquidity flows, identify high-volume order blocks, and mitigate common trading drawdowns. Watch the embedded high-definition video directly below to digest every nuance of this elite strategy.",
+            imageUrl: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to this exclusive, premier video masterclass of IMALI NgesiZulu Academy. This video unveils high-precision algorithmic order delivery mechanics. You will learn to decode structural shifts, trade in alignment with interbank liquidity flows, identify high-volume order blocks, and mitigate common trading drawdowns. Watch the high-definition video directly below to digest every nuance of this elite strategy.",
             content_zu: "Siyakwamukela kule vando yevidiyo yodumo ekhethekile ye-IMALI NgesiZulu Academy. Le vidiyo iveza imithetho enembile yokulethwa kwentengo emakethe. Uzofunda ukuhlaziya isakhiwo semakethe (structure shifts), ukuhweba ngokuhambisana nengcebo yemali yamabhange (market liquidity flows), ukuthola ama-order blocks anomthamo omkhulu, kanye nokunciphisa ukulahlekelwa okungadingeki. Hororisa le vidiyo efakwe ngezansi ukuze ufunde wonke umthetho kuleli zinga eliphezulu.",
             resources: [
               {
@@ -114,6 +114,1082 @@ const staticCoursesData: Course[] = [
     ]
   },
   {
+    id: "elite_onedrive_hedging_masterclass",
+    title_en: "IMALI Elite Strategy 2: Institutional Hedging & USD Correlation Masterclass",
+    title_zu: "I-IMALI Elite Strategy 2: Institutional Hedging ne-USD Correlation Masterclass",
+    category_en: "Elite Portfolio Management",
+    category_zu: "Ukugadwa Kwephothifoliyo Okuphezulu",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "30 Hours",
+    duration_zu: "Amahora angu-30",
+    description_en: "The second instalment of our premier video elite mentorship. Unlock the precision behind intermarket correlation analysis (DXY vs S&P500), high-probability institutional hedging architectures, and advanced risk matrix algorithms.",
+    description_zu: "Incenye yesibili yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Vula ulwazi lokuhlaziya kokuhlangana kwezimakethe (DXY ne-S&P500), izinhlelo zokuvikela ingozi emabhange (hedging), kanye nemithetho ethuthukisiwe yama-risk algorithms.",
+    thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_hedging_mod_1",
+        title_en: "Module 1: Advanced Hedging Architectures & Live USD Matrices",
+        title_zu: "Isifundo 1: Izinhlelo Zika-Hedging Ezithuthukile ne-USD Correlation",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_2",
+            title_en: "Class 2: Master Class Video - Advanced Hedging Systems & USD Correlation Matrices",
+            title_zu: "Isigaba 2: Ividiyo ye-Master Class - Advanced Hedging Systems ne-USD Correlation Matrices",
+            duration: "52 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQRM8JGHWAkiTpXkyLW2NtBxAaBUZQWv_A879EOXGTdzpFc",
+            imageUrl: "https://images.unsplash.com/photo-1621504450181-5d38686cfdcd?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 2 of our IMALI Elite sequence. In this video, we dive deep into professional intermarket hedging systems and USD correlation matrices. Discover how the US Dollar Index (DXY) dictates global asset directions, how to structure multi-layered hedges during high-impact news releases, and how to execute risk-mitigated strategies under institutional guidance. Watch the high-definition video directly below to study these elite mechanisms.",
+            content_zu: "Siyakwamukela esigabeni sesibili se IMALI Elite sequence yethu. Kule vidiyo, singena ngokushona kumasu we-hedging wezakhiwo eziphezulu zemali kanye ne-correlation matrices ezimakethe zomhlaba. Thola ukuthi i-US Dollar Index (DXY) iyala kanjani ukunyakaza kwempahla, uzofunda ukwakha ama-hedges ngesikhathi sezindaba ezinkulu zezimali (news releases), kanye nendlela yokuhweba ngaphansi kwemigomo we-hedging emabhange. Bukela le vidiyo efakwe ngezansi ukuze uthole ulwazi oluphelele.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Hedging_USD_Correlation.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Hedging_Correlation.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE USD CORRELATION & INSTITUTIONAL HEDGING
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. INTERMARKET USD DXY CORRELATION
+- The US Dollar Index (DXY) is inversely correlated to EURUSD, GBPUSD, and Gold (XAUUSD).
+- S&P500 and high-beta equities generally drift opposite to a spiking DXY.
+- Confirm DXY structural shift BEFORE placing high-volume major currency pairs.
+
+2. INSTITUTIONAL HEDGING ALGORITHMS
+- True hedging relies on delta-neutral exposure instead of doubling down on bad trades.
+- Corcommitant hedging leverages negative correlation: long EURUSD/short GBPUSD in specific spreads.
+- Maintain a strict 0.5% risk spread allocation on correlated basket trades.
+
+3. NEWS LIQUIDITY INJECTIONS
+- High-impact events like NFP and FOMC produce artificial wick sweep expansions.
+- Wait exactly 15 minutes after the release to identify the true institutional bias.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: UKUVILOMELA INDLELA YE-HEDGING ne-USD CORRELATION
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. INDLELA YOKUHLANGANISA YE_USD DXY (CORRELATION)
+- I-US Dollar Index (DXY) inokuhlangana okuphambene ne-EURUSD, GBPUSD, negolide (XAUUSD).
+- I-S&P500 namasheya amakhulu kunyakaza ngendlela ephambene uma i-DXY inyuka phezulu.
+- Qinisekisa i-structural shift ku-DXY NGAPHAMBI kokuthi uvule ama-trades amakhulu.
+
+2. AMASU EMALI WE-HEDGING (ALGORITHMS)
+- I-Hedging yeqiniso isebenza nge-delta-neutral exposure hhayi ngokwandisa ama-trades alahlekelwayo.
+- Sebenzisa i-negative correlation: long EURUSD/short GBPUSD ngezilinganiso ezithize.
+- Gcina umthetho wengozi owu-0.5% kuphela kwi-correlated basket trade ngayinye.
+
+3. UKUGELEZA KWEMALI NGESIKHATHI SEZINDABA (NEWS)
+- Izindaba ezinkulu njenge-NFP ne-FOMC ziletha ukushanelwa okukhulu kokulingana (wick sweep).
+- Linda amaminithi angu-15 ngemva kwesindaba ukuze ubone umzila ophelele wamabhange.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_hedging_quiz_1",
+              title_en: "VVIP Elite Hedging & US Dollar Index Matrix",
+              title_zu: "Ukihlolwa Kwe-Hedging ne-USD Index Context",
+              questions: [
+                {
+                  id: "elite_onedrive_hedging_q1",
+                  question_en: "If the US Dollar Index (DXY) clears institutional liquidity on high timeframes and reverses downwards, what expectation does this create for the EURUSD pair?",
+                  question_zu: "Uma i-US Dollar Index (DXY) ishanela i-liquidity ephezulu bese yehla, yikuphi okulindelekile kwi-EURUSD pair?",
+                  options_en: [
+                    "EURUSD is highly likely to break out and reverse upwards due to strong inverse correlation",
+                    "EURUSD will flash-crash immediately following the exact vector shift of USD",
+                    "EURUSD will enter an indefinite zero-liquidity horizontal consolidation pattern",
+                    "EURUSD is completely unaffected by changes in the US Dollar Index parameters"
+                  ],
+                  options_zu: [
+                    "I-EURUSD kungenzeka kakhulu ukuthi inyuke iye phezulu ngenxa yokuhlangana okuphambene (inverse correlation)",
+                    "I-EURUSD izowa masinyane ilandele impendulo efanayo ne-USD unomphela",
+                    "I-EURUSD izongena ekuhlanganisweni okuphansi okungenawo umnyakazo ohlangothini zombili",
+                    "I-EURUSD ayithinteki neze ngezinguquko ezitholakala kwi-US Dollar Index"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_orderflow_masterclass",
+    title_en: "IMALI Elite Strategy 3: Institutional Order Flow & Footprint Blueprint",
+    title_zu: "I-IMALI Elite Strategy 3: Institutional Order Flow ne-Footprint Blueprint",
+    category_en: "Elite Technical Analysis",
+    category_zu: "Ukuhlaziywa Kwezobuchwepheshe Okuphezulu",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "35 Hours",
+    duration_zu: "Amahora angu-35",
+    description_en: "The third instalment of our premier video elite mentorship. Master the art of reading Footprint Charts, Order Books (DOM), and tracking the real-time aggressive buying and selling pressure of global interbank algorithms.",
+    description_zu: "Incenye yesithathu yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela ekuhlaziyeni amandla e-Footprint Charts, Order Books (DOM), kanye nezindlela zokulandelela amabhange nokuqondisa ama-orders ngqo.",
+    thumbnail: "https://images.unsplash.com/photo-1590283602185-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_orderflow_mod_1",
+        title_en: "Module 1: Order Flow Footprints & Depth of Market Tracing",
+        title_zu: "Isifundo 1: Ama-Footprint Charts kanye ne-Depth of Market Tracing",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_3",
+            title_en: "Class 3: Master Class Video - Order Flow Footprints & Volumetric Delta Delivery",
+            title_zu: "Isigaba 3: Ividiyo ye-Master Class - Order Flow Footprints ne-Volumetric Delta Delivery",
+            duration: "58 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQRsnXijnWafT6hS_6-5nMptAfwpNxm_UZLAzYDKFdwheNM",
+            imageUrl: "https://images.unsplash.com/photo-1638274553228-69cdbe509449?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 3 of our IMALI Elite sequences. In this video instruction, we focus on Order Flow Footprints and Volumetric Delta Delivery mechanics. Master how to track aggressive market buyers and sellers, identify stacked imbalances within daily price nodes, and interpret cumulative delta signals to execute positions with microscopic drawdown. Watch the high-definition video directly below to digest every nuance of this elite strategy.",
+            content_zu: "Siyakwamukela esigabeni sesithathu se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokujulile ngokunyakaza kwe-Order Flow Footprints kanye nama-delta limits okulethwa kwentengo emakethe. Uzofunda ukulandelela abathengisi nabathengi abanolaka (aggressive orders), ukuthola i-imbalance emakethe, kanye nokuqinisekisa i-cumulative delta turns elawulwa amabhange amakhulu. Hororisa le vidiyo efakwe ngezansi ukuze ujule.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Order_Flow_Domination.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Order_Flow_Domination.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE ORDER FLOW footprint & VOLUME DELTA CODES
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. UNDERSTANDING VOLUMETRIC FOOTPRINT CHARTS
+- Standard candlestick charts only show Open, High, Low, and Close prices of assets.
+- Footprint charts show exact buyers and sellers inside every single price node.
+- Imbalances occur when buy volume exceeds sell volume diagonally by 300% or more.
+
+2. CUMULATIVE DELTA SHIFTS
+- Delta represents the absolute difference between aggressive buying and selling volume.
+- A rising cumulative delta with falling prices signals latent institutional absorption.
+- Wait for a positive delta spike at key support points before entering long positions.
+
+3. EXECUTING DIAGONAL BID/ASK IMBALANCES
+- Stacked buying imbalances serve as strong support block levels during retraces.
+- Position stop losses 1 tick beyond the final volume imbalance candle structure.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: ISAKHIWO SE-ORDER FLOW NE-VOLUME DELTA
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. UKUQONDA AMA-FOOTPRINT CHARTS (VOLUMETRIC)
+- Amashadi avamile akhombisa kuphela intengo yenhloko evulekileyo neziphansi.
+- Ama-footprint khombisa isilinganiso esinembile sabathengi nabathengisi endaweni ngayinye.
+- I-imbalance yenzeka uma abathengi benga ngaphezu kwabathengisi ngoku-300% phezu komugqa odayonali.
+
+2. CUMULATIVE DELTA SHIFTS
+- I-Delta umele umehluko phakathi kwama-orders athenga nafaka inkuthalo namathengisayo.
+- Ukunyuka kwe-delta ngenkathi intengo yehla kukhombisa ukumuncwa (absorption) kwama-orders wamabhange.
+- Linda isibani se-positive delta phezulu kwe-support ngaphambi kokuthenga.
+
+3. ENGINGENAYO KWI-DIAGONAL IMBALANCES
+- Amaseli we-stacked buy imbalances asebenza njenge-support eqinile kwi-retrace.
+- Beka i-Stop loss 1 tick phesheya kwendawo emaphakathi ne-volume imbalance block.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_orderflow_quiz_1",
+              title_en: "VVIP Elite Order Flow Volumetrics Evaluation",
+              title_zu: "Ukuhlaziywa Kwe-Order Flow Volumetrics ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_orderflow_q1",
+                  question_en: "What does a diagonal ask-side footprint imbalance of 400% indicate at a major resistance structure?",
+                  question_zu: "Yini ekhonjiswa yi-diagonal ask imbalance ewu-400% phezulu kwesakhiwo se-resistance?",
+                  options_en: [
+                    "High aggressive buying pressure breaking or testing the ceiling barrier",
+                    "A massive collection of passive sell limits waiting to absorb normal prices",
+                    "A direct network drop warning from global liquidity provider servers",
+                    "A completely balanced market waiting for a high-impact interest rate announcement"
+                  ],
+                  options_zu: [
+                    "Ukushaywa phezulu ngabathengi abanolaka abazama ukugqobhoza i-resistance block",
+                    "Izinkulungwane zokulinda ezimileyo (limit orders) ezifuna ukumunca intengo ejwayelekile",
+                    "Ukunqamuka kokuxhumana phakathi kwama-interbank liquidity servers amakhulu",
+                    "Imakethe elingene kahle balindele ukukhishwa kwe-interest rate nezindaba zezimali"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_psychology_masterclass",
+    title_en: "IMALI Elite Strategy 4: High-Performance Risk Mathematics & Trader Psychology Masterclass",
+    title_zu: "I-IMALI Elite Strategy 4: High-Performance Risk Mathematics ne-Trader Psychology Masterclass",
+    category_en: "Elite Risk & Psychology Management",
+    category_zu: "Ukulawulwa Kwengozi Nomqondo Okuphezulu",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "40 Hours",
+    duration_zu: "Amahora angu-40",
+    description_en: "The fourth instalment of our premier video elite mentorship. Bridge the gap between system performance and execution mindset. Master fractional Kelly criterion stake calculators, maximum drawdown immunization formulas, and high-performance cognitive state management.",
+    description_zu: "Incenye yesine yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Xhumanisa ukusebenza kohlelo nengqondo nomoya wokuhweba. Thola ulwazi lwe Kelly criterion calculators, amafomula okuvikela i-drawdown, kanye nokuphathwa komqondo ophakeme ngesikhathi sokuhweba.",
+    thumbnail: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_psychology_mod_1",
+        title_en: "Module 1: Advanced Risk Engineering & Stress Immunization Frameworks",
+        title_zu: "Isifundo 1: Izibalo Zengozi ne-Stress Immunization Frameworks",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_4",
+            title_en: "Class 4: Master Class Video - Advanced Risk Mathematics & Cognitive Psychology Codes",
+            title_zu: "Isigaba 4: Ividiyo ye-Master Class - Advanced Risk Mathematics ne-Cognitive Psychology Codes",
+            duration: "61 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQQIsk02ildtQJQNQlepkyhLAWn4JcBxMgcIAE6Pwe48Tyk",
+            imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 4 of our IMALI Elite sequences. This masterclass video is dedicated to advanced risk mathematics and high-performance execution psychology. Discover how to control drawdown with mathematical precision, implement Kelly Criterion positioning matrices, and eliminate cognitive biases during live-market stressors. Direct your attention to the full-length video below to absorb these professional-grade risk immunization frameworks.",
+            content_zu: "Siyakwamukela esigabeni sesine se IMALI Elite sequence yethu. Kule vidiyo, sigxila kakhulu ezibalweni zengozi ezithuthukile kanye nengqondo ekahle yokuhweba (trading psychology). Shintsha indlela osebenzisa ngayo ilot sizing, thola ukuthi unganciphisa kanjani i-drawdown nge Kelly Criterion formulas, futhi uqede ukwesaba nemizwa emakethe. Bukela le vidiyo efakwe ngezansi ukuze uthole ulwazi oluphelele lokuqeqeshwa kwethu.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Risk_Mathematics_Psychology.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Risk_Mathematics_Psychology.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE RISK ENG & EXECUTION NEUROPSYCHOLOGY
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. MATHEMATICAL DRAWDOWN IMMUNIZATION
+- The primary cause of trader ruin is consecutive series losses paired with linear staking.
+- Employ fractional positioning sizes based on verified Win-Loss probabilities.
+- Never exceed 1.5% maximum total risk across all active correlated trading baskets.
+
+2. FRACTIONAL KELLY STAKING MATRIX
+- Kelly sizing calculates the optimum trade size based on historical system edge.
+- Formula: K% = W - [(1 - W) / R], where W = Win rate percentage, R = Risk-to-reward ratio.
+- Use a conservative 'Half-Kelly' multiplier (0.5 * K%) to smooth capital equity growth.
+
+3. COGNITIVE CALIBRATION DURING LIVE STRESSORS
+- Market stress triggers primitive fight-or-flight centers in the amygdala, bypassing rationale.
+- Prevent reactive trading by automating exact price entry and invalidation triggers.
+- Take immediate 15-minute screen-breaks following consecutive high-volume target hits or losses.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: IZIBALO ZENGOZI NOMQONDO OKUPHEZULU
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. UKUZIVIKELA KWI-DRAWDOWN EMALINI (IMMUNIZATION)
+- Isizathu esikhulu esenza abahwebi bafele emakethe ukulandelelana kokulahlekelwa ne-linear stakes.
+- Sebenzisa ama-fractional sizes emali ahlaziywe ngamathuba we-Win-Loss (probabilities).
+- Ungalokothi weqe u-1.5% wengozi isiyonke kuyo yonke imisebenzi efanayo evulekileyo.
+
+2. KELLY CRITERION FORMULA (STAKING)
+- Isibalo sika Kelly sithola ifomula elilungile le-lot size ngoklandela umlando wesistimu yakho.
+- Ifomula: K% = W - [(1 - W) / R], lapho u-W = Inzuzo rate %, kanti u-R = Risk-to-reward ratio.
+- Sebenzisa i-Half-Kelly multiplier (0.5 * K%) ukuze ukhulise imali yakho kahle ngaphandle kwemingcele.
+
+3. UKULAWULWA KOMQONDO NEZIVIVINYO (PSYCHOLOGY)
+- Ukwesaba kulethwa triggers kwengqondo phansi kwengcindezi (fight-or-flight), engasizi nakancane.
+- Gwema lokhu ngokubeka phansi (automating) amazinga lapho ufaka khona ama-trades kanye ne-Stop Loss eqondileyo.
+- Thatha amaminithi angu-15 ngaphandle kwekhompyutha yakho ngemva kokuphumelela noma ukulahlekelwa ama-trades.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_psychology_quiz_1",
+              title_en: "VVIP Elite Risk Math & Psychology Evaluation",
+              title_zu: "Ukuhlaziywa Kwezibalo Zengozi ne-Psychology ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_psychology_q1",
+                  question_en: "According to the Fractional Kelly Criterion guidelines, why is employing a 'Half-Kelly' ratio preferred over full sizing arrays?",
+                  question_zu: "Ngokomgomo we-Fractional Kelly Criterion, kungani isilinganiso esiwu-'Half-Kelly' sikhethwa ngaphezu kwesilinganiso esifull?",
+                  options_en: [
+                    "It dramatically smooths down capital fluctuations and volatility, protecting long-term equity growth from high drawdowns",
+                    "It increases the cumulative trading volume automatically, bypassing raw margin limitations during New York sessions",
+                    "It disables the stop loss parameters directly on backend brokerage systems during high-impact news spikes",
+                    "It doubles the probability of consecutive winning strikes across all global algorithmic assets"
+                  ],
+                  options_zu: [
+                    "Sehlisa ukuguquguquka kwemali (equity volatility), vikela ukukhula kwemali ngesikhathi semingcele emikhulu ye-drawdown",
+                    "Sinyusa ama-orders volume ngokuzenzakalelayo, seqa imingcele yama margins phakathi kwe New York sessions",
+                    "Sicisha umsebenzi we-Stop Loss kubathengisi (brokers) ngesikhathi kukhona izindaba ezinkulu zezimali",
+                    "Siphinda kabili amathuba wokuphumelela kulandelelana kuyo oyedwa impahla emakethe yomhlaba"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_liquidity_masterclass",
+    title_en: "IMALI Elite Strategy 5: Institutional Liquidity Sweeps & High-Probability Execution Secrets",
+    title_zu: "I-IMALI Elite Strategy 5: Institutional Liquidity Sweeps ne-High-Probability Execution Secrets",
+    category_en: "Elite Liquidity & Execution",
+    category_zu: "Ukusetshenziswa Kwemali ne-Liquidity Okuphezulu",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "42 Hours",
+    duration_zu: "Amahora angu-42",
+    description_en: "The fifth instalment of our premier video elite mentorship. Learn the mechanical codes of interbank liquidity pools. Master high-probability stop-hunt sweeps, fair value gap entries, and precision institutional mitigations using our proprietary execution blueprint.",
+    description_zu: "Incenye yesihlanu yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela ekuhlaziyeni amandla we-Liquidity Pools, ama-stop hunt sweeps, kanye nezikhungo zentengo zama-Fair Value Gaps (FVG) anekhwalithi ephezulu.",
+    thumbnail: "https://images.unsplash.com/photo-1640340434855-6084b1f4901c?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_liquidity_mod_1",
+        title_en: "Module 1: Advanced Liquidity Sourcing & Precision Entry Protocols",
+        title_zu: "Isifundo 1: Advanced Liquidity Sourcing ne-Precision Entry Protocols",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_5",
+            title_en: "Class 5: Master Class Video - Institutional Liquidity Pools & Stop-Hunt Mechanics",
+            title_zu: "Isigaba 5: Ividiyo ye-Master Class - Institutional Liquidity Pools ne-Stop-Hunt Mechanics",
+            duration: "64 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQSo-mDEnx8nTrJTnCpyB1r-Ad9mezrm5w5xkK-oytG1KuE",
+            imageUrl: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 5 of our IMALI Elite sequences. This masterclass video is dedicated to explaining Institutional Liquidity Sourcing and Liquidity Sweep structures. Learn how the interbank algorithm locates retail stop-losses (liquidity pools), triggers high-probability sweeps, and structures clean mitigations off Fair Value Gaps (FVG). Be sure to watch the interactive, high-definition video lesson directly below to master these execution secrets.",
+            content_zu: "Siyakwamukela esigabeni sesihlanu se IMALI Elite sequence yethu. Kule vidiyo, sigxila kakhulu ekuzingeleni i-Liquidity Pools emakethe (Stop-Hunts). Uzofunda ukuthi amabhange anyakazisa kanjani intengo ukuze anqamule ama-retail traders ezindaweni ezibalulekile, nendlela yoksebenzisa ama-Fair Value Gaps (FVG) ukuthola ama-trades anembile anekhwalithi ephezulu. Bukela le vidiyo ehamba phambili efakwe ngezansi.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Liquidity_Sourcing.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Liquidity_Sourcing.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE LIQUIDITY SOURCING & SWEEP BLUEPRINT
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. LIQUIDITY POOL METRICS
+- Interbank algorithms require massive counterparty liquidity to fill substantial orders.
+- This liquidity resides in concentrated buy stop and sell stop boundaries (old highs/lows).
+- Retail support-resistance setups act as perfect engineering ground to trap liquidity pools.
+
+2. MECHANICAL STOP-HUNT SWEEPS
+- A stop-hunt sweep is a rapid, temporary price breach behind a significant trend level.
+- Sweeps are characterized by dynamic long wicks leaving behind zero actual body closes.
+- Once a sweep concludes, the pricing engine swiftly reverses to hunt opposite boundaries.
+
+3. COGNITIVE DISPLACEMENT & FVG ENTRY
+- Wait for a clear Market Structure Shift (MSS) following a liquidity capture.
+- Execute limit entry positions of 1:3 RR directly off optimal 50% equilibrium Fair Value Gaps.
+- Place protective stop losses 1.5 pips beyond the ultimate swing extreme of the sweep candle.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: LIQUIDITY POOLS NE-STOP-HUNT BLUEPRINT
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. INDAWO YE-LIQUIDITY POOLS (IZIBALO)
+- Izinhlelo zamabhange (algorithms) zidinga imali eqinile ukuze zifake ama-orders amakhulu.
+- Le mali ihlala kakhulu ngaphansi noma ngenhla kwezigaba ezibalulekile (old highs / lows).
+- Ukuxhumana kwe-retail kusetshenziswa njengezindawo zokusungula noma zokudweba isicupho sombhalo entengweni.
+
+2. I-STOP-HUNT SWEEP MECHANICALS
+- I-stop-hunt sweep ingukulandelelwa okusheshayo kwe-orders ngale kwaleyo migomo.
+- Ikhonjiswa ngemisila emide (long wicks) ngaphandle kokuvaleka komzimba wentengo (candle body structures).
+- I-sweep isuka phezulu iye phansi, bese imakethe ishintsha ngejubane elikhulu.
+
+3. DISPLACEMENT ENTRANCE (FVG)
+- Linda ukuthi kuvele i-Market Structure Shift (MSS) ngenhla/ngaphansi kwe-displacement candle.
+- Faka ama-trade akho ngqo phezulu kwe-Fair Value Gap (FVG) elinganiselwa ku-50% standard entries.
+- Beka i-protective stop loss ngendlela ekahle ngemuva kwendawo yokugcina yaleyo sweep candle.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_liquidity_quiz_1",
+              title_en: "VVIP Elite Liquidity & Execution Evaluation",
+              title_zu: "Ukuhlaziywa Kwe-Liquidity Pools ne-Execution ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_liquidity_q1",
+                  question_en: "What distinct mechanical signature separates an institutional liquidity sweep from a genuine breakout close?",
+                  question_zu: "Yimuphi umahluko obonakalayo ohlukanisa i-liquidity sweep yamabhange ne-genuine breakout?",
+                  options_en: [
+                    "A sweep shows rapid entry with long rejection wicks, whereas a breakout secures solid candle body closes beyond the level",
+                    "A sweep automatically triggers high-impact economic news releases on global financial servers within minutes",
+                    "A sweep deactivates all active pending stop-loss and take-profit ratios on MT4 and MT5 brokers worldwide",
+                    "A sweep occurs only during low-volume Asian trading sessions with zero volatility and minimal directional spread"
+                  ],
+                  options_zu: [
+                    "I-sweep ikhombisa ukunyakaza okusheshayo ngemisila emide (rejection wicks), kanti i-breakout ivala ngomzimba egcwele phesheya kwe-level",
+                    "I-sweep ikhipha ngokuzenzakalelayo izindaba ezinkulu zezimali emakethe kumaseva womhlaba jikelele",
+                    "I-sweep icisha yonke imingcele yokuphatha ingozi (stop-loss / take-profit) kuzo zonke izikhungo zabathengisi",
+                    "I-sweep eyenzeka kuphela phakathi kweseshoni yase-Asia lapho kungekho mnyakazo ne-volatility emakethe"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_reversal_masterclass",
+    title_en: "IMALI Elite Strategy 6: Algorithmic Reversals & Institutional Fair Value Gaps",
+    title_zu: "I-IMALI Elite Strategy 6: Algorithmic Reversals ne-Institutional Fair Value Gaps",
+    category_en: "Elite Trend Reversals",
+    category_zu: "Ukushintsha Kwekhethelo Emakethe",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "44 Hours",
+    duration_zu: "Amahora angu-44",
+    description_en: "The sixth instalment of our premier video elite mentorship. Master the structural shifts of market cycles. Decode fair value gaps (FVG), liquidity vacuums, and learn to capture explosive trend reversals with microscopic risk.",
+    description_zu: "Incenye yesithupha yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela ekuhlaziyeni ushintsho lwesakhiwo semakethe (MSS), ama-Fair Value Gaps (FVG) anekhwalithi, kanye nendlela yokbamba izitayela ezintsha emakethe.",
+    thumbnail: "https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_reversal_mod_1",
+        title_en: "Module 1: Advanced Reversal Cycles & Fair Value Gap Mechanics",
+        title_zu: "Isifundo 1: Advanced Reversal Cycles ne-Fair Value Gap Mechanics",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_6",
+            title_en: "Class 6: Master Class Video - Algorithmic Market Structure Shifts & FVG Validation",
+            title_zu: "Isigaba 6: Ividiyo ye-Master Class - Algorithmic Market Structure Shifts ne-FVG Validation",
+            duration: "68 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQTgMLDioL0bQJPwWWfTBGzFAb1YFzOTxPl0N-htDV84dKc",
+            imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 6 of our IMALI Elite sequences. This masterclass video is dedicated to mastering Algorithmic Trend Reversals and validating Fair Value Gaps (FVGs). Gain elite comprehension on how institutional algorithms engineered displacement, validated imbalances, and executed precision entries at key structural pivot zones. Direct your attention to the full-length video below to absorb these professional-grade trend capture frameworks.",
+            content_zu: "Siyakwamukela esigabeni sesithupha se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngezindlela zokushintsha kwesakhiwo semakethe (Market Structure Shift) nokuqinisekisa ama-Fair Value Gaps (FVG). Funda ukuthi amabhange adala kanjani i-displacement, athole ama-imbalances phezulu kwe-liquidity, futhi wenze izithengiselane ezinembile. Bukela le vidiyo efakwe ngezansi ukuze uthole ulwazi oluphelele.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Reversal_Framework.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-reversal_Framework.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE REVERSAL SYSTEM & AUTOMATED IMPORT CORRELATOR
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. MARKET STRUCTURE SHIFTS (MSS)
+- True reversal is signaled only after a high-probability sweep of high-timeframe liquidity.
+- Watch for displacement: an aggressive, large-bodied candle breaking structural support/resistance.
+- Confirm volume using cumulative delta indicators pointing towards the new trade direction.
+
+2. FAIR VALUE GAP (FVG) IMPLICATIONS
+- An FVG is a 3-candle structural imbalance where price did not trade on the opposing side.
+- High-probability setups recur when price retraces exactly to the 50% equilibrium level of the FVG.
+- Avoid low-volume ranges; instead target high-volume imbalance structures for limit entry.
+
+3. COGNITIVE DISCIPLINE IN REVERSAL SEQUENCES
+- Trend reversals often trigger high cognitive friction as traders try to pick exact tops.
+- Execute with hard invalidation stops located 1.5 pips beyond the displacement range extreme.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: REVERSAL SYSTEM NEYAKHELO YETHEMPO ENTENGWENI
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. MARKET STRUCTURE SHIFTS (MSS)
+- Ushintsho oluyiqiniso lukhonjiswa kuphela ngemuva kokuthathwa kwe-high-timeframe liquidity.
+- Linda ukuthi kuvele i-displacement: inkanyezi egcwele ngomzimba odabula amazinga wokugcina wentengo.
+- Qinisekisa i-volume emakethe usebenzisa amandla we-delta dynamic kulowo mnyakazo omuhle.
+
+2. MA-FAIR VALUE GAPS (FVG) METRICS
+- I-FVG lizinga lezakhiwo lamakhandlela amathathu lapho intengo ingahambanga khona ngendlela efanele.
+- Izithengiselane zekhwalithi zenzeka lapho intengo ihlehlela emuva phezulu ku-50% equilibrium ye-FVG.
+- Gwema izindawo lapho ingekho i-volume key; landela kuphela ama-imbalances anombhalo emakethe.
+
+3. UKUQONDISA INQUBO ENGQONDWENI (DISCIPLINE)
+- Ukushintsha kwe-trends kuvame ukuletha ukwesaba ngoba abahwebi bazama ukubala i-top nemizwa.
+- Beka i-protective stop loss esiqinile esingama pips angu-1.5 ngale kwaleyo displacement high.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_reversal_quiz_1",
+              title_en: "VVIP Elite Reversals & FVG Validation Quiz",
+              title_zu: "Ukuhlolwa Kwezibalo Zokusethwa noku-Reversal ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_reversal_q1",
+                  question_en: "Which structural component marks high-probability algorithmic displacement after a liquidity run?",
+                  question_zu: "Yisiphi isakhiwo esikhombisa displacement eqinile emakethe ngemva kokuthathwa kwe-liquidity?",
+                  options_en: [
+                    "A powerful displacement candle leaving a valid Fair Value Gap (FVG) and structural split",
+                    "A slow consolidation pattern occurring within the slow end of New York sessions",
+                    "A simple support line rejection without clearing any resting retail market orders",
+                    "A sudden terminal disconnect popup warning that forces manual trade cancellation"
+                  ],
+                  options_zu: [
+                    "Inhlansi egcwele ye-displacement candle eshiye i-Fair Value Gap (FVG) ne-break of structure",
+                    "Ukushelela kancane kwentengo ngemuva kokuphela kwe-New York session sikhathi sonke",
+                    "Isiphephelo sentengo phezulu komugqa we-support ngaphandle kokususa ama-stops emakethe",
+                    "Iphutha lokuxhumana kwesikhashana phezulu kwe-platform ye-terminal kwi-PC yakho"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_supplydemand_masterclass",
+    title_en: "IMALI Elite Strategy 7: Institutional Supply & Demand Matrix & Invalidation Protocols",
+    title_zu: "I-IMALI Elite Strategy 7: Institutional Supply & Demand Matrix ne-Invalidation Protocols",
+    category_en: "Elite Supply & Demand",
+    category_zu: "Ukuphakelwa Nokufunwa Kwemakethe Okuphezulu",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "46 Hours",
+    duration_zu: "Amahora angu-46",
+    description_en: "The seventh instalment of our premier video elite mentorship. Unlock the hidden footprints of institutional block towers. Master premium-discount liquidity matrices, refined supply/demand mitigation zones, and invalidation protocols.",
+    description_zu: "Incenye yesikhombisa yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela ekuhlaziyeni ama-Order Blocks wamabhange endaweni ye-Supply kanye ne-Demand, kanye nezinyathelo zoku Vikela Ingozi.",
+    thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_supplydemand_mod_1",
+        title_en: "Module 1: Supply/Demand Arrays & Precision Verification Rules",
+        title_zu: "Isifundo 1: Supply/Demand Arrays ne-Precision Verification Rules",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_7",
+            title_en: "Class 7: Master Class Video - Institutional Supply/Demand Optimization & Order Blocks",
+            title_zu: "Isigaba 7: Ividiyo ye-Master Class - Institutional Supply/Demand Optimization ne-Order Blocks",
+            duration: "70 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQTDlxGbs_rAT6FaTYxo1_j1ARm3eG6NbbCceGMcQpM-e-I",
+            imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 7 of our IMALI Elite sequences. This masterclass video is dedicated to explaining Institutional Supply & Demand and Order Block refinement. Learn how the interbank algorithm maps major institutional buying and selling zones, refines them down to low-timeframe points of interest (POI), and structures precision entries with standard invalidation safeguards. Direct your attention to the full-length video below to study these elite mechanisms.",
+            content_zu: "Siyakwamukela esigabeni sesikhombisa se IMALI Elite sequence yethu. Kule vidiyo, sigxila kakhulu ekungeneni kwentengo ezindaweni zama-Order Blocks we-Supply kanye ne-Demand. Uzofunda ukuthi amabhange adweba kanjani amazinga abalulekile, indlela yokulungisa lama-levels usebenzisa ama-lower timeframes (POI), kanye nezindlela ezikahle zokuvikela imali yakho uma imakethe ishintsha indlela. Bukela le vidiyo efakwe ngezansi ukuze uthole ulwazi oluphelele.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Supply_Demand_Matrix.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Supply_Demand_Matrix.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE SUPPLY & DEMAND MATRIX & ORDER BLOCKS
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. REFINED ORDER BLOCKS
+- An institutional order block is the final candle before an aggressive displacement move.
+- We refine these zones on lower timeframes to locate the exact point of imbalance origin.
+- Always wait for price to return and mitigate the block before executing pending orders.
+
+2. SUPPLY & DEMAND ZONE RULES
+- High-probability zones are born exclusively from strong displacement leaving behind FVGs.
+- A zone without a supporting Fair Value Gap has a much higher probability of being swept.
+- Ensure the zones reside in premium territory for sells, or discount territory for buys.
+
+3. INVALIDATION PROTOCOLS
+- Structural invalidation occurs when a candle secures a solid close body beyond the zone limits.
+- Set hard invalidation SL safety buffers precisely 1.5 - 2 pips beyond the outer block wick.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: SUPPLY & DEMAND MATRIX NAMA-ORDER BLOCKS
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. AMA-ORDER BLOCKS REFINED
+- I-Order block yamabhange ikhandlela lokugcina ngaphambi kokuba kuvele umnyakazo wentengo onamandla (displacement).
+- Sibheka lama-zones kuma-lower timeframes ukuze sithole kahle lapho umnyakazo uqale khona.
+- Linda njalo ukuthi intengo ibuyele endaweni yaleyo block (mitigation) ngaphambi kokungena.
+
+2. SUPPLY & DEMAND ZONE RULES
+- Izindawo zekhwalithi zizalwa kuphela ngumnyakazo onamandla oshiya ama-Fair Value Gaps (FVG).
+- I-zone engenayo i-Fair Value Gap isengcupheni enkulu yokuthi ifakwe i-liquidity sweep.
+- Qinisekisa ukuthi i-supply block isendaweni ye-premium, kanti i-demand isendaweni ye-discount.
+
+3. UKUVIKELA INGOZI OKUQINILE (INVALIDATION)
+- Umthetho wentengo uthi i-zone ayisasebenzi uma ikhandlela livala ngomzimba ogcwele phesheya kwayo.
+- Beka i-protective stop loss sikhathi sonke phakathi kwama pips angu-1.5 kuye ku-2 ngale kwaleyo wick.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_supplydemand_quiz_1",
+              title_en: "VVIP Elite Supply/Demand Matrix Qualification",
+              title_zu: "Ukuhlolwa Kwezibalo ze-Supply ne-Demand ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_supplydemand_q1",
+                  question_en: "Which condition must be met to validate an institutional Supply or Demand block as high-probability?",
+                  question_zu: "Yisiphi isimo okufanele sifezwe ukuze i-Supply noma i-Demand block yamabhange ibe ngekhwalithi ephezulu?",
+                  options_en: [
+                    "It must originate from strong displacement that leaves behind clear Fair Value Gaps (FVGs)",
+                    "It must be located precisely in equilibrium during the peak Asian trading timeline",
+                    "It must trigger immediate slippage alerts and terminal disconnect loops on all live platforms",
+                    "It must be traded only with maximum uncalculated leverage during a weekend market halt"
+                  ],
+                  options_zu: [
+                    "Kufanele iqalwe ngumnyakazo onamandla (displacement) oshiya izikhala zama-Fair Value Gaps (FVGs)",
+                    "Kufanele ibe semgqeni we-equilibrium ngesikhathi se-Asian trading session sonke",
+                    "Kufanele idale amaphutha emishinini wokuhweba kanye nama-terminal loops kuwo wonke amapulatifomu",
+                    "Kufanele ihwetshwe kuphela ngama-lot sizes amakhulu kakhulu ngesikhathi imakethe ivaliwe ngempelasonto"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_amd_masterclass",
+    title_en: "IMALI Elite Strategy 8: AMD (Accumulation, Manipulation, Distribution) Matrix & Time-Price Theory",
+    title_zu: "I-IMALI Elite Strategy 8: AMD (Accumulation, Manipulation, Distribution) Matrix ne-Time-Price Theory",
+    category_en: "Elite AMD & Timing",
+    category_zu: "Isikhathi ne-AMD Emakethe",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "48 Hours",
+    duration_zu: "Amahora angu-48",
+    description_en: "The eighth instalment of our premier video elite mentorship. Unlock the algorithmic power of 3: Accumulation, Manipulation, and Distribution (AMD). Master premium daily session boundaries, time-price delivery matrices, and learn to capture high-probability institutional expansions.",
+    description_zu: "Incenye yesishiyagalombili yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela ekuhlaziyeni i-Accumulation, Manipulation, ne-Distribution (AMD) endaweni ye-Power of 3, kanye ne-Time-Price Theory emakethe.",
+    thumbnail: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_amd_mod_1",
+        title_en: "Module 1: AMD Cycles, Power of 3 & Time-Price Theory",
+        title_zu: "Isifundo 1: AMD Cycles, Power of 3 ne-Time-Price Theory",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_8",
+            title_en: "Class 8: Master Class Video - Algorithmic AMD Power of 3 & Time-Price Delivery Cycles",
+            title_zu: "Isigaba 8: Ividiyo ye-Master Class - Algorithmic AMD Power of 3 ne-Time-Price Delivery Cycles",
+            duration: "72 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQRwBZGROBvcQIhKNiTp40FGAeef_qrWGSn551AewWVv1VE",
+            imageUrl: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 8 of our IMALI Elite sequences. This masterclass video is dedicated to explaining AMD (Accumulation, Manipulation, Distribution) Power of 3 and Time-Price theory. Learn how the interbank algorithm accumulates orders during low-volume sessions, manipulates retail sentiment by sweeping liquidity pools, and then distributes price explosively towards the true daily targets. Direct your attention to the full-length video below to study these institutional cycles.",
+            content_zu: "Siyakwamukela esigabeni sesishiyagalombili se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngezindlela ze-Accumulation, Manipulation, ne-Distribution (AMD) kanye ne-Time-Price Theory emakethe we-Power of 3. Uzofunda ukuthi i-algorithm ibeka kanjani ama-orders ngesikhathi se-Asian range, isuse kanjani abahwebi ngokushanela ama-liquidity pools ngesikhathi somzuzu we-London Open, bese isabalalisa intengo ngamandla ngesikhathi se-New York session. Bukela le vidiyo efakwe ngezansi ukuze uthole ulwazi oluphelele.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_AMD_Power_Of_3.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-AMD_Power_Of_3.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE AMD POWER OF 3 & TIME-PRICE THEORY
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. ACCUMULATION MECHANICS (A)
+- Typically occurs during the Asian session.
+- Institutional algorithm accumulates orders within a tight, low-volume consolidation range.
+- Avoid placing orders inside this range; instead, map the high and low boundaries.
+
+2. MANIPULATION MECHANICS (M)
+- Occurs during London Open or early New York.
+- Price is driven aggressively above or below the accumulation range to sweep liquidity.
+- This creates the daily wick (high or low of the day) and traps breakout traders.
+
+3. DISTRIBUTION MECHANICS (D)
+- Occurs as the algorithm distributes price towards the opposite objective.
+- This represents the major daily expansion leg.
+- Look for entries on lower timeframe structure shifts inside the manipulation run.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: AMD POWER OF 3 NE-TIME-PRICE THEORY
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. ACCUMULATION MECHANICS (A)
+- Ivamise ukwenzeka ngesikhathi se-Asian session.
+- I-algorithm ibeka imikhawulo eqinile nemincane ye-volume phakathi kwe-consolidation range.
+- Gwema ukufaka izithengiselane ngaphansi kwale zone; dweba amazinga wayo we-high and low.
+
+2. MANIPULATION MECHANICS (M)
+- Kwenzeka ngesikhathi se-London Open noma ekuqaleni kwe-New York.
+- Intengo ikhushulwa ngamandla ngaphezulu noma ngaphansi kwe-accumulation range ukuqoqa imali.
+- Lokhu kudala indawo yomsila wekhandlela (high noma low of the day) bese kuvibeza abahwebi bezitayela.
+
+3. DISTRIBUTION MECHANICS (D)
+- Kwenzeka lapho i-algorithm isabalalisa intengo ibuyela ngakolunye uhlangothi olubalulekile.
+- Lona ngumnyakazo omkhulu wentengo womhla lowo obizwa nge-expansion leg.
+- Bheka ukungena (entries) kuma-lower timeframes lapho kuvela khona ushintsho lwendlela.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_amd_quiz_1",
+              title_en: "VVIP Elite AMD & Time-Price Qualification Quiz",
+              title_zu: "Ukuhlolwa Kwezibalo ze-AMD ne-Time-Price ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_amd_q1",
+                  question_en: "What is the primary role of the Manipulation phase in the institutional Power of 3 (AMD) cycle?",
+                  question_zu: "Inhloso enkulu yesigaba se-Manipulation kwi-Power of 3 (AMD) algorithm yini?",
+                  options_en: [
+                    "To sweep liquidity and trap retail traders before starting the true daily expansion trend",
+                    "To consolidate volume horizontally inside a boring range for the entire week",
+                    "To trigger hardware error alerts and disconnect the internet gateway on MetaTrader",
+                    "To distribute partial profits to retail buyers during a low-volume weekend session"
+                  ],
+                  options_zu: [
+                    "Ukushanela i-liquidity kanye nokubamba abahwebi bendabuko ngaphambi kokuqala uhambo lokugcina entengweni",
+                    "Ukubeka intengo endaweni eyodwa kancane isonto lonke ngaphandle kokunyakaza",
+                    "Ukudala amaphutha ohlelo lokuxhumana noma ukunqamula i-internet yakho kwi-PC",
+                    "Ukukhokha imali amabhonasi kubathengisi ngesikhathi imakethe ivaliwe ngempelasonto"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_inducement_masterclass",
+    title_en: "IMALI Elite Strategy 9: Algorithmic Inducements & VVIP Liquidity Sweeps",
+    title_zu: "I-IMALI Elite Strategy 9: Algorithmic Inducements ne-VVIP Liquidity Sweeps",
+    category_en: "Elite Inducements",
+    category_zu: "Ukususwa Kwemali nethuba Eliphezulu",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "50 Hours",
+    duration_zu: "Amahora angu-50",
+    description_en: "The ninth instalment of our premier video elite mentorship. Decipher high-probability algorithmic inducement mechanisms. Learn to identify retail trap configurations, structure entry triggers inside interbank sweep zones, and execute with precision.",
+    description_zu: "Incenye yesishiyagalombili neyodwa yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela ekuhlaziyeni ama-Algorithmic Inducements kanye nezindlela zokushanela i-liquidity phezulu kwe-VVIP setup.",
+    thumbnail: "https://images.unsplash.com/photo-1621504450181-5d38686cfdcd?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_inducement_mod_1",
+        title_en: "Module 1: Inducement Structures & VVIP Execution Protocols",
+        title_zu: "Isifundo 1: Inducement Structures ne-VVIP Execution Protocols",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_9",
+            title_en: "Class 9: Master Class Video - Algorithmic Inducements & Precision Sweep Execution",
+            title_zu: "Isigaba 9: Ividiyo ye-Master Class - Algorithmic Inducements ne-Precision Sweep Execution",
+            duration: "74 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQRxB8jJRY8XSoXPdTVNNyRCARVHGkHRaTB4g28zLS47x3k",
+            imageUrl: "https://images.unsplash.com/photo-1631248055158-edec7a3c072b?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 9 of our IMALI Elite sequences. This masterclass video is dedicated to mastering Algorithmic Inducements and Liquidity Sweeps. Gain elite comprehension on how institutional algorithms engineer inducement highs and lows, lure premature traders into subpar setups, and execute sudden sweeps. Direct your attention to the full-length video below to study these highly accurate trading frameworks.",
+            content_zu: "Siyakwamukela esigabeni sesishiyagalombili nanye se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngezindlela zokushanela i-liquidity kanye nama-Algorithmic Inducements emakethe. Uzofunda ukuthi i-algorithm idala kanjani izinhlangothi ezidukisayo (inducements), indlela amabhange anyakazisa ngayo intengo ukushaqisa abathengisi, kanye nendlela yokubamba izithengiselane phezulu kwama-sweep areas. Bukela le vidiyo efakwe ngezansi ukuze uthole ulwazi oluphelele.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Inducements_Framework.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Inducements_Framework.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE ALGORITHMIC INDUCEMENTS & LIQUIDITY SWEEPS
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. ALGORITHMIC INDUCEMENTS
+- An inducement is a structural high or low engineered to lure premature breakout of reversal traders.
+- Institutional algorithms trigger retail limit orders at minor swing points before reversing the intent.
+- Do not trade early at minor structure points; instead, identify the true liquidity sweep objective.
+
+2. RETAIL TRAP CONFIGURATIONS
+- Double tops and bottoms are classical retailer magnets used by banks to build massive liquidity pools.
+- Banks often trigger retail orders by slightly crossing these areas, then sweeping the stop losses.
+- Wait for a clear sweep wick rejection and structural shift before formulating entry.
+
+3. ENTRY AND CAPITAL PROTECTION
+- Enter strictly after structural invalidation on a lower timeframe following the sweep extreme.
+- Guard entries with static safety stop loss placement 1.5 - 2 pips beyond the sweep wick extreme.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: ALGORITHMIC INDUCEMENTS NAMA-LIQUIDITY SWEEPS
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. ALGORITHMIC INDUCEMENTS
+- I-inducement represents isakhiwo semakethe esidukisayo esidonsela abahwebi ukuba bangene sikhathi sonke.
+- I-algorithm yamabhange amakhulu ivuselela ama-buy/sell stops kuma-minor swing points ngaphambi kokushintsha.
+- Gwema izithengiselane kuma-minor level; lindela njalo amazinga womhla we-liquidity sweep enkulu.
+
+2. RETAIL TRAP CONFIGURATIONS
+- Ama-double tops ne-bottoms ayimigomo ebonakalayo yamabhange ukuqoqa i-pool enkulu ye-liquidity.
+- Amabhange anyakazisa intengo kancane ngale kwaleyo migqa, ashanele ama-Stop Loss abantu abaningi.
+- Linda njalo ukuthi kuvele i-wick sweep rejection evulekile kanye ne-break of structure.
+
+3. UKUNGENA NEYOKUVIKELA IMALI
+- Ngena kuphela emva kokuthi kube ne-structure shift yethu kuma-lower timeframes ngaphansi komnyakazo we-sweep.
+- Beka stop loss esiqinile phakathi kwama pips angu-1.5 kuye ku-2 ngaphezu noma ngaphansi kwe-wick egobile.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_inducement_quiz_1",
+              title_en: "VVIP Elite Inducement & Liquidity Sweeps Qualification Quiz",
+              title_zu: "Ukuhlolwa Kwezibalo ze-Inducement ne-Liquidity Sweeps ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_inducement_q1",
+                  question_en: "What is the primary characteristic of an institutional inducement?",
+                  question_zu: "Yisiphi isici esiyinhloko se-inducement emakethe yamabhange?",
+                  options_en: [
+                    "A structural high or low engineered specifically to trap premature breakout or trend-reversal traders",
+                    "A long consolidation range extending across multiple days with zero institutional trading volume",
+                    "A sudden platform connection loss trigger that closes active customer positions automatically",
+                    "A simple support line that holds perfectly without any liquidity sweep occurring"
+                  ],
+                  options_zu: [
+                    "Isakhiwo se-high noma i-low esidaliwe ukuze kubanjwe abahwebi abangena kancane emakethe we-breakout noma i-trend shift",
+                    "Indawo yokuhamba emaceleni isikhathi eside sezinsuku ezimbalwa engenalo unyakazo we-volume",
+                    "Iphutha kuxhumano lwenethiwekhi elivala izithengiselane ezivuliwe ngokuzenzakalelayo",
+                    "Umugqa we-support elula ebambe intengo kahle ngaphandle kokunyakazisa ama-stop loss"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_macro_masterclass",
+    title_en: "IMALI Elite Strategy 10: Institutional Market Maker Models & VVIP Daily Bias Protocols",
+    title_zu: "I-IMALI Elite Strategy 10: Institutional Market Maker Models ne-VVIP Daily Bias Protocols",
+    category_en: "Elite Market Maker Models",
+    category_zu: "Amamodeli Okuhweba Ambhange Okuphezulu",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "52 Hours",
+    duration_zu: "Amahora angu-52",
+    description_en: "The tenth instalment of our premier video elite mentorship. Master the structural layouts of Market Maker Buy and Sell Models (MMBM/MMSM). Learn to synthesize macro liquidity runs, identify consolidated profiles, and master the institutional daily bias setup with surgical precision.",
+    description_zu: "Incenye yeshumi yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela egobolondweni le-Market Maker Buy & Sell Models (MMBM/MMSM) kanye nendlela yokuthola i-Daily Bias ekuhwebeni kwakho.",
+    thumbnail: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_macro_mod_1",
+        title_en: "Module 1: Market Maker Models & Daily Bias Frameworks",
+        title_zu: "Isifundo 1: Market Maker Models ne-Daily Bias Frameworks",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_10",
+            title_en: "Class 10: Master Class Video - Institutional Market Maker Models & VVIP Daily Bias Protocols",
+            title_zu: "Isigaba 10: Ividiyo ye-Master Class - Institutional Market Maker Models ne-VVIP Daily Bias Protocols",
+            duration: "76 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQSQmuZqVBCvRL6wVHbqiL6TAfHELkOE_q4uCkwXiqlOewU",
+            imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 10 of our IMALI Elite sequences. This landmark masterclass video is dedicated to explaining the sophisticated Market Maker Buy/Sell Models (MMBM/MMSM) and institutional daily bias delivery protocols. Explore the key phases of displacement, consolidation, engineering of liquidity, smart money reversals, and final distribution to resting pools. Direct your attention to the full-length video below to study these highly accurate frameworks.",
+            content_zu: "Siyakwamukela esigabeni seshumi se IMALI Elite sequence yethu. Kule vidiyo, sigxila kakhulu ekufundeni amazinga we-Market Maker Buy and Sell Models (MMBM/MMSM) ne-Daily Bias ka-VVIP. Uzofunda ukuthi amabhange amakhulu adweba kanjani amazinga, indlela yokulandela umkhondo wentengo, kanye nendlela efanele yokuthola amazinga e-daily bias avikelekile. Bukela le vidiyo efakwe ngezansi ukuze uthole ulwazi oluphelele.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Market_Maker_Models.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Market_Maker_Models.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE MARKET MAKER MODELS & DAILY BIAS PROTOCOLS
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. MARKET MAKER MODELS (MMBM / MMSM)
+- These models map the complete algorithmic cycle of price from inception to distribution.
+- Buy Model: Price transitions from a consolidation high down to a smart money reversal (SMR), then climbs back up through low-timeframe displacement.
+- Sell Model: Price climbs to a smart money reversal, then descends back through consolidated sell zones to sweep major lows.
+
+2. INSTITUTIONAL DAILY BIAS
+- Determined by analyzing macro candle setups (Daily/Weekly) to establish the next day's directional pull.
+- High-probability daily bias targets the nearest major liquidity pool or unmitigated Fair Value Gap.
+- Never trade against the macro daily bias unless a clean structural shift occurs at high-timeframe key levels.
+
+3. RISK & INTEGRATION
+- Align lower timeframe entries directly with the macro Daily/Weekly trend directions.
+- Keep protective stop losses bounded at 1.5 - 2 pips beyond the smart money reversal structural extrema.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: MARKET MAKER MODELS NAMA-DAILY BIAS PROTOCOLS
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. AMAMODELI AMABHANGE (MMBM / MMSM)
+- Lama-models akhombisa umjikelezo ophelele we-algorithm wentengo kusukela ekuqaleni kuya ekugcineni.
+- Buy Model: Intengo isuka phezulu iye phansi lapho kutholakala i-Smart Money Reversal (SMR), bese ikhuphuka futhi ishintsha isimo.
+- Sell Model: Intengo ikhuphukela phezulu kakhulu lapho kutholakala umnyakazo we-SMR, bese yehla ngamandla ukuqoqa ama-resting lows.
+
+2. INSTITUTIONAL DAILY BIAS
+- Leli thuba litholakala ngokuhlaziya amakhandlela amakhulu (Daily / Weekly) ukuze sithole uhlangothi olulandelayo lwentengo.
+- Intengo ye-daily bias ishesha lula iye ngakwi-liquidity pool eseduze noma i-Fair Value Gap engakavalwa.
+- Ungalokothi uhwebe uphikisana ne-daily bias enkulu ngaphandle kokuthi kuvele ushintsho lwesakhiwo (MSS).
+
+3. UKUVIKELA NEZINGA LOKUNGENA
+- Qondanisa izindlela zakho zokungena kuma-lower timeframes njalo nohlangothi lwethrendi enkulu ye-Daily/Weekly.
+- Beka i-protective stop loss phakathi kwama pips angu-1.5 kuye ku-2 ngale kwendawo yeqophelo le-Smart Money Reversal (SMR).`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_macro_quiz_1",
+              title_en: "VVIP Elite Market Maker Models & Daily Bias Qualification Quiz",
+              title_zu: "Ukuhlolwa Kwezibalo ze-Market Maker Models ne-Daily Bias ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_macro_q1",
+                  question_en: "What marks the turning point of a Market Maker Buy or Sell Model?",
+                  question_zu: "Yini ekhombisa ushintsho olubalulekile (turning point) kwi-Market Maker Buy noma Sell Model?",
+                  options_en: [
+                    "The completion of a Smart Money Reversal (SMR) at a high-timeframe key liquidity level",
+                    "A horizontal consolidation boundary extending over the entire weekend holiday",
+                    "A dynamic indicator crossing line that forces immediate software exit codes on terminals",
+                    "A simple support line rejection that requires using maximum uncalculated market leverage"
+                  ],
+                  options_zu: [
+                    "Ukuphothulwa kwe-Smart Money Reversal (SMR) endaweni ebalulekile yendlalifa ye-high-timeframe liquidity",
+                    "Isimo lapho intengo ihamba emaceleni isonto lonke ngesikhathi imakethe ivaliwe",
+                    "Ulayini wento yokubala ophoqa ukuthi uhlelo lokuhweba luvaleke ngokuzenzakalelayo kwi-PC",
+                    "Ukungasabeli kwentengo emugqeni we-support obala odinga ukuhweba ngama-orders amaningi kakhulu"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_funding_masterclass",
+    title_en: "IMALI Elite Strategy 11: Institutional Funding Loops & Liquidity Delivery Matrices",
+    title_zu: "I-IMALI Elite Strategy 11: Institutional Funding Loops ne-Liquidity Delivery Matrices",
+    category_en: "Elite Funding & Liquidity Delivery",
+    category_zu: "Ukutholwa Kwezimali ne-Liquidity Emakethe",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "54 Hours",
+    duration_zu: "Amahora angu-54",
+    description_en: "The eleventh instalment of our premier video elite mentorship. Demystify the interbank algorithmic funding cycles, credit injection windows, and the complex liquidity delivery matrices. Master the top-tier execution setups backed by pure global macro flows.",
+    description_zu: "Incenye yeshumi nakanye yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela egobolondweni le-Institutional Funding Loops kanye nezinqubo ze-Liquidity Delivery Matrices.",
+    thumbnail: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_funding_mod_1",
+        title_en: "Module 1: Funding Cycles & Algorithmic Matrices",
+        title_zu: "Isifundo 1: Funding Cycles ne-Algorithmic Matrices",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_11",
+            title_en: "Class 11: Master Class Video - Institutional Funding Loops & Liquidity Delivery Matrices",
+            title_zu: "Isigaba 11: Ividiyo ye-Master Class - Institutional Funding Loops ne-Liquidity Delivery Matrices",
+            duration: "78 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQSSsyD8vFC9SZFQyukr1Q-dAaqJcHBV_pn_pP7lsKwntaE",
+            imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 11 of our IMALI Elite sequences. This advanced masterclass video investigates the core mechanisms behind institutional funding loops and the interbank electronic pricing algorithm's liquidity delivery matrices. Learn how international central banks balance credit, inject macro liquidity, and how delivery windows govern the intra-day sweeps. Direct your attention to the full-length video below to study these highly precise matrices.",
+            content_zu: "Siyakwamukela esigabeni seshumi nakanye se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokujulile ngezindlela zokusebenza ze-Institutional Funding Loops kanye ne-Liquidity Delivery Matrices ye-algorithm yamabhange amakhulu. Uzofunda ukuthi amabhange adala kanjani intengo, indlela yokulandela isikhathi esifanele se-delivery windows, kanye nokuvikeleka ekuhwebeni phezulu kwalama-flows. Bukela le vidiyo efakwe ngezansi ukuze uthole ulwazi oluphelele.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Funding_Loops_Matrix.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Funding_Loops_Matrix.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: INSTITUTIONAL FUNDING LOOPS & LIQUIDITY MATRICES
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. ALGORITHMIC FUNDING LOOPS
+- Funding loops correspond to the specific price injection routines used by the interbank delivery network.
+- Credit injections by liquidity providers establish major macro trend baselines.
+- Look to alignment with primary funding direction during peak volatility sessions (London & New York).
+
+2. LIQUIDITY DELIVERY MATRICES (LDM)
+- Governed by precise time and price triggers rather than lagging indicators.
+- The interbank engine seeks high-volume pools of resting orders to execute without extreme slippage.
+- Identify multi-month highs/lows where massive corporate liquidity matrices reside.
+
+3. STRATEGY ALIGNMENT
+- Always look for confirmation on lower timeframe structures inside these institutional matrices.
+- Place static safety stop loss orders strictly 1.5 - 2 pips beyond the sweep extrema, preventing unnecessary losses.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: INSTITUTIONAL FUNDING LOOPS NAMA-LIQUIDITY MATRICES
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. ALGORITHMIC FUNDING LOOPS
+- I-funding loops imelela amazinga we-algorithm lapho amabhange amakhulu efaka khona imali emakethe.
+- Lokhu kufaka kufaka phakathi imijikelezo ebalulekile eyenza izitayela ezinkulu (trends) kwintengo.
+- Qondanisa njalo izithengiselane zakho nohlangothi lwale-funding ngaphansi kwe-London ne-New York sessions.
+
+2. LIQUIDITY DELIVERY MATRICES (LDM)
+- Lawulwa yisikhathi nentengo esiqondile kunokusebenzisa izinto zokubala (lagging indicators).
+- Uhlelo lubheka izindawo eziqukethe imali eningi (resting stop orders) ukuze lusebenze ngaphandle kokulahlekelwa yintengo (slippage).
+- Dweba amazinga wobubanzi be-high nezikhathi zomnyakazo we-multi-month.
+
+3. UKUVIKELA NEZINGA LOKUNGENA
+- Lindela njalo ukuthi kuvele i-lower timeframe structural confirmation ngaphakathi kwalezi zindawo ezibalulekile.
+- Qaphela stop loss esimisiwe phezulu kwama pips angu-1.5 kuye ku-2 ngale kwaleyo wick ye-sweep, ukuvikela imali yakho.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_funding_quiz_1",
+              title_en: "VVIP Elite Funding Loops & Liquidity Matrices Qualification Quiz",
+              title_zu: "Ukuhlolwa Kwezibalo ze-Funding Loops ne-Liquidity Matrices ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_funding_q1",
+                  question_en: "What is the primary driving force behind the Liquidity Delivery Matrix (LDM)?",
+                  question_zu: "Yini enyakazisa kakhulu ama-Liquidity Delivery Matrices (LDM) emakethe yamabhange?",
+                  options_en: [
+                    "Symmetric time-price delivery cycles seeking resting institutional order pools",
+                    "A lagging moving average crossing line on low timeframe retail setups",
+                    "Random chat group recommendations that gather retail buyer volume",
+                    "A technical platform crash that closes client connections unexpectedly"
+                  ],
+                  options_zu: [
+                    "Imijikelezo yesikhathi nentengo (time-price cycles) eqondiswe kwi-resting institutional liquidity",
+                    "Ulayini wama-moving averages ohamba kancane kwi-timeframe yabathengisi",
+                    "Izincomo ezisuka emaqenjini okuxoxa ohlelweni lokuxhumana kwi-smartphone",
+                    "Ukuphazamiseka kobuchwepheshe obuku-browser obuvala ukuxhumana phezulu kwekhibhodi"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "pa_elite_candlestick_physics_mastery",
     title_en: "The Master Guide to Institutional Candlestick Physics & Liquidity Analysis",
     title_zu: "Incwadi Engezamabhange Emakethe Nomthetho Wentengo Wamakhandlela",
@@ -128,7 +1204,7 @@ const staticCoursesData: Course[] = [
     thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
     instructorName: "Jean-Louis Cele & Thabiso Khumalo",
     rating: 4.98,
-    studentsCount: 3120,
+    studentsCount: 0,
     modules: [
       {
         id: "pa_mod_candlestick_1",
@@ -275,7 +1351,7 @@ Amabhange amakhulu ashayela lezi zindawo ukuqoqa ama-buy stops noma ama-sell sto
     thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
     instructorName: "Thabiso Khumalo & Sarah Mthembu",
     rating: 5.0,
-    studentsCount: 4210,
+    studentsCount: 0,
     modules: [
       {
         id: "elite_m1",
@@ -1068,7 +2144,7 @@ ISINYATHELO 5: BALA INGOZI KAMANGA (1% LOT SIZE)
     thumbnail: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=800&auto=format&fit=crop",
     instructorName: "Thabiso Khumalo & Jean-Louis Cele",
     rating: 4.9,
-    studentsCount: 3100,
+    studentsCount: 0,
     modules: [
       {
         id: "psych_m1",
@@ -1225,7 +2301,7 @@ Uhlelo lwakho kumele lube nazo zonke ezemikhakha:
     thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
     instructorName: "Sipho Ndlovu & Thabiso Khumalo",
     rating: 4.9,
-    studentsCount: 2310,
+    studentsCount: 0,
     modules: [
       {
         id: "mt4_m1",
@@ -1542,7 +2618,7 @@ Gcina i-Akhawunti yakho iphephile ngalezi zinto:
     thumbnail: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
     instructorName: "Sarah Mthembu & Thabiso Khumalo",
     rating: 5.0,
-    studentsCount: 1810,
+    studentsCount: 0,
     modules: [
       {
         id: "pa_m1",
@@ -1636,7 +2712,7 @@ Imali enkulu yamabhange (Tier-1) idinga ama-orders abahwebi abancane ukuze ivule
     thumbnail: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=800&auto=format&fit=crop",
     instructorName: "Thabiso Khumalo & Sarah Mthembu",
     rating: 4.8,
-    studentsCount: 1540,
+    studentsCount: 0,
     modules: [
       {
         id: "macro_m1",
@@ -1726,7 +2802,7 @@ Inani lentela liwu-yield wemali. Amabhange amakhulu alawula:
     thumbnail: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=800&auto=format&fit=crop",
     instructorName: "Sarah Mthembu & Sipho Ndlovu",
     rating: 4.95,
-    studentsCount: 1940,
+    studentsCount: 0,
     modules: [
       {
         id: "risk_m1",
@@ -1823,7 +2899,7 @@ Kunzima kakhulu ukubuyisa imali uma ulahlekelwe yingxenye enkulu:
     thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
     instructorName: "Jean-Louis Cele & Thabiso Khumalo",
     rating: 4.97,
-    studentsCount: 1100,
+    studentsCount: 0,
     modules: [
       {
         id: "orderflow_m1",
@@ -2122,7 +3198,7 @@ for (let i = 1; i <= 28; i++) {
   const selectedDiff = difficultyLevels[i % difficultyLevels.length];
   
   const ratingVal = parseFloat((4.8 + (i % 3) * 0.08 + (i % 2) * 0.04).toFixed(2));
-  const studentCountVal = 850 + (i * 120);
+  const studentCountVal = 0;
   
   generatedCourses.push({
     id: courseId,
@@ -2220,7 +3296,21 @@ Leli qembu lezifundo likunika ulwazi olunzulu mayelana nezibalo zomthamo womhlab
   });
 }
 
-export const coursesData: Course[] = [...staticCoursesData, ...generatedCourses];
+const allowedIds = [
+  "elite_onedrive_video_masterclass",
+  "elite_onedrive_hedging_masterclass",
+  "elite_onedrive_orderflow_masterclass",
+  "elite_onedrive_psychology_masterclass",
+  "elite_onedrive_liquidity_masterclass",
+  "elite_onedrive_reversal_masterclass",
+  "elite_onedrive_supplydemand_masterclass",
+  "elite_onedrive_amd_masterclass",
+  "elite_onedrive_inducement_masterclass",
+  "elite_onedrive_macro_masterclass",
+  "elite_onedrive_funding_masterclass"
+];
+
+export const coursesData: Course[] = staticCoursesData.filter(c => allowedIds.includes(c.id));
 
 
 

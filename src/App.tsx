@@ -393,10 +393,10 @@ export const AUDIO_CLASS_TYPES = [
 
 function StepChartGraphic({ lessonId, stepIndex, language }: { lessonId: string; stepIndex: number; language: string }) {
   const isZulu = language === "zu";
-  const isPa = lessonId.includes("pa_") || lessonId.includes("price_") || lessonId.includes("candlestick") || lessonId === "elite_l2" || lessonId === "elite_l3" || lessonId === "elite_l7";
-  const isPsych = lessonId.includes("psych_") || lessonId.includes("mind") || lessonId.includes("plan") || lessonId === "elite_l8";
-  const isRisk = lessonId.includes("risk_") || lessonId.includes("leverage") || lessonId.includes("formula") || lessonId === "elite_l5" || lessonId === "elite_l9";
-  const isOrderflow = lessonId.includes("orderflow_") || lessonId.includes("delta") || lessonId.includes("footprint") || lessonId === "elite_l1" || lessonId === "elite_l6";
+  const isPa = lessonId.includes("pa_") || lessonId.includes("price_") || lessonId.includes("candlestick") || lessonId === "elite_l2" || lessonId === "elite_l3" || lessonId === "elite_l7" || lessonId === "elite_onedrive_lesson_1" || lessonId === "elite_onedrive_lesson_5" || lessonId === "elite_onedrive_lesson_6" || lessonId === "elite_onedrive_lesson_7" || lessonId === "elite_onedrive_lesson_8" || lessonId === "elite_onedrive_lesson_9" || lessonId === "elite_onedrive_lesson_10" || lessonId === "elite_onedrive_lesson_11";
+  const isPsych = lessonId.includes("psych_") || lessonId.includes("mind") || lessonId.includes("plan") || lessonId === "elite_l8" || lessonId === "elite_onedrive_lesson_4";
+  const isRisk = lessonId.includes("risk_") || lessonId.includes("leverage") || lessonId.includes("formula") || lessonId === "elite_l5" || lessonId === "elite_l9" || lessonId === "elite_onedrive_lesson_2";
+  const isOrderflow = lessonId.includes("orderflow_") || lessonId.includes("delta") || lessonId.includes("footprint") || lessonId === "elite_l1" || lessonId === "elite_l6" || lessonId === "elite_onedrive_lesson_3";
 
   if (isPa) {
     if (stepIndex === 0) {
@@ -1144,6 +1144,349 @@ function StepChartGraphic({ lessonId, stepIndex, language }: { lessonId: string;
 
 function getLessonSteps(lesson: any, language: string) {
   const isZulu = language === "zu";
+  
+  if (lesson.id === "elite_onedrive_lesson_1") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukubheka Isakhiwo ngama-Higher Timeframes" : "Step 1: Analyzing Higher-Timeframe Market Structure",
+        description: isZulu 
+          ? "Hlola i-D1 noma i-H4 trend ukuze ubone ukuthi intengo ihamba ngakuphi na. Susa amaphepha adala ukukhathala engqondweni, gcina kuphela amakhandlela nentengo ehlanzekile." 
+          : "Analyze the Daily and 4-Hour trend framework to establish overall market bias. Clear your screen of unnecessary indicators and isolate institutional order zones.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukulinda i-Candlestick Wick Sweep / Amalungiselela e-Liquidity" : "Step 2: Real-time Wick Liquidity Sweep Verification",
+        description: isZulu 
+          ? "Linda intengo ishanele imingcele emikhulu (wick sweep) lapho amanye amaprofayela abeke khona ama-stop losses abo. Amabhange azosusa bonke abahwebi abancane lapha." 
+          : "Wait for a high-momentum candle wick to cleanly sweep past the major high/low boundaries, liquidating retail stop losses before turning instantly in the premium direction.",
+        imageUrl: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukuqinisekisa i-Market Structure Shift kwi-Lower Timeframe" : "Step 3: Confirming Lower-Timeframe Market Structure Shift (MSS)",
+        description: isZulu 
+          ? "Yehla kakhulu kwi-1M noma i-5M timeframe, uvunde isandla lapho intengo breaks isakhiwo sayo sendawo emva kwe sweep wick, lokhu kuqinisekisa reverse yeqiniso." 
+          : "Zoom into the 1-minute or 5-minute execution charts and look for a clear displacement break of local market structure, confirming that banks are reorganizing the trend.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukuthengiselana kwi-Fair Value Gap nokuSondela I-SL Eqinile" : "Step 4: Precision Mitigation Entry under Tight Risk Measures",
+        description: isZulu 
+          ? "Setha i-passive limit limit order yakho kwi Fair Value Gap (FVG) evulekileyo. Beka i-stop loss yakho phesheya kwensika kabi (sweep wick) ugcine ingozi ku-1.0% kuphela." 
+          : "Settle your limit entry directly at the horizontal Fair Value Gap boundary. Secure your protective Stop Loss buffer safely behind the sweep wick peak, keeping risk strictly below 1.0%.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_2") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukuhlaziya Amandla we-US Dollar Index DXY" : "Step 1: Quantifying US Dollar Index (DXY) Structural Shift",
+        description: isZulu 
+          ? "I-US Dollar Index iyona yala amanye umkhakha wezezimali. Hlola ukuthi i-DXY ihamba ngaphi emuva kokushanelwa kwesakhiwo (liquidity check) ngaphambi kokuhweba." 
+          : "Analyze the US Dollar Index (DXY) daily trend framework. Since major currencies and gold trade inversely, DXY structure shifts are absolute leading indicators for entry bias.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukuhlola i-Intermarket Divergence and Assets Direction" : "Step 2: Cross-Examining Intermarket Divergence Boundaries",
+        description: isZulu 
+          ? "Hlola i-EURUSD, GBPUSD, negolide ngezikhathi ezifanayo. Uma enye ishaqa i-liquidity kanti enye itshiye isakhiwo sayo semvelo, ungafaka i-trade eqinile kakhulu." 
+          : "Compare and contrast major correlated instruments (EURUSD, GBPUSD, or Gold) in real-time. Spot divergence patterns where one instrument sweeps liquidity while the other hesitates.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukwakha i-Delta-Neutral Hedging System Yokuvikela Capital" : "Step 3: Engineering Premium Delta-Neutral Insurance (Hedges)",
+        description: isZulu 
+          ? "Ukuze unciphise ingozi, sebenzisa izikhundla ezimbili eziphambene (EURUSD ne-GBPUSD) ngezikhathi zendaba ezibucayi (news releases). Lokhu kuvikela margin yakho eyimali." 
+          : "Build multi-layered negative correlation profiles. Leverage delta-neutral positions (such as long EURUSD vs short GBPUSD in structured ratios) to safely isolate equity curves from news slips.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukulawula ama-Drawdowns nokuQinisekisa i-Margin Level > 1000%" : "Step 4: Live Drawdown Management & Margin Health Review",
+        description: isZulu 
+          ? "Ngemuva kokufaka ama-orders, hlola i-Terminal bar ukuthi i-Margin Level % ifinyelele ngaphezu kwemingcele ewu-1000%. Gcina risk multiplier yaphansi ukuze uphumelele." 
+          : "Monitor live execution profiles upon trade deployment. Keep your floating margin highly cushioned above the 1000% threshold to guarantee immunity to market drawdowns.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_3") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukuhlaziya amashadi we-Volumetric Footprint" : "Step 1: Dissecting Volumetric Footprint Order Flows",
+        description: isZulu 
+          ? "Misa amasheya akho ezibalo ngamakhandlela anembile akhombisa abathengi nabathengisi ngqo. Thola izindawo lapho umthamo ulingana ngokuphambene khona." 
+          : "Apply a footprint filter on high-volume liquid sessions. Isolate aggressive buying and selling transactions occurring inside individual candlestick price ticks.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukulandelela ama-Diagonal Bid/Ask Imbalances" : "Step 2: Locating Diagonal Bid/Ask Imbalances",
+        description: isZulu 
+          ? "Bheka lapho abathengi bengaphezu kwabathengisi diagonally ngoku-300% (buying imbalance) noma abathengisi baphezulu kakhulu (selling imbalance). Lokhu kukhombisa umnikelo wamabhange." 
+          : "Track diagonal ask vs bid orders in real-time. Look for extreme volumetric imbalances (diagonal ratio surpassing 300%) representing massive institutional market participation.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukuqinisekisa i-Cumulative Delta Shifts kwi-Extreme Peaks" : "Step 3: Verifying Cumulative Delta Reversing Shifts",
+        description: isZulu 
+          ? "Uma intengo ifinyelela kwi-resistance kodwa i-delta isiqalile ukwehla phezulu, lokhu kukhombisa ukuthi abathengi baphelelwa ngamandla kanti amabhange aselungiselela ukuzosusa intengo." 
+          : "Monitor cumulative delta curves. When price registers consecutive local peaks but the delta actively drops, it confirms heavy passive absorption of aggressive buying orders.",
+        imageUrl: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukuthengiselana kwi-Stacked Imbalances nokuSetha i-SL Eqinile" : "Step 4: Stacked Imbalances Entry & High-Precision Risk Cushion",
+        description: isZulu 
+          ? "Ngemuva kokugqobhoza (MSS), faka i-trade yakho ngqo phezulu kwe-imbalance eningi evulekileyo. Beka i-stop loss sakho kancane ngale kwensika yezinga lesakhiwo (1 tick cushion)." 
+          : "Deploy orders directly at the upper boundary of stacked buying imbalances. Position your precise protective stop loss 1 tick below the footprint candle structure block.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_4") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukubala Isilungiselelo se-Kelly Criterion Sizing" : "Step 1: Quantifying Fractional Kelly Criterion Parameters",
+        description: isZulu 
+          ? "Bala optimal trade size usebenzisa ifomula Kelly % ukuthola standard risk size ehambisanayo nomlando webhange lakho." 
+          : "Define optimal trade exposure size dynamically. Apply historical win-loss ratios and reward metrics to establish safe capital allocation thresholds.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukumisa Ifomula Yokuzivikela kwi-Drawdown" : "Step 2: Securing Drawdown Immunization Barriers",
+        description: isZulu 
+          ? "Gcina isilinganiso esiphansi se-risk (1.0% - 1.5%) across all baskets ukuze uqinisekise ukuthi i-equity ihlala ivikelekile ekulahlekelweni okuningi." 
+          : "Enforce strict capitalization buffers. Restrict total combined exposure to 1.5% maximum to shield your equity curve from short-term market streaks.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukubhula Ukwesaba ne-FOMO Emakethe" : "Step 3: Neurological Stress Mitigation Frameworks",
+        description: isZulu 
+          ? "Vala ukuhweba ngezandla uma ubona unemizwa, automating entry and exit point signals ukugcina logic iqinile." 
+          : "Counteract emotional stressors triggered during volatile live sessions. Suppress impulsive FOMO responses by automating entry and exit triggers.",
+        imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukuthatha Amakhefu Impose Post-Execution Invalidation Rules" : "Step 4: Imposing Mandatory Post-Execution Offline Breaks",
+        description: isZulu 
+          ? "Thatha ikhefu eliwu-15 mins off the screen phesheya kwemiphumela emikhulu, lokhu kubuyisela logic elungile engqondweni yakho." 
+          : "Enforce cognitive pauses. Step away from trading terminals for exactly 15 minutes immediately following consecutive execution outcomes.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_5") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukuhlaziya Imikhawulo Kama-HTF Ranges ne-Premium/Discount" : "Step 1: Mapping HTF Ranges & Premium-vs-Discount Matrices",
+        description: isZulu 
+          ? "Thola u-equilibrium we-50% kwi-Fibonacci. Ungalokothi uthenge kwi-premium zone noma uthengise kwi-discount zone." 
+          : "Define the high-timeframe trading range and map the 50% equilibrium. Ensure limit buy setups are placed exclusively in deep discount territory.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukuthola i-Market Maker Buy & Sell Models (MMBM/MMSM)" : "Step 2: Tracking Market Maker Order Models",
+        description: isZulu 
+          ? "Landela ukuthi intengo idlula kanjani kwi-consolidation iye kwi-liquidity sweep zone ngaphambi kokuqondisa ama-orders kabili." 
+          : "Decode multi-stage accumulation and distribution models as the smart money algorithm campaigns between liquid ranges.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukuxhumanisa ama-Liquidity Runs nezikhathi ze-Sessions" : "Step 3: Aligning Sessions and High-Volume Influx Intervals",
+        description: isZulu 
+          ? "Qinisekisa ukuthi amasu okuhweba (liquidity setup) avela ngesikhathi se-London Open noma i-New York Session, hhayi ngesikhathi sobusika kwi-Asian session." 
+          : "Synthesize timezone parameters. Execute limit setups only during the London Open or initial New York market delivery windows.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukulungisa ama-Stop Loss Precision nama-Scale-Out Positions" : "Step 4: Precision Position Management & Scale-Out Rules",
+        description: isZulu 
+          ? "Setha i-Stop Loss phesheya kwendawo sweping range, bese ukhuphula amabhonasi encazelo yakho ngezinyathelo kwi-opposing key pools." 
+          : "Position your protective stop loss 1 tick beyond invalidation extremes, and implement partial profit scale-outs at high-volume structural targets.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_6") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukubona Ushintsho Lwesakhiwo Semakethe (MSS)" : "Step 1: Identifying Market Structure Shift (MSS)",
+        description: isZulu 
+          ? "Linda ukuthi intengo isabalalise imingcele ngokugqabula (displacement) phakathi kokunyakaza okubalulekile, ikakhulukazi ngemva kokuthathwa kwe-liquidity." 
+          : "Observe market action for displacement: an aggressive, large-bodied candle breaking structural swing pivots, confirming structural transition of trend momentum.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukuthola nama-imbalances e-Fair Value Gaps (FVG)" : "Step 2: Locating Multi-Candle Fair Value Gaps (FVG)",
+        description: isZulu 
+          ? "Thola amazinga alinganiselwa kumakhandlela amathathu lapho kukhona isikhala esivelele entengweni, esingakhaswanga ngempendulo yezandla." 
+          : "Pinpoint three-candle structural gaps where high-speed displacement left behind zero trade balance. These imbalances act as gravity wells for future price action.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukuxazulula ama-Limits ngezikhathi zokwebiwa (Retracements)" : "Step 3: Positioning Premium vs Discount Retracements",
+        description: isZulu 
+          ? "Gada intengo yokuhlehla (retracement) iye kwi-discount okungaphansi kwe-equilibrium value of 50% ngaphambi kokukhetha trade setup." 
+          : "Map the displacement leg with Fibonacci tools. Position entry orders exclusively in deep discount territory (below the 50% optimal equilibrium mark).",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukubeka protective stop loss Precision" : "Step 4: Advanced Capital Protection & Hard Invalidation SL",
+        description: isZulu 
+          ? "Qondanisa protective stop loss sikhathi sonke ngemuva kwendawo yendawo sweping candle (1.5 pips buffer) ukuze ugcine safe profile." 
+          : "Configure protective stop loss commands strictly 1.5 pips beyond invalidation levels of the sweep extreme, protecting accounts from unexpected capital shocks.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_7") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukudweba Ama-Order Blocks (OB)" : "Step 1: Mapping Institutional Order Blocks (OB)",
+        description: isZulu 
+          ? "Thola ikhandlela lokugcina ngaphambi kokuhambela phezulu okunamandla (displacement). Leli zinga likhombisa lapho amabhange afake khona ama-orders." 
+          : "Identify the last candle prior to a fast displacement move. This zone indicates key institutional buying or selling footprints.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukuhlunga ne-Premium/Discount Matrix" : "Step 2: Dual Premium vs Discount Matrix Filters",
+        description: isZulu 
+          ? "Sebenzisa u-Fibonacci ukuthola u-equilibrium we-50%. Qinisekisa ukuthi ulandela kuphela ukuthenga ngaphansi kwendawo (discount area)." 
+          : "Apply Fibonacci parameters across the displacement leg. Enter buy positions strictly in discount and sells strictly in premium domains.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukuxazulula Low-Timeframe POI Refinements" : "Step 3: Low-Timeframe POI & Imbalance Refinements",
+        description: isZulu 
+          ? "Yehla kwi-timeframe encane (isib. M5 noma M15) ukuze unqume kahle ingxenye emele isikhala entengweni (imbalance/POI origin)." 
+          : "Transition to lower timeframes to narrow down POIs. Target the refined origin candle of the macro displacement for precise low-risk execution.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukuvikela Imali ne-Hard Invalidation SL" : "Step 4: Executing Structural Invalidation SL Standards",
+        description: isZulu 
+          ? "Beka i-Stop Loss yakho ngama pips angu-1.5 kuye ku-2 ngaphezu noma ngaphansi kwe-wick ye-Order Block ukuvimbela redrawdown." 
+          : "Configure invalidation protective stop losses precisely 1.5 to 2 pips beyond the outer block limits, keeping your risk profile tightly bounded.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_8") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukubona Asian Range Accumulation (A)" : "Step 1: Identifying Asian Range Accumulation (A)",
+        description: isZulu 
+          ? "Linda ukuthi intengo ihambe emaceleni ngesikhathi sase-Asia, bese udweba amazinga wobubanzi be-session." 
+          : "Observe horizontal consolidation on a low timeframe during the Asian session, mapping the session highs and lows.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukubona Institutional Manipulation (M)" : "Step 2: Spotting Institutional Manipulation (M)",
+        description: isZulu 
+          ? "Gada ukushanela okusheshayo ngaphezulu noma ngaphansi kwalezo mingcele yangaphambilini ngesikhathi somzuzu we-London noma i-New York Open." 
+          : "Observe the rapid sweep above or below the accumulation boundaries during London Open or New York Open to trap retail sentiment.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukulandela i-Distribution Expansion (D)" : "Step 3: Tracking the Distribution Expansion (D)",
+        description: isZulu 
+          ? "Faka izikhundla kwi-trend enkulu emva kokuba i-algorithm iqale ukukhuphuka/ukwehla ngamandla ukuya emgomweni womhla lowo." 
+          : "Execute trades in the direction of the genuine weekly macro expansion trend as the market delivers target values back to value areas.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukungena Precision ne-Stop Loss Buffers" : "Step 4: Precision Entry & Stop Loss Invalidation",
+        description: isZulu 
+          ? "Ngena usebenzisa u-structure shift kwi-timeframe encane, bese ubeka i-Stop Loss yakho ngama pips angu-1.5 kuye ku-2 ngale kwaleyo wick ye-manipulation." 
+          : "Enter on a lower timeframe structural shift after manipulation and anchor the safety stop loss 1.5 - 2 pips beyond the wick extreme.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_9") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukudweba amazinga wobubanzi be-Liquidity Zones" : "Step 1: Mapping High-Probability Liquidity Zones",
+        description: isZulu 
+          ? "Dweba amazinga e-liquidity pools ngaphambi kokuhlangana kwe-session. Qikelela ama-equal highs noma ama-double bottoms." 
+          : "Map multi-session liquidity pools. Keep special track of pristine equal highs and double bottoms where resting retail stop losses reside.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukuthola Ama-Algorithmic Inducements" : "Step 2: Dissection of Algorithmic Inducement (IDM)",
+        description: isZulu 
+          ? "Linda ukuthi intengo idale ama-swing minor adukisayo afinyelele ekwenzeni abantu abaningi bangene sikhathi sonke ngaphambi kokushanela." 
+          : "Observe minor structural swing pivots engineered as decoys. Premature buyers and sellers are lured here before the main sweep is deployed.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukulinda VVIP Liquidity Sweeps" : "Step 3: Lying in Wait for the VVIP Liquidity Sweep",
+        description: isZulu 
+          ? "Linda intengo ukuba ihambe ngamandla idlule umugqa we-inducement, isuse abathengisi, bese ishiya i-wick eyeqophelo eliphezulu." 
+          : "Patiently await the high-speed sweep of the inducement zone. Watch for a rapid liquidity capture and immediate rejection wick behavior.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukufaka i-Trade ne-Strict Capital Protection" : "Step 4: Executing with Invalidation Safety Margins",
+        description: isZulu 
+          ? "Ngena usebenzisa isakhiwo saleso sweep kwi-timeframe encane, bese ubeka i-Stop Loss ngama pips angu-1.5 kuye ku-2 ngale kwaleyo wick phesheya." 
+          : "Configure trade orders on low-timeframe transition with protective stop losses strictly 1.5 - 2 pips beyond the invalidation level wick.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_10") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukubona the Initial Consolidation Stage" : "Step 1: Identifying the Consolidation Phase",
+        description: isZulu 
+          ? "Thola ukuhamba emaceleni kwentengo lapho i-algorithm yakha khona indawo yokuqala yama-order amasha." 
+          : "Identify horizontal range bound consolidation where the market maker algorithm establishes the initial positions and builds liquidity pools.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukulandela Smart Money Reversal (SMR)" : "Step 2: Identifying the Smart Money Reversal (SMR)",
+        description: isZulu 
+          ? "Linda intengo ukuthi ishanele amazinga amakhulu e-liquidity bese ishintsha isimo layout kwi-timeframe encane." 
+          : "Wait for a macro sweep of key liquidity levels at high-timeframe coordinates followed by a low-timeframe displacement in the opposite direction.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukubona low-risk re-entry scenarios" : "Step 3: Tracking the Displacement & Re-Accumulation Stages",
+        description: isZulu 
+          ? "Bona isigaba se-displacement ehamba ngamandla lapho intengo idubula indlela iye emagcekeni amasha we-Fair Value Gaps noma Order Blocks." 
+          : "Track the aggressive displacement back through previous consolidated blocks, utilizing short-term mitigations of newly formed Fair Value Gaps.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukufinyelela Core Distribution Pools" : "Step 4: Reaching Core Distribution Targets",
+        description: isZulu 
+          ? "Vala izikhundla zakho endaweni ye-consolidation yokuqala noma ngaphezulu kwe-liquidity engasasebenzi lapho intengo iqonde khona." 
+          : "Secure profits precisely at the original consolidation boundaries where resting stop order triggers provide high institutional exit volume.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  } else if (lesson.id === "elite_onedrive_lesson_11") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukubona i-Algorithmic Credit Injection Window" : "Step 1: Identifying credit injection windows",
+        description: isZulu 
+          ? "Buka izindawo lapho kusetshenziswa khona izikhathi ezithile zebhange ukufaka i-capital enkulu ngaphansi kwe-London noma i-New York open." 
+          : "Observe specific interbank coordinate times where sudden capital allocations are injected to drive trends during London or New York sessions.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukudweba ama-Liquidity Delivery Boundary Matrices" : "Step 2: Mapping Liquidity Delivery Matrices (LDM)",
+        description: isZulu 
+          ? "Hlaziya amazinga entengo lapho amabhange amakhulu eqoqa khona izimali eziningi, egubha ama-multi-month highs kanye nama-lows." 
+          : "Map the deep historical high-volume price coordinates where large institutional blocks reside and resting stop orders are resting.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukuzijwayeza kwi-Delivery Window Intraday Sweep" : "Step 3: Spotting the Delivery Window Intraday Sweep",
+        description: isZulu 
+          ? "Lindela ushano lwesi-speed esikhulu sokuqoqa intengo phezulu kwamamathriki lawo, eshaqa izikhundla eziningi." 
+          : "Observe high-velocity sweeps into delivery matrix levels. Look for immediate reactions and structural failures on low timeframe tracking charts.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukungena ngokuqikelela Strict Stop Loss" : "Step 4: Executing with Strict Protective Stop Loss",
+        description: isZulu 
+          ? "Faka i-order phezulu kwesakhiwo esivelele, ubeke stop loss esimisiwe phakathi kwama pips angu-1.5 kuye ku-2 ngaphezu kwaleyo wick phesheya." 
+          : "Enter trades on clean structure shift patterns with stop loss rules firmly anchored 1.5 - 2 pips beyond the invalidation wick boundary.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+  }
   
   if (lesson.id?.includes("pa_") || lesson.id === "elite_l2" || lesson.id === "elite_l3" || lesson.id === "elite_l7") {
     return [
@@ -2077,10 +2420,20 @@ export default function App() {
   const [studentProgress, setStudentProgress] = useState(() => {
     const local = localStorage.getItem("imali_student_progress");
     const defaultState = {
-      enrolledCourses: ["elite_onedrive_video_masterclass", "pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
+      enrolledCourses: ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", "pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
       completedCourses: [],
       progress: {
         "elite_onedrive_video_masterclass": 0,
+        "elite_onedrive_hedging_masterclass": 0,
+        "elite_onedrive_orderflow_masterclass": 0,
+        "elite_onedrive_psychology_masterclass": 0,
+        "elite_onedrive_liquidity_masterclass": 0,
+        "elite_onedrive_reversal_masterclass": 0,
+        "elite_onedrive_supplydemand_masterclass": 0,
+        "elite_onedrive_amd_masterclass": 0,
+        "elite_onedrive_inducement_masterclass": 0,
+        "elite_onedrive_macro_masterclass": 0,
+        "elite_onedrive_funding_masterclass": 0,
         "pa_elite_candlestick_physics_mastery": 100,
         "elite_forex_elite_pathway": 10,
       },
@@ -2095,13 +2448,91 @@ export default function App() {
           let enrolled = parsed.enrolledCourses || [];
           if (!enrolled.includes("elite_onedrive_video_masterclass")) {
             enrolled = ["elite_onedrive_video_masterclass", ...enrolled];
+          }
+          if (!enrolled.includes("elite_onedrive_hedging_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass")];
           } else {
-            enrolled = ["elite_onedrive_video_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass")];
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_orderflow_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_psychology_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_liquidity_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_reversal_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_supplydemand_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_amd_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_inducement_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass" && id !== "elite_onedrive_inducement_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_macro_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass" && id !== "elite_onedrive_inducement_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass" && id !== "elite_onedrive_inducement_masterclass" && id !== "elite_onedrive_macro_masterclass")];
+          }
+          if (!enrolled.includes("elite_onedrive_funding_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass" && id !== "elite_onedrive_inducement_masterclass" && id !== "elite_onedrive_macro_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass" && id !== "elite_onedrive_inducement_masterclass" && id !== "elite_onedrive_macro_masterclass" && id !== "elite_onedrive_funding_masterclass")];
           }
           parsed.enrolledCourses = enrolled;
           if (!parsed.progress) parsed.progress = {};
           if (parsed.progress["elite_onedrive_video_masterclass"] === undefined) {
             parsed.progress["elite_onedrive_video_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_hedging_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_hedging_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_orderflow_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_orderflow_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_psychology_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_psychology_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_liquidity_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_liquidity_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_reversal_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_reversal_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_supplydemand_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_supplydemand_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_amd_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_amd_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_inducement_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_inducement_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_macro_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_macro_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_funding_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_funding_masterclass"] = 0;
           }
           return parsed;
         }
@@ -2824,7 +3255,7 @@ export default function App() {
       thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
       instructorName: currentUser.name,
       rating: 5.0,
-      studentsCount: 1,
+      studentsCount: 0,
       modules: [
         {
           id: uid + "_m1",
