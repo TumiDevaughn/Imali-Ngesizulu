@@ -2076,17 +2076,11 @@ export default function App() {
   // Deep student progress state tracking for courses, completed chapters, and scores
   const [studentProgress, setStudentProgress] = useState(() => {
     const local = localStorage.getItem("imali_student_progress");
-    if (local) {
-      try {
-        return JSON.parse(local);
-      } catch (e) {
-        // Fallback
-      }
-    }
-    return {
-      enrolledCourses: ["pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
+    const defaultState = {
+      enrolledCourses: ["elite_onedrive_video_masterclass", "pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
       completedCourses: [],
       progress: {
+        "elite_onedrive_video_masterclass": 0,
         "pa_elite_candlestick_physics_mastery": 100,
         "elite_forex_elite_pathway": 10,
       },
@@ -2094,6 +2088,28 @@ export default function App() {
         "pa_candlestick_quiz_1": 100
       }
     };
+    if (local) {
+      try {
+        const parsed = JSON.parse(local);
+        if (parsed && typeof parsed === "object") {
+          let enrolled = parsed.enrolledCourses || [];
+          if (!enrolled.includes("elite_onedrive_video_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", ...enrolled];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass")];
+          }
+          parsed.enrolledCourses = enrolled;
+          if (!parsed.progress) parsed.progress = {};
+          if (parsed.progress["elite_onedrive_video_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_video_masterclass"] = 0;
+          }
+          return parsed;
+        }
+      } catch (e) {
+        // Fallback
+      }
+    }
+    return defaultState;
   });
 
   useEffect(() => {
@@ -5289,11 +5305,21 @@ export default function App() {
                            {/* Elite Step-by-Step Illustrated Blueprints Header */}
                            <div className="p-6 border-b border-zinc-800 bg-gradient-to-b from-zinc-900 to-black space-y-4">
                              <div className="flex justify-between items-center">
-                               <span className="text-[9px] bg-[#D4AF37] text-black font-mono font-black tracking-widest px-2.5 py-1 rounded">
-                                 {language === "en" ? "LONG-FORM ILLUSTRATED BLUEPRINT" : "UHLELO LOKUFUNDA LWEZITHOMBE"}
-                               </span>
+                               {activeLesson.videoUrl && activeLesson.videoUrl !== "#" ? (
+                                 <span className="text-[9px] bg-[#D4AF37] text-black font-mono font-black tracking-widest px-2.5 py-1 rounded animate-pulse">
+                                   {language === "en" ? "ACTIVE PREMIUM VIDEO LECTURE" : "IVIDIYO YESIFUNDO EZIPHELELEYO"}
+                                 </span>
+                               ) : (
+                                 <span className="text-[9px] bg-[#D4AF37] text-black font-mono font-black tracking-widest px-2.5 py-1 rounded">
+                                   {language === "en" ? "LONG-FORM ILLUSTRATED BLUEPRINT" : "UHLELO LOKUFUNDA LWEZITHOMBE"}
+                                 </span>
+                               )}
                                <span className="text-[9px] bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30 px-2 py-0.5 rounded font-mono uppercase tracking-wider">
-                                 {language === "en" ? "FULL IMAGES INSIDE" : "INEMIFANEKISO EZIPHELELEYO"}
+                                 {activeLesson.videoUrl && activeLesson.videoUrl !== "#" ? (
+                                   language === "en" ? "HIGH-DEFINITION STREAM" : "UKUSAKAZWA KWE-HD"
+                                 ) : (
+                                   language === "en" ? "FULL IMAGES INSIDE" : "INEMIFANEKISO EZIPHELELEYO"
+                                 )}
                                </span>
                              </div>
                              
@@ -5301,11 +5327,54 @@ export default function App() {
                                {language === "en" ? activeLesson.title_en : activeLesson.title_zu}
                              </h3>
                              <p className="text-xs text-zinc-400 max-w-xl leading-relaxed">
-                               {language === "en" 
-                                 ? "This comprehensive course guide provides professional high-resolution step-by-step illustrated blueprints instead of videos. Scroll down to study each graphical phase of the strategy setup." 
-                                 : "Lo mhlahlandlela ususa amavidiyo ufake imifanekiso egcwele esebenza isinyathelo ngesinyathelo ngendlela efundisekayo neqondakalayo. Phequlula phansi uzofunda."}
+                               {activeLesson.videoUrl && activeLesson.videoUrl !== "#" ? (
+                                 language === "en" 
+                                   ? "Launch the premium high-fidelity video lecture player below to study the full tactical demonstration. We have also included strategic text outlines and dynamic download matrices below." 
+                                   : "Vula isidlali sevidiyo esiphezulu ngezansi ukuze ufunde isinyathelo ngesinyathelo. Siphinde safaka amasu okubhala phansi ngezansi ohlelweni."
+                               ) : (
+                                 language === "en" 
+                                   ? "This comprehensive course guide provides professional high-resolution step-by-step illustrated blueprints instead of videos. Scroll down to study each graphical phase of the strategy setup." 
+                                   : "Lo mhlahlandlela ususa amavidiyo ufake imifanekiso egcwele esebenza isinyathelo ngesinyathelo ngendlela efundisekayo neqondakalayo. Phequlula phansi uzofunda."
+                               )}
                              </p>
                            </div>
+
+                           {/* PRE-RENDER VIDEO IF EXISTENT (e.g. OneDrive, Youtube, raw mp4) */}
+                           {activeLesson.videoUrl && activeLesson.videoUrl !== "#" && (
+                             <div className="p-6 pb-2 border-b border-zinc-800 bg-zinc-950/50">
+                               <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-zinc-800 bg-black shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
+                                 {activeLesson.videoUrl.includes("1drv.ms") ? (
+                                   // Microsoft OneDrive iframe viewer support
+                                   <iframe
+                                     src={activeLesson.videoUrl}
+                                     className="absolute top-0 left-0 w-full h-full border-0 animate-fade-in"
+                                     frameBorder="0"
+                                     scrolling="no"
+                                     allowFullScreen
+                                     title={language === "en" ? activeLesson.title_en : activeLesson.title_zu}
+                                   />
+                                 ) : activeLesson.videoUrl.includes("youtube.com") || activeLesson.videoUrl.includes("youtu.be") ? (
+                                   <iframe
+                                     src={activeLesson.videoUrl.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                                     className="absolute top-0 left-0 w-full h-full border-0 animate-fade-in"
+                                     frameBorder="0"
+                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                     allowFullScreen
+                                     title={language === "en" ? activeLesson.title_en : activeLesson.title_zu}
+                                   />
+                                 ) : (
+                                   // Native video (like w3school mp4 files)
+                                   <video
+                                     src={activeLesson.videoUrl}
+                                     controls
+                                     className="absolute top-0 left-0 w-full h-full object-cover animate-fade-in"
+                                     poster={activeLesson.imageUrl || undefined}
+                                     preload="metadata"
+                                   />
+                                 )}
+                               </div>
+                             </div>
+                           )}
  
                            {/* Lesson Written Transcript content & downloadable premium tools */}
                            <div className="p-6 space-y-8">

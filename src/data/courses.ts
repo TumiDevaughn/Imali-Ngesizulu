@@ -7,6 +7,113 @@ import { Course } from "../types";
 
 const staticCoursesData: Course[] = [
   {
+    id: "elite_onedrive_video_masterclass",
+    title_en: "Presidential Elite Market Masterclass & Live Execution Guide",
+    title_zu: "I-Presidential Elite Market Masterclass ne-Live Execution Guide",
+    category_en: "Elite Algorithmic Trading",
+    category_zu: "Ukuhweba Okuphezulu we-Algorithmic",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "24 Hours",
+    duration_zu: "Amahora angu-24",
+    description_en: "An exclusive masterclass featuring our premier technical video training. Gain institutional-level access to advanced execution blueprints, live-session order block strategies, and mathematical hedging models developed for serious retail traders.",
+    description_zu: "I-masterclass ekhethekile efaka phakathi ukuqeqeshwa kwethu kwevidiyo yezobuchwepheshe ebalulekile. Thola ukufinyelela ezingeni lesikhungo ezinhlelweni zokusebenza ezithuthukile, amasu emiklomelo yezikhathi ezibukhoma, namamodeli okuvimbela ingozi (hedging) abhalelwe abahwebi abazimisele.",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 1420,
+    modules: [
+      {
+        id: "elite_onedrive_mod_1",
+        title_en: "Module 1: Professional Video Mentorship & Live Execution Workspace",
+        title_zu: "Isifundo 1: Ividiyo Yomhlahlandlela ne-Live Execution Workspace",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_1",
+            title_en: "Class 1: Master Class Video - Advanced Market Structure & High-Precision Order Flows",
+            title_zu: "Isigaba 1: Ividiyo ye-Master Class - Advanced Market Structure ne-High-Precision Order Flows",
+            duration: "45 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQRlLF-meXf7RrxN2FOqjNwiAYmyTq3MadN3q8ozLB_JIxY",
+            imageUrl: "https://images.unsplash.com/photo-1590283657385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to this exclusive, premier video masterclass of IMALI NgesiZulu Academy. This video unveils high-precision algorithmic order delivery mechanics. You will learn to decode structural shifts, trade in alignment with interbank liquidity flows, identify high-volume order blocks, and mitigate common trading drawdowns. Watch the embedded high-definition video directly below to digest every nuance of this elite strategy.",
+            content_zu: "Siyakwamukela kule vando yevidiyo yodumo ekhethekile ye-IMALI NgesiZulu Academy. Le vidiyo iveza imithetho enembile yokulethwa kwentengo emakethe. Uzofunda ukuhlaziya isakhiwo semakethe (structure shifts), ukuhweba ngokuhambisana nengcebo yemali yamabhange (market liquidity flows), ukuthola ama-order blocks anomthamo omkhulu, kanye nokunciphisa ukulahlekelwa okungadingeki. Hororisa le vidiyo efakwe ngezansi ukuze ufunde wonke umthetho kuleli zinga eliphezulu.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Market_Structure_Video_Syllabus.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Market_Structure_Syllabus.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE MARKET STRUCTURE & ORDER FLOW CODES
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. LIQUIDITY PURGING IN HIGHER TIMEFRAMES
+- Always identify the Daily, 4-Hour, and 1-Hour swing highs and lows.
+- Banks hunt liquidity outside these extreme limits to fill their size orders.
+- A true reversal begins only after a clear wick sweep occurs.
+
+2. QUANTIFYING DRAWDOWN MANAGEMENT
+- Limit your risk to exactly 1% per position entry.
+- Settle your stop losses 2 pips beyond the candle wick sweep peak.
+- Settle profit targets at the opposing structural liquidity pool.
+
+3. HIGH-PRECISION MATRIX EXECUTION
+- Maintain a minimum 1:3 risk-to-reward ratio.
+- Move stop loss to break-even once price clears 1:1 risk-to-reward distance.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: ISAKHIWO SEMAKETHE NE-ORDER FLOW
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. UKUSHANELWA KWAMA-ORDERS (LIQUIDITY PURGING)
+- Thola imingcele ye-Daily, 4-Hour, ne-1-Hour phezulu neziphansi.
+- Amabhange emali adlala phesheya kwemingcele emikhulu ukuqoqa imali.
+- Inqubo ishintsha kahle emva komugqa othi sweep (wick sweep).
+
+2. UKUGADWA KWE-DRAWDOWN NEMALI
+- Ungalokothi ubeke ingozi engaphezu kuka 1% we-balance kwi-trade ngayinye.
+- Beka i-Stop Loss phesheya komisila kude no-2 pips we-peak.
+- Thatha inzuzo yakho kwi-liquidity pool evulekileyo ngaphesheya.
+
+3. AMASU ENCOMO NGEZIBALO (HIGH-PRECISION MATRIX)
+- Gcina isilinganiso sensebenzo yesikhala: 1:3 risk-to-reward ratio.
+- Hambisa i-stop loss iye kwi-entry (break-even) uma intengo ifinyelela u-1:1.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_quiz_1",
+              title_en: "VVIP Elite Order Flow Evaluation",
+              title_zu: "Ukuhlaziywa Kwe-Order Flow ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_q1",
+                  question_en: "What is the primary key to low-drawdown entries outlined in the masterclass video?",
+                  question_zu: "Yini imfungulo eyinhloko yokungena ngaphansi kwe-drawdown encane ekhonjiswe kule vidiyo?",
+                  options_en: [
+                    "Wait for a high-timeframe wick sweep of liquidity, and look for structure shifts next on lower timeframes",
+                    "Enter market immediately at New York open with maximum lot sizing variables",
+                    "Follow public telegram channel indicators without calculating risk-to-reward balance",
+                    "Configure automated servers to trade index baskets on random intervals"
+                  ],
+                  options_zu: [
+                    "Linda ukushanelwa kwama-orders (wick sweep) kwi-high timeframe, bese ulanda i-structure shift kwi-timeframe emizuzwini emihlanu",
+                    "Faka i-trade ngqo emakethe ngesikhathi se-New York ovulekileyo usebenzisa lot sizing enkulu kabi",
+                    "Landela ama-signals eziteshi ze-Telegram mahhala ngaphandle kokubala ingozi ne-reward",
+                    "Setha amarobhothi wokuhweba izinkampani ezahlukene ngezikhathi ezingahlelekile"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "pa_elite_candlestick_physics_mastery",
     title_en: "The Master Guide to Institutional Candlestick Physics & Liquidity Analysis",
     title_zu: "Incwadi Engezamabhange Emakethe Nomthetho Wentengo Wamakhandlela",
