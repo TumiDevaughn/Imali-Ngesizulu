@@ -5468,7 +5468,12 @@ export default function App() {
                       return (
                         <div key={course.id} className="bg-black/60 border border-zinc-800 rounded-3xl overflow-hidden flex flex-col justify-between group hover:border-[#D4AF37]/50 transition-all shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
                           <div className="h-44 overflow-hidden relative">
-                            <img src={course.thumbnail} alt={course.title_en} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <img 
+                              src={course.thumbnail} 
+                              alt={course.title_en} 
+                              referrerPolicy="no-referrer"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                            />
                             <div className="absolute top-3 left-3 bg-black/75 backdrop-blur px-2.5 py-1 rounded-md text-[9px] uppercase tracking-widest border border-zinc-800 text-zinc-300">
                               {language === "en" ? course.difficulty_en : course.difficulty_zu}
                             </div>
