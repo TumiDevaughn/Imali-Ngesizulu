@@ -2068,6 +2068,7 @@ export default function App() {
   const [courses, setCourses] = useState<Course[]>(coursesData);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
+  const [courseSearchQuery, setCourseSearchQuery] = useState("");
   
   // --- STUDENT PROFILES STATE ENGINE (100% IN-BROWSER SECURE WORKSPACE) ---
   const [studentDetails, setStudentDetails] = useState(() => {
@@ -3681,7 +3682,7 @@ export default function App() {
               <button
                 id="nav_classroom"
                 onClick={() => { setActiveTab("classroom"); }}
-                className={`w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "classroom" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
+                className={`hidden w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "classroom" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
               >
                 <div className="flex items-center gap-3">
                   <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 group-hover:bg-[#D4AF37]/20 group-hover:border-[#D4AF37]/50 transition-all duration-300">
@@ -3706,7 +3707,7 @@ export default function App() {
               <button
                 id="nav_chat"
                 onClick={() => { setActiveTab("chat"); }}
-                className={`w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "chat" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
+                className={`hidden w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "chat" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
               >
                 <div className="flex items-center gap-3">
                   <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 group-hover:bg-[#D4AF37]/20 group-hover:border-[#D4AF37]/50 transition-all duration-300">
@@ -4565,12 +4566,12 @@ export default function App() {
                               onClick={() => {
                                 setActiveRole(Role.STUDENT);
                                 localStorage.setItem("imali_student_profile", JSON.stringify(studentDetails));
-                                alert(studentDetails.name ? `Entering the classroom as student: ${studentDetails.name}!` : "Entering the classroom as student!");
-                                setActiveTab("classroom");
+                                alert(studentDetails.name ? `Student profile activated for: ${studentDetails.name}!` : "Student profile activated!");
+                                setActiveTab("dashboard");
                               }}
                               className="py-2.5 px-5 bg-gradient-to-r from-[#D4AF37] to-[#996515] hover:brightness-110 text-black text-[10px] font-mono font-black uppercase tracking-widest rounded-xl transition shadow cursor-pointer"
                             >
-                              👤 Join Class as Student
+                              👤 Activate Student Profile
                             </button>
                           </div>
                         </div>
@@ -4758,13 +4759,13 @@ export default function App() {
                                     setActiveRole(Role.INSTRUCTOR);
                                     localStorage.setItem("imali_instructor_profile", JSON.stringify(instructorDetails));
                                     alert(instructorDetails.name 
-                                      ? (language === "en" ? `Designated as current live instructor: ${instructorDetails.name}. Entering classroom!` : `Ubekwe njengomfundisi wamanje obukhoma: ${instructorDetails.name}. Ungena eklasini!`)
-                                      : (language === "en" ? "Designated as current live instructor. Entering classroom!" : "Ubekwe njengomfundisi wamanje obukhoma. Ungena eklasini!"));
-                                    setActiveTab("classroom");
+                                      ? (language === "en" ? `Instructor profile activated for: ${instructorDetails.name}!` : `Imininingwane yomfundisi isivuliwe: ${instructorDetails.name}!`)
+                                      : (language === "en" ? "Instructor profile activated!" : "Imininingwane yomfundisi isivuliwe!"));
+                                    setActiveTab("dashboard");
                                   }}
                                   className="py-2.5 px-5 bg-gradient-to-r from-[#D4AF37] to-[#996515] hover:brightness-110 text-black text-[10px] font-mono font-black uppercase tracking-widest rounded-xl transition shadow cursor-pointer"
                                 >
-                                  🎓 {language === "en" ? "Activate Instructor Role" : "Ngena Njengomfundisi"}
+                                  🎓 {language === "en" ? "Activate Instructor Profile" : "Ngena Njengomfundisi"}
                                 </button>
                               </div>
                             </div>
@@ -4970,24 +4971,7 @@ export default function App() {
 
                   </div>
 
-                  {/* Profile preservation ledger review */}
-                  <div className="pt-3 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center bg-black/40 p-4 rounded-2xl gap-3">
-                    <span className="text-[10px] text-zinc-500 font-mono flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                      IMALI SECURE: Profiles automatically saved to browser local storage
-                    </span>
-                    <button 
-                      onClick={() => {
-                        localStorage.setItem("imali_student_profile", JSON.stringify(studentDetails));
-                        localStorage.setItem("imali_instructor_profile", JSON.stringify(instructorDetails));
-                        localStorage.setItem("imali_admin_profile", JSON.stringify(adminDetails));
-                        alert("Academic profiles saved successfully! Complete local privacy preserved.");
-                      }}
-                      className="py-1.5 px-4 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 border border-[#D4AF37]/45 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-mono tracking-widest uppercase rounded-xl transition cursor-pointer"
-                    >
-                      Save Settings Instantly
-                    </button>
-                  </div>
+
                 </div>
 
                 {/* Class Reminders & Missed Class Simulated Alerts Hub */}
@@ -5079,47 +5063,7 @@ export default function App() {
                         />
                       </div>
 
-                      {/* 2. Forex Signals Alerts */}
-                      <div className="flex items-center justify-between p-3 bg-black/40 border border-zinc-900 rounded-2xl">
-                        <div className="text-left">
-                          <p className="text-xs font-bold text-white leading-normal">Forex Signals Alerts</p>
-                          <span className="text-[9px] text-zinc-500">Alert me when Live Forex stream starts</span>
-                        </div>
-                        <input 
-                          type="checkbox"
-                          checked={reminderPrefs.forexAlerts}
-                          onChange={(e) => setReminderPrefs({ ...reminderPrefs, forexAlerts: e.target.checked })}
-                          className="w-4 h-4 accent-[#D4AF37] rounded cursor-pointer"
-                        />
-                      </div>
 
-                      {/* 3. Futures Spreads Alerts */}
-                      <div className="flex items-center justify-between p-3 bg-black/40 border border-zinc-900 rounded-2xl">
-                        <div className="text-left">
-                          <p className="text-xs font-bold text-white leading-normal">Futures Spreads Alerts</p>
-                          <span className="text-[9px] text-zinc-500">Alert me when live speaker begins broadcasting</span>
-                        </div>
-                        <input 
-                          type="checkbox"
-                          checked={reminderPrefs.futuresAlerts}
-                          onChange={(e) => setReminderPrefs({ ...reminderPrefs, futuresAlerts: e.target.checked })}
-                          className="w-4 h-4 accent-[#D4AF37] rounded cursor-pointer"
-                        />
-                      </div>
-
-                      {/* Reminder Recurrence Interval Dropdown */}
-                      <div className="space-y-1">
-                        <label className="text-[9px] text-zinc-500 uppercase tracking-wider font-mono font-bold">Reminder Recurrence Interval</label>
-                        <select 
-                          value={reminderPrefs.recurrence}
-                          onChange={(e) => setReminderPrefs({ ...reminderPrefs, recurrence: e.target.value })}
-                          className="w-full bg-zinc-950 border border-zinc-900 p-2.5 text-[11px] text-zinc-300 rounded-xl outline-none cursor-pointer"
-                        >
-                          <option value="Daily">Once Per Day (Structured)</option>
-                          <option value="Hourly">Upon Stream Signal Initiation</option>
-                          <option value="Weekly">Weekly Digest Ledger Review</option>
-                        </select>
-                      </div>
 
                       {/* Real Alert Instant Dispatcher/Testbed (No Demos Requirement) */}
                       <div className="pt-2">
@@ -5454,6 +5398,8 @@ export default function App() {
                       <Search className="w-4 h-4 text-[#D4AF37]" />
                       <input 
                         type="text" 
+                        value={courseSearchQuery}
+                        onChange={(e) => setCourseSearchQuery(e.target.value)}
                         placeholder={language === "en" ? "Search premium catalog..." : "Funa izifundo lapha..."}
                         className="bg-transparent border-0 text-xs text-white outline-none w-full"
                       />
@@ -5462,27 +5408,57 @@ export default function App() {
 
                   {/* Elegant Grid of Courses */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {courses.map(course => {
-                      const isEnrolled = currentUser.enrolledCourses.includes(course.id);
-                      const progressVal = currentUser.progress[course.id] || 0;
-                      return (
-                        <div key={course.id} className="bg-black/60 border border-zinc-800 rounded-3xl overflow-hidden flex flex-col justify-between group hover:border-[#D4AF37]/50 transition-all shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
-                          <div className="h-44 overflow-hidden relative">
-                            <img 
-                              src={course.thumbnail} 
-                              alt={course.title_en} 
-                              referrerPolicy="no-referrer"
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                            />
-                            <div className="absolute top-3 left-3 bg-black/75 backdrop-blur px-2.5 py-1 rounded-md text-[9px] uppercase tracking-widest border border-zinc-800 text-zinc-300">
-                              {language === "en" ? course.difficulty_en : course.difficulty_zu}
-                            </div>
-                            {isEnrolled && (
-                              <div className="absolute top-3 right-3 bg-[#D4AF37] text-black font-extrabold text-[8px] uppercase tracking-widest px-2 py-1 rounded">
-                                {language === "en" ? "ENROLLED" : "UBALIWE"}
+                    {courses
+                      .filter(course => {
+                        const q = courseSearchQuery.trim().toLowerCase();
+                        if (!q) return true;
+                        return (
+                          course.title_en.toLowerCase().includes(q) ||
+                          course.title_zu.toLowerCase().includes(q) ||
+                          course.category_en.toLowerCase().includes(q) ||
+                          course.category_zu.toLowerCase().includes(q) ||
+                          course.description_en.toLowerCase().includes(q) ||
+                          course.description_zu.toLowerCase().includes(q)
+                        );
+                      })
+                      .map(course => {
+                        const isEnrolled = currentUser.enrolledCourses.includes(course.id);
+                        const progressVal = currentUser.progress[course.id] || 0;
+                        const isSpecialElite = course.id === "elite_onedrive_psychology_masterclass" || course.id === "elite_onedrive_amd_masterclass";
+                        return (
+                          <div 
+                            key={course.id} 
+                            className={`bg-black/60 border rounded-3xl overflow-hidden flex flex-col justify-between group transition-all duration-300 shadow-[0_5px_15px_rgba(0,0,0,0.5)] ${
+                              isSpecialElite 
+                                ? "border-[#D4AF37]/40 shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:border-[#D4AF37]" 
+                                : "border-zinc-800 hover:border-[#D4AF37]/50"
+                            }`}
+                          >
+                            <div className="h-44 overflow-hidden relative">
+                              <img 
+                                src={course.thumbnail} 
+                                alt={course.title_en} 
+                                referrerPolicy="no-referrer"
+                                className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${
+                                  isSpecialElite 
+                                    ? "ring-2 ring-[#D4AF37]/20 border-b-2 border-[#D4AF37]" 
+                                    : ""
+                                }`} 
+                              />
+                              <div className="absolute top-3 left-3 bg-black/75 backdrop-blur px-2.5 py-1 rounded-md text-[9px] uppercase tracking-widest border border-zinc-800 text-zinc-300">
+                                {language === "en" ? course.difficulty_en : course.difficulty_zu}
                               </div>
-                            )}
-                          </div>
+                              {isEnrolled && (
+                                <div className="absolute top-3 right-3 bg-[#D4AF37] text-black font-extrabold text-[8px] uppercase tracking-widest px-2 py-1 rounded shadow-lg">
+                                  {language === "en" ? "ENROLLED" : "UBALIWE"}
+                                </div>
+                              )}
+                              {isSpecialElite && (
+                                <div className="absolute bottom-3 right-3 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-black font-extrabold text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-full shadow-[0_0_10px_rgba(212,175,55,0.4)] border border-white/20 animate-pulse">
+                                  {language === "en" ? "👑 ELITE SELECTION" : "👑 UKUKHETHA OKUPHELELE"}
+                                </div>
+                              )}
+                            </div>
 
                           <div className="p-6 space-y-4 flex-1">
                             <div className="flex justify-between items-center text-[10px] font-mono text-[#D4AF37]">
@@ -5499,8 +5475,6 @@ export default function App() {
                             </p>
 
                             <div className="flex items-center gap-2 text-xs text-zinc-500 font-mono">
-                              <span className="text-zinc-300 font-bold">{course.instructorName}</span>
-                              <span>•</span>
                               <span>{course.studentsCount} Students</span>
                             </div>
                           </div>
@@ -5657,8 +5631,6 @@ export default function App() {
 
                       <div className="flex flex-wrap gap-4 text-xs font-mono text-zinc-400">
                         <span>{language === "en" ? "Duration: " + selectedCourse.duration_en : "Isikhathi: " + selectedCourse.duration_zu}</span>
-                        <span>•</span>
-                        <span>{language === "en" ? "Instructor: " + selectedCourse.instructorName : "Uthisha: " + selectedCourse.instructorName}</span>
                         <span>•</span>
                         <span>Rating: ⭐⭐⭐⭐⭐ ({selectedCourse.rating})</span>
                       </div>
