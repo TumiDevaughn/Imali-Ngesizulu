@@ -2209,6 +2209,7 @@ export default function App() {
   const [classroomUnlocked, setClassroomUnlocked] = useState<boolean>(() => {
     return localStorage.getItem("imali_classroom_unlocked") === "true";
   });
+  const [partnerAdError, setPartnerAdError] = useState<boolean>(false);
   const [enteredClassCode, setEnteredClassCode] = useState("");
   const [classCodeError, setClassCodeError] = useState("");
 
@@ -3816,24 +3817,31 @@ export default function App() {
                 referrerPolicy="no-referrer-when-downgrade"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative block w-full max-w-[728px] lg:max-w-[460px] xl:max-w-[728px] min-h-[45px] sm:min-h-[60px] overflow-hidden rounded-xl border border-zinc-900 shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-[1.01] bg-gradient-to-r from-zinc-950 via-neutral-900 to-zinc-950 flex items-center justify-center"
+                className="relative block w-full max-w-[728px] lg:max-w-[460px] xl:max-w-[728px] overflow-hidden rounded-xl border border-zinc-900 shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 hover:scale-[1.01] bg-gradient-to-r from-zinc-950 via-neutral-900 to-zinc-950"
               >
-                {/* Fallback Text under image */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-2 bg-zinc-950/90 text-center font-mono">
-                  <span className="text-[9px] text-[#D4AF37] font-bold tracking-widest uppercase">IMALI PREMIER PARTNER DIRECTORY</span>
-                  <span className="text-[8px] text-zinc-500 mt-0.5">ESTABLISH SECURE PARTNER COMMERCE GATEWAY</span>
-                </div>
-                <img 
-                  src="https://ads.pipaffiliates.com/i/150844?c=662032" 
-                  width="728" 
-                  height="90" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  alt="Partner Integration Portal"
-                  onError={(e) => {
-                    e.currentTarget.style.opacity = "0";
-                  }}
-                  className="absolute inset-0 w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity z-10"
-                />
+                {partnerAdError ? (
+                  /* Premium elegant placeholder only when image fails */
+                  <div className="flex flex-col items-center justify-center p-4 text-center min-h-[60px] md:min-h-[80px] bg-neutral-950/90 font-mono">
+                    <span className="text-[10px] sm:text-xs text-[#D4AF37] font-bold tracking-widest uppercase">
+                      IMALI PREMIER PARTNER DIRECTORY
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] text-zinc-500 mt-1 uppercase tracking-wider">
+                      Secure Partner Commerce Connection Active
+                    </span>
+                  </div>
+                ) : (
+                  <img 
+                    src="https://ads.pipaffiliates.com/i/150844?c=662032" 
+                    width="728" 
+                    height="90" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    alt="Partner Integration Portal"
+                    onError={() => {
+                      setPartnerAdError(true);
+                    }}
+                    className="w-full h-auto block opacity-95 hover:opacity-100 transition-opacity"
+                  />
+                )}
               </a>
             </div>
           </section>
