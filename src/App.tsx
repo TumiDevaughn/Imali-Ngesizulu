@@ -393,7 +393,7 @@ export const AUDIO_CLASS_TYPES = [
 
 function StepChartGraphic({ lessonId, stepIndex, language }: { lessonId: string; stepIndex: number; language: string }) {
   const isZulu = language === "zu";
-  const isPa = lessonId.includes("pa_") || lessonId.includes("price_") || lessonId.includes("candlestick") || lessonId === "elite_l2" || lessonId === "elite_l3" || lessonId === "elite_l7" || lessonId === "elite_onedrive_lesson_1" || lessonId === "elite_onedrive_lesson_5" || lessonId === "elite_onedrive_lesson_6" || lessonId === "elite_onedrive_lesson_7" || lessonId === "elite_onedrive_lesson_8" || lessonId === "elite_onedrive_lesson_9" || lessonId === "elite_onedrive_lesson_10" || lessonId === "elite_onedrive_lesson_11";
+  const isPa = lessonId.includes("pa_") || lessonId.includes("price_") || lessonId.includes("candlestick") || lessonId === "elite_l2" || lessonId === "elite_l3" || lessonId === "elite_l7" || lessonId === "elite_onedrive_lesson_1" || lessonId === "elite_onedrive_lesson_5" || lessonId === "elite_onedrive_lesson_6" || lessonId === "elite_onedrive_lesson_7" || lessonId === "elite_onedrive_lesson_8" || lessonId === "elite_onedrive_lesson_9" || lessonId === "elite_onedrive_lesson_10" || lessonId === "elite_onedrive_lesson_11" || lessonId === "elite_onedrive_lesson_12";
   const isPsych = lessonId.includes("psych_") || lessonId.includes("mind") || lessonId.includes("plan") || lessonId === "elite_l8" || lessonId === "elite_onedrive_lesson_4";
   const isRisk = lessonId.includes("risk_") || lessonId.includes("leverage") || lessonId.includes("formula") || lessonId === "elite_l5" || lessonId === "elite_l9" || lessonId === "elite_onedrive_lesson_2";
   const isOrderflow = lessonId.includes("orderflow_") || lessonId.includes("delta") || lessonId.includes("footprint") || lessonId === "elite_l1" || lessonId === "elite_l6" || lessonId === "elite_onedrive_lesson_3";
@@ -1486,6 +1486,37 @@ function getLessonSteps(lesson: any, language: string) {
         imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
       }
     ];
+  } else if (lesson.id === "elite_onedrive_lesson_12") {
+    return [
+      {
+        title: isZulu ? "Isinyathelo 1: Ukuhlanganisa i-Multi-Timeframe Structure" : "Step 1: Formulating Multi-Timeframe Confluence Bounds",
+        description: isZulu 
+          ? "Hlola isihloko se-Monthly, i-Weekly, kanye ne-Daily trend ukuze ubone ukuthi i-institutional flow iqonde kuliphi icala ngqo." 
+          : "Synthesize the Monthly, Weekly, and Daily market structures to define the absolute long-term order flow direction.",
+        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 2: Ukubona ama-Order Blocks Awaqinile kwi-4-Hour Chart" : "Step 2: Pinpointing the 4-Hour Mitigation Block",
+        description: isZulu 
+          ? "Dweba amazinga entengo lapho kuvela khona i-Order Block emikhulu ukuze ukwazi ukuthola imingcele yehlandla lakho." 
+          : "Map out the strong 4-Hour Order Block or Mitigation Block zone. This establishes the high-probability baseline for premium entries.",
+        imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 3: Ukulinda i-Liquidity Sweep kwi-15-Minute Trigger Frame" : "Step 3: Triggering on lower-timeframe liquidity sweep",
+        description: isZulu 
+          ? "Linda intengo ishanele indawo ye-liquidity kwi-15-minute frame ngokushesha, emuva kwalokho yehlele kwi-entry trigger." 
+          : "Wait for a low-timeframe (15-minute or 5-minute) liquidity sweep. Look for displacement structure shift and a clear Fair Value Gap.",
+        imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        title: isZulu ? "Isinyathelo 4: Ukungena nge-Sniper Execution & Strict Drawdown Limits" : "Step 4: Executing Sniper Entry with strict risk limits",
+        description: isZulu 
+          ? "Thola ukungena kwi-Fair Value Gap ngokuqinisekileyo, ubeke safety stop loss sakho sibe ngu 2 pips phesheya kwaleyo wick evikelayo." 
+          : "Enter directly on the mitigation boundary. Anchor your stop loss 2 pips beyond the invalidation level to maintain excellent reward-to-risk dynamics.",
+        imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
   }
   
   if (lesson.id?.includes("pa_") || lesson.id === "elite_l2" || lesson.id === "elite_l3" || lesson.id === "elite_l7") {
@@ -2422,7 +2453,7 @@ export default function App() {
   const [studentProgress, setStudentProgress] = useState(() => {
     const local = localStorage.getItem("imali_student_progress");
     const defaultState = {
-      enrolledCourses: ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", "pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
+      enrolledCourses: ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", "elite_onedrive_confluence_masterclass", "pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
       completedCourses: [],
       progress: {
         "elite_onedrive_video_masterclass": 0,
@@ -2436,6 +2467,7 @@ export default function App() {
         "elite_onedrive_inducement_masterclass": 0,
         "elite_onedrive_macro_masterclass": 0,
         "elite_onedrive_funding_masterclass": 0,
+        "elite_onedrive_confluence_masterclass": 0,
         "pa_elite_candlestick_physics_mastery": 100,
         "elite_forex_elite_pathway": 10,
       },
@@ -2501,6 +2533,11 @@ export default function App() {
           } else {
             enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass" && id !== "elite_onedrive_inducement_masterclass" && id !== "elite_onedrive_macro_masterclass" && id !== "elite_onedrive_funding_masterclass")];
           }
+          if (!enrolled.includes("elite_onedrive_confluence_masterclass")) {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", "elite_onedrive_confluence_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass" && id !== "elite_onedrive_inducement_masterclass" && id !== "elite_onedrive_macro_masterclass" && id !== "elite_onedrive_funding_masterclass")];
+          } else {
+            enrolled = ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", "elite_onedrive_confluence_masterclass", ...enrolled.filter((id: string) => id !== "elite_onedrive_video_masterclass" && id !== "elite_onedrive_hedging_masterclass" && id !== "elite_onedrive_orderflow_masterclass" && id !== "elite_onedrive_psychology_masterclass" && id !== "elite_onedrive_liquidity_masterclass" && id !== "elite_onedrive_reversal_masterclass" && id !== "elite_onedrive_supplydemand_masterclass" && id !== "elite_onedrive_amd_masterclass" && id !== "elite_onedrive_inducement_masterclass" && id !== "elite_onedrive_macro_masterclass" && id !== "elite_onedrive_funding_masterclass" && id !== "elite_onedrive_confluence_masterclass")];
+          }
           parsed.enrolledCourses = enrolled;
           if (!parsed.progress) parsed.progress = {};
           if (parsed.progress["elite_onedrive_video_masterclass"] === undefined) {
@@ -2535,6 +2572,9 @@ export default function App() {
           }
           if (parsed.progress["elite_onedrive_funding_masterclass"] === undefined) {
             parsed.progress["elite_onedrive_funding_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_confluence_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_confluence_masterclass"] = 0;
           }
           return parsed;
         }

@@ -1190,6 +1190,112 @@ const staticCoursesData: Course[] = [
     ]
   },
   {
+    id: "elite_onedrive_confluence_masterclass",
+    title_en: "IMALI Elite Strategy 12: Advanced Confluence & Multi-Timeframe High-Precision Execution",
+    title_zu: "I-IMALI Elite Strategy 12: Advanced Confluence ne-Multi-Timeframe High-Precision Execution",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The twelfth instalment of our premier video elite mentorship. Deep dive into advanced price confluence patterns, multi-timeframe liquidity sweeps, and high-precision execution mechanics across indices and currency pairs. Enhance your technical accuracy and drawdown metrics using pure algorithmic rules.",
+    description_zu: "Incenye yeshumi nambili yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela egobolondweni le-Advanced Price Confluence kanye ne-Multi-Timeframe Liquidity Sweeps ngaphansi kokuhlonipha ama-rules.",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_confluence_mod_1",
+        title_en: "Module 1: Advanced Confluence Matrix & High-Precision Execution",
+        title_zu: "Isifundo 1: Advanced Confluence Matrix ne-High-Precision Entries",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_12",
+            title_en: "Class 12: Master Class Video - Advanced Price Confluence & High-Precision Execution Mechanics",
+            title_zu: "Isigaba 12: Ividiyo ye-Master Class - Advanced Price Confluence ne-High-Precision Execution Mechanics",
+            duration: "65 Mins",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQQjoMA7zX5ZRZ469bjAk5W_AdII8VIx_7kOo3Nn1jwDquA?width=1728&height=1080",
+            imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 12 of our IMALI Elite sequences. This advanced masterclass video uncovers the ultimate secrets of multi-timeframe price confluence. Learn how to synthesize higher-timeframe order block confirmations with lower-timeframe liquidity sweep triggers to achieve sniper entries with minimal risk. Watch the deep-dive high-fidelity video directly below to master every aspect of this professional workflow.",
+            content_zu: "Siyakwamukela esigabeni seshumi nambili se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokujulile ngezindlela zokusebenza ze-Advanced Price Confluence kanye ne-Multi-Timeframe Liquidity Sweeps. Uzofunda ukuthi ungenza kanjani confluence phakathi kwehlandla elikhulu nencane ukuze ungene ngqo ngaphandle kokulahlekelwa yimali (low drawdown). Bukela le vidiyo efakwe ngezansi ukuze ujule.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Price_Confluence_Syllabus.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Price_Confluence_Syllabus.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ADVANCED CONFLUENCE & MULTI-TIMEFRAME CODES
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. THE CONFLUENCE MATRIX
+- Aligning the Weekly/Daily institutional bias is mandatory before seeking intraday setups.
+- Identify the 4-Hour Order Block coordinates to define your primary execution boundaries.
+- Cross-reference with the 15-Minute timeframe to witness structural displacement.
+
+2. PRECISION ENTRY PROTOCOLS
+- Limit execution strictly to NY/London session overlaps.
+- Restrict lot sizes dynamically to keep drawdown below 1% of total portfolio balance.
+- Place stop-loss targets strictly 2 pips beyond the 15M invalidation wick extremes.
+
+3. STRATEGIC POSITION GROWTH
+- Target opposing high-timeframe structural liquidity pools to maximize risk-to-reward metrics.
+- Keep execution rules simple, disciplined, and strictly rules-based.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: IZIBALO ZECONFLUENCE NE-EXECUTION CODES
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. IMITHETHO YECONFLUENCE
+- Qinisekisa njalo ukuthi bias isuke ihambisana ne Weekly noma Daily frame ngaphambi kokuvula i-trade.
+- Thola indawo ye-4-Hour Order Block ukuze ugade amazinga abalulekile.
+- Qondanisa isikhundla kwi-15M timeframe ukuze uqinisekise inyanga nenhla yentengo.
+
+2. ISINYATHELO SOKUNGENA OKUNEMBILE (ENTRIES)
+- Hlonipha izikhathi zomnyakazo we-London ne-New York sessions kuphela.
+- Gcina usayizi we-lots usekela ukugcina drawdown ingaphansi kuka 1% we-portfolio yakho.
+- Sula stop loss sakho sibe ngu 2 pips nje phesheya kwaleyo wick evikelayo.
+
+3. UKUPHATHWA KWEZINZUZO
+- Khomba izindawo ze-liquidity ezikude kwi-high timeframe ukuze ukhulise inzuzo phakathi kwengozi.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_confluence_quiz_1",
+              title_en: "VVIP Elite Technical Confluence Assessment Quiz",
+              title_zu: "Ukuhlolwa Kwezibalo ze-Confluence ne-Precision Entries ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_confluence_q1",
+                  question_en: "What is the primary requirement for a high-probability confluence setup?",
+                  question_zu: "Yini edingekayo kuqala ngaphambi kokuthola isethi enethuba eliphezulu leconfluence?",
+                  options_en: [
+                    "Alignment of high-timeframe institutional bias with lower-timeframe entry sweep triggers",
+                    "A crossover of multiple retail trendline indicators on low timeframes",
+                    "Entering random lot sizes based on high-impact daily news alerts",
+                    "Setting static stop loss boundaries on middle indicators only"
+                  ],
+                  options_zu: [
+                    "Ukuhambisana kwe-high-timeframe institutional bias kanye ne-lower-timeframe entry sweep indicators",
+                    "Ukuhlanganisa ama-trendlines amaningi atholakala mahhala kwi-timeframe encane",
+                    "Ukungena usebenzisa i-lots engahlelekile emuva kokuvela kwe-news elula",
+                    "Ukubeka ama-stop loss levels ku-middle timeframe usebenzisa lagging indicators kuphela"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "pa_elite_candlestick_physics_mastery",
     title_en: "The Master Guide to Institutional Candlestick Physics & Liquidity Analysis",
     title_zu: "Incwadi Engezamabhange Emakethe Nomthetho Wentengo Wamakhandlela",
@@ -3307,7 +3413,8 @@ const allowedIds = [
   "elite_onedrive_amd_masterclass",
   "elite_onedrive_inducement_masterclass",
   "elite_onedrive_macro_masterclass",
-  "elite_onedrive_funding_masterclass"
+  "elite_onedrive_funding_masterclass",
+  "elite_onedrive_confluence_masterclass"
 ];
 
 export const coursesData: Course[] = staticCoursesData.filter(c => allowedIds.includes(c.id));
