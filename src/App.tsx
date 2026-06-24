@@ -1770,7 +1770,7 @@ export default function App() {
     const isGreeting = ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening", "howdy", "hola", "sawubona", "sanibonani", "ezethu", "molo"].some(g => query.includes(g)) || query === "hi" || query === "hello" || query === "hey";
 
     if (isGreeting) {
-      responseEn = "Hello there! 🌟 It is so wonderful to connect with you. I am your personal, warm academic companion here at IMALI NgesiZulu. I can perfectly explain any part of our platform—including our Elite Courses, the Live Classroom, Audio Suite forums, Financial Clocks, or direct emails. How may I assist you today?";
+      responseEn = "Hello there! 🌟 It is so wonderful to connect with you. I am your personal, warm academic companion here at IMALI NgesiZulu. I can perfectly explain any part of our platform—including our Imali Courses, the Live Classroom, Audio Suite forums, Financial Clocks, or direct emails. How may I assist you today?";
       responseZu = "Yebo, sawubona! 🌟 Kuyinto enhle kakhulu ukuxhumana nawe. Ngiwumsizi wakho nomngane wakho wezemfundo lapha e-IMALI NgesiZulu. Ngingakuchasisela kahle noma iyiphi ingxenye yesikhulumi sethu—kuhlanganise nezifundo zethu ezivelele, iKilasi Elibukhoma, inkundla yethu yezwi, noma imeyili. Ngingakusiza ngani namuhla?";
       return { responseEn, responseZu, shouldOpenContact };
     }
@@ -1811,7 +1811,7 @@ export default function App() {
     }
     // Courses / Syllabus / Study / Modules
     else if (query.includes("course") || query.includes("syllabus") || query.includes("module") || query.includes("learn") || query.includes("teach") || query.includes("lesson") || query.includes("candlestick") || query.includes("physics") || query.includes("analysis") || query.includes("forex") || query.includes("gold") || query.includes("crypto") || query.includes("study") || query.includes("pathway") || query.includes("masterclass")) {
-      responseEn = "We offer premium masterclass tracks: (1) 'The Master Guide to Institutional Candlestick Physics & Liquidity Analysis', teaching Open-High-Low-Close (OHLC) mechanics, wick sweeps, and Fair Value Gaps (FVG). (2) 'The Master Trader Pathway: Beginner-to-Expert' with over 40 hours of training on interbank price delivery (DXY, FTSE, correlations) and mathematical risk standards (the 1% risk rules). Feel free to click on the 'Elite Courses' tab in the sidebar navigation to start learning!";
+      responseEn = "We offer premium masterclass tracks: (1) 'The Master Guide to Institutional Candlestick Physics & Liquidity Analysis', teaching Open-High-Low-Close (OHLC) mechanics, wick sweeps, and Fair Value Gaps (FVG). (2) 'The Master Trader Pathway: Beginner-to-Expert' with over 40 hours of training on interbank price delivery (DXY, FTSE, correlations) and mathematical risk standards (the 1% risk rules). Feel free to click on the 'Imali Courses' tab in the sidebar navigation to start learning!";
       responseZu = "Siphakela izifundo eziphezulu zekhwalithi: (1) 'Incwadi Engezamabhange Emakethe Nomthetho Wentengo Wamakhandlela' efundisa nge-OHLC physics, wick sweeps, ne-Fair Value Gaps (FVG). (2) 'Ukuphumela Kwezohwebo: Isinyathelo Ngesinyathelo' esinama-40 hours wokufunda ama-order books, amabhange we-Tier-1, nokusebenzisa ama-DXY nengozi ka-1%. Chofoza inkinobho 'Izifundo Ezivelele' kwi-sidebar ukuze uqale!";
     }
     // Classroom / Live Room / Virtual Classroom / Forum
@@ -1821,7 +1821,7 @@ export default function App() {
     }
     // Radio / Bloomberg / BBC / Music / Lofi / News Room
     else if (query.includes("radio") || query.includes("bloomberg") || query.includes("bbc") || query.includes("music") || query.includes("lofi") || query.includes("news room") || query.includes("newsroom") || query.includes("jazz") || query.includes("ambient") || query.includes("stream")) {
-      responseEn = "The 'Radio News Room' tab offers a highly interactive audio broadcasting center. You can stream live global business and economics feeds like Bloomberg Financial Radio (US), BBC World Service, NPR USA, RFI English, Deutsche Welle, CapeTalk South Africa, or relax with deep-cognitive lofi study beats and afro house progressive rhythms to increase dynamic focus!";
+      responseEn = "The 'Imali News Room' tab offers a highly interactive audio broadcasting center. You can stream live global business and economics feeds like Bloomberg Financial Radio (US), BBC World Service, NPR USA, RFI English, Deutsche Welle, CapeTalk South Africa, or relax with deep-cognitive lofi study beats and afro house progressive rhythms to increase dynamic focus!";
       responseZu = "Uthebhu 'Igumbi Ledaba Lomsakazo' unikeza isiteshi sokusakaza esisebenzisanayo lapho ungalalela khona izindaba zomhlaba bukhoma (Bloomberg Radio, BBC World, CapeTalk, RFI, Deutsche Welle), noma uplozole ngomsindo opholile we-jazz, progressive house ne-lofi focus beats ezandisa ingqondo yezemfundo!";
     }
     // Roles / Switch / Admin / Instructor / Student / Credentials
@@ -3368,7 +3368,7 @@ export default function App() {
       duration_zu: "Amahora angu-12",
       description_en: newCourseDescEn || "New elite path registered inside master curriculum archives.",
       description_zu: newCourseDescZu || "Isifundo esisha emanzini e-Imperial.",
-      thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
+      thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4uzEWWNy1jf56wz_ZrI_1tC3EV9jzmA2m6g&s",
       instructorName: currentUser.name,
       rating: 5.0,
       studentsCount: 0,
@@ -5574,18 +5574,18 @@ export default function App() {
                                 : "border-zinc-800 hover:border-[#D4AF37]/50"
                             }`}
                           >
-                            <div className="h-44 overflow-hidden relative">
+                            <div className="h-44 overflow-hidden relative bg-black flex items-center justify-center border-b border-zinc-900/60">
                               <img 
-                                src={course.thumbnail} 
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4uzEWWNy1jf56wz_ZrI_1tC3EV9jzmA2m6g&s" 
                                 alt={course.title_en} 
                                 referrerPolicy="no-referrer"
                                 onError={(e) => {
                                   e.currentTarget.onerror = null;
-                                  e.currentTarget.src = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop";
+                                  e.currentTarget.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4uzEWWNy1jf56wz_ZrI_1tC3EV9jzmA2m6g&s";
                                 }}
-                                className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${
+                                className={`w-24 h-24 rounded-full object-cover border-2 border-[#D4AF37] shadow-[0_4px_16px_rgba(214,175,55,0.25)] group-hover:scale-105 transition-transform duration-500 ${
                                   isSpecialElite 
-                                    ? "ring-2 ring-[#D4AF37]/20 border-b-2 border-[#D4AF37]" 
+                                    ? "ring-4 ring-[#D4AF37]/30" 
                                     : ""
                                 }`} 
                               />
@@ -6023,7 +6023,7 @@ export default function App() {
                                        
                                        <div className="p-3 bg-zinc-950/80 border-t border-zinc-900 text-[9px] text-zinc-400 font-mono flex items-center justify-between">
                                          <span>{step.title}</span>
-                                         <span className="text-zinc-600 font-mono">Elite Courses Academic Unit</span>
+                                         <span className="text-zinc-600 font-mono">Imali Courses Academic Unit</span>
                                        </div>
                                      </div>
                                    </div>
@@ -6149,7 +6149,7 @@ export default function App() {
                       ) : (
                         <div className="h-96 bg-zinc-950 border border-zinc-800 rounded-3xl flex flex-col justify-center items-center text-center p-6">
                           <BookOpen className="w-12 h-12 text-[#D4AF37] mb-4 animate-pulse" />
-                          <h4 className="text-[#D4AF37] font-serif uppercase tracking-widest">Elite Courses Lecture Room Inactive</h4>
+                          <h4 className="text-[#D4AF37] font-serif uppercase tracking-widest">Imali Courses Lecture Room Inactive</h4>
                           <p className="text-xs text-zinc-500 max-w-sm mt-1">
                             {language === "en" ? "Select a learning module in the syllabus checklist sidebar to stream video lecture." : "Khetha isifundo eceleni ukuze uqalise ukufunda kwi-ledjini."}
                           </p>
@@ -6194,7 +6194,7 @@ export default function App() {
                           <div className="flex flex-col sm:flex-row justify-between items-end gap-6 pt-6 border-t border-zinc-900 text-left">
                             <div className="space-y-1">
                               <p className="text-[8px] text-zinc-500 font-mono">AUTHORIZED ACCREDITATION SIGNATURE</p>
-                              <p className="text-xs font-serif text-[#D4AF37] italic uppercase">Elite Courses Board of Academics</p>
+                              <p className="text-xs font-serif text-[#D4AF37] italic uppercase">Imali Courses Board of Academics</p>
                               <p className="text-[9px] text-[#D4AF37] font-mono">REGISTRY HASH KEY: ELITE-93820-ZC</p>
                             </div>
                             <div className="text-right">
@@ -8794,7 +8794,7 @@ export default function App() {
             {/* Document Content */}
             <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 text-left selection:bg-[#D4AF37]/30">
               <div className="bg-zinc-905/30 border border-zinc-900 p-5 rounded-2xl">
-                <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-2">🎓 Elite Courses Financial Qualification System</p>
+                <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-2">🎓 Imali Courses Financial Qualification System</p>
                 <div className="w-12 h-1 bg-[#D4AF37] rounded-full mb-4"></div>
                 <div className="text-sm font-mono text-zinc-300 whitespace-pre-wrap leading-relaxed select-all">
                   {language === "en" ? activePdfResource.pdfContent_en : activePdfResource.pdfContent_zu}

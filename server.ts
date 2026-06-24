@@ -298,50 +298,71 @@ function convertOneDriveUrl(unshortenedUrl: string) {
   try {
     const urlObj = new URL(unshortenedUrl);
     const params = urlObj.searchParams;
-    const resid = params.get("resid");
+    
+    // Extract key parameters case-insensitively
+    let cid = params.get("cid");
+    let resid = params.get("resid") || params.get("resId");
+    
+    // If not found in query, try parsing from pathname (e.g. /share/RESID)
+    if (!resid) {
+      const pathParts = urlObj.pathname.split("/");
+      const shareIndex = pathParts.indexOf("share");
+      if (shareIndex !== -1 && pathParts[shareIndex + 1]) {
+        resid = pathParts[shareIndex + 1];
+      }
+    }
+    
     const authkey = params.get("authkey");
     const redeem = params.get("redeem");
+    const ithint = params.get("ithint");
+    const e = params.get("e");
 
-    if (redeem) {
-      // If there is a redeem token, keep /redir in the path for embedding
-      // because /embed does not support the redeem token validation/redemption flow.
-      if (!params.has("embed")) {
-        urlObj.searchParams.set("embed", "1");
+    if (resid) {
+      if (!cid && resid.includes("!")) {
+        cid = resid.split("!")[0];
       }
-      const embedUrl = urlObj.toString();
       
-      // For downloadUrl, we use the /download path if possible
-      const downloadUrlObj = new URL(unshortenedUrl);
-      downloadUrlObj.pathname = downloadUrlObj.pathname.replace("/redir", "/download");
-      const directUrl = downloadUrlObj.toString();
+      const newParams = new URLSearchParams();
+      if (cid) newParams.set("cid", cid);
+      newParams.set("resid", resid);
+      if (authkey) newParams.set("authkey", authkey);
+      if (redeem) newParams.set("redeem", redeem);
+      if (ithint) newParams.set("ithint", ithint);
+      if (e) newParams.set("e", e);
+      newParams.set("embed", "1");
+
+      const embedUrl = `https://onedrive.live.com/embed?${newParams.toString()}`;
+      
+      const downloadParams = new URLSearchParams(newParams);
+      downloadParams.delete("embed");
+      const directUrl = `https://onedrive.live.com/download?${downloadParams.toString()}`;
       
       return { embedUrl, directUrl };
     }
 
-    if (resid && authkey) {
-      return {
-        embedUrl: `https://onedrive.live.com/embed?resid=${encodeURIComponent(resid)}&authkey=${encodeURIComponent(authkey)}`,
-        directUrl: `https://onedrive.live.com/download?resid=${encodeURIComponent(resid)}&authkey=${encodeURIComponent(authkey)}`
-      };
-    }
+    // Fallback using simple path replacement
+    const embedUrlObj = new URL(unshortenedUrl);
+    embedUrlObj.pathname = embedUrlObj.pathname
+      .replace("/redir", "/embed")
+      .replace("/view", "/embed")
+      .replace("/download", "/embed");
     
-    if (unshortenedUrl.includes("/embed")) {
-      return {
-        embedUrl: unshortenedUrl,
-        directUrl: unshortenedUrl.replace("/embed", "/download")
-      };
+    if (!embedUrlObj.searchParams.has("embed")) {
+      embedUrlObj.searchParams.set("embed", "1");
     }
-    if (unshortenedUrl.includes("/download")) {
-      return {
-        embedUrl: unshortenedUrl.replace("/download", "/embed"),
-        directUrl: unshortenedUrl
-      };
-    }
+    const embedUrl = embedUrlObj.toString();
 
-    const embedUrl = unshortenedUrl.replace("/redir", "/embed").replace("/view", "/embed");
-    const directUrl = unshortenedUrl.replace("/redir", "/download").replace("/view", "/download");
+    const downloadUrlObj = new URL(unshortenedUrl);
+    downloadUrlObj.pathname = downloadUrlObj.pathname
+      .replace("/redir", "/download")
+      .replace("/view", "/download")
+      .replace("/embed", "/download");
+    
+    downloadUrlObj.searchParams.delete("embed");
+    const directUrl = downloadUrlObj.toString();
+
     return { embedUrl, directUrl };
-  } catch (e) {
+  } catch (err) {
     const embedUrl = unshortenedUrl.replace("/redir", "/embed").replace("/view", "/embed");
     const directUrl = unshortenedUrl.replace("/redir", "/download").replace("/view", "/download");
     return { embedUrl, directUrl };

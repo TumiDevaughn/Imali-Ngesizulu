@@ -22,12 +22,12 @@ export const translations = {
     
     // Navigation
     nav_dashboard: "Academy Dashboard",
-    nav_courses: "Elite Courses",
+    nav_courses: "Imali Courses",
     nav_classroom: "Virtual Classroom",
     nav_chat: "Academic Lounge",
     nav_analytics: "Executive Analytics",
     nav_admin: "Syndicate Admin",
-    nav_blueprints: "Radio News Room",
+    nav_blueprints: "Imali News Room",
     nav_drive: "Google Drive Sync",
 
     // General Actions

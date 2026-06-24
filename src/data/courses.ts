@@ -1216,7 +1216,7 @@ const staticCoursesData: Course[] = [
             title_en: "Class 12: Master Class Video - Advanced Price Confluence & High-Precision Execution Mechanics",
             title_zu: "Isigaba 12: Ividiyo ye-Master Class - Advanced Price Confluence ne-High-Precision Execution Mechanics",
             duration: "65 Mins",
-            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQSyB3GQeOGfRq_EW4yVFMb0AVzlH93djcjW3QoFSf0pCLM?width=1728&height=1080",
+            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQCH2P3PdEwqQKzzEhaXw2v8AfR5MmUvx2rr-Q3o1tP5ZRQ?e=WLbDyX",
             imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
             content_en: "Welcome to class 12 of our IMALI Elite sequences. This advanced masterclass video uncovers the ultimate secrets of multi-timeframe price confluence. Learn how to synthesize higher-timeframe order block confirmations with lower-timeframe liquidity sweep triggers to achieve sniper entries with minimal risk. Watch the deep-dive high-fidelity video directly below to master every aspect of this professional workflow.",
             content_zu: "Siyakwamukela esigabeni seshumi nambili se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokujulile ngezindlela zokusebenza ze-Advanced Price Confluence kanye ne-Multi-Timeframe Liquidity Sweeps. Uzofunda ukuthi ungenza kanjani confluence phakathi kwehlandla elikhulu nencane ukuze ungene ngqo ngaphandle kokulahlekelwa yimali (low drawdown). Bukela le vidiyo efakwe ngezansi ukuze ujule.",
