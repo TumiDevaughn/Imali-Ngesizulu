@@ -1191,16 +1191,16 @@ const staticCoursesData: Course[] = [
   },
   {
     id: "elite_onedrive_confluence_masterclass",
-    title_en: "IMALI Elite Strategy 12: Advanced Confluence & Multi-Timeframe High-Precision Execution",
-    title_zu: "I-IMALI Elite Strategy 12: Advanced Confluence ne-Multi-Timeframe High-Precision Execution",
+    title_en: "IMALI Elite Strategy 12: Relative Strength Index (RSI) High-Precision Trading Indicator",
+    title_zu: "I-IMALI Elite Strategy 12: Ukusetshenziswa kwe-RSI Indicator ne-High-Precision Trading",
     category_en: "Elite Technical Confluence",
     category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
     difficulty_en: "VVIP Elite to Expert",
     difficulty_zu: "Izinga Eliphezulu le-VVIP",
     duration_en: "45 Hours",
     duration_zu: "Amahora angu-45",
-    description_en: "The twelfth instalment of our premier video elite mentorship. Deep dive into advanced price confluence patterns, multi-timeframe liquidity sweeps, and high-precision execution mechanics across indices and currency pairs. Enhance your technical accuracy and drawdown metrics using pure algorithmic rules.",
-    description_zu: "Incenye yeshumi nambili yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela egobolondweni le-Advanced Price Confluence kanye ne-Multi-Timeframe Liquidity Sweeps ngaphansi kokuhlonipha ama-rules.",
+    description_en: "The twelfth instalment of our premier video elite mentorship. Deep dive into the Relative Strength Index (RSI) indicator setup, configuring Period 14 and levels 70/30. Learn how to identify true overbought levels above 75 for low-drawdown sell executions, and oversold levels below 20 for precise buy setups, directly based on our latest master class video.",
+    description_zu: "Incenye yeshumi nambili yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ukufinyelela egobolondweni le-Relative Strength Index (RSI), uhlele i-Period 14 ne-Levels 70/30. Uzofunda ukuthenga lapho i-RSI ingaphansi kuka-20 (oversold) nokuthengisa lapho i-RSI ingaphezu kuka-75 (overbought).",
     thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
     instructorName: "Jean-Louis Cele & Thabiso Khumalo",
     rating: 5.0,
@@ -1208,83 +1208,90 @@ const staticCoursesData: Course[] = [
     modules: [
       {
         id: "elite_onedrive_confluence_mod_1",
-        title_en: "Module 1: Advanced Confluence Matrix & High-Precision Execution",
-        title_zu: "Isifundo 1: Advanced Confluence Matrix ne-High-Precision Entries",
+        title_en: "Module 1: RSI Indicators & High-Precision Execution",
+        title_zu: "Isifundo 1: Ama-RSI Indicators ne-High-Precision Entries",
         lessons: [
           {
             id: "elite_onedrive_lesson_12",
-            title_en: "Class 12: Master Class Video - Advanced Price Confluence & High-Precision Execution Mechanics",
-            title_zu: "Isigaba 12: Ividiyo ye-Master Class - Advanced Price Confluence ne-High-Precision Execution Mechanics",
+            title_en: "Class 12: Master Class Video - RSI Indicator Strategy, Period 14 & Overbought/Oversold Level Mechanics",
+            title_zu: "Isigaba 12: Ividiyo ye-Master Class - Relative Strength Index (RSI), Period 14 ne-Overbought/Oversold levels",
             duration: "65 Mins",
-            videoUrl: "https://1drv.ms/v/c/e49241441bf56c71/IQCH2P3PdEwqQKzzEhaXw2v8AfR5MmUvx2rr-Q3o1tP5ZRQ?e=WLbDyX",
+            videoUrl: "https://jumpshare.com/embed/3pK9ZZUfYszxU2kpH96Z",
             imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
-            content_en: "Welcome to class 12 of our IMALI Elite sequences. This advanced masterclass video uncovers the ultimate secrets of multi-timeframe price confluence. Learn how to synthesize higher-timeframe order block confirmations with lower-timeframe liquidity sweep triggers to achieve sniper entries with minimal risk. Watch the deep-dive high-fidelity video directly below to master every aspect of this professional workflow.",
-            content_zu: "Siyakwamukela esigabeni seshumi nambili se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokujulile ngezindlela zokusebenza ze-Advanced Price Confluence kanye ne-Multi-Timeframe Liquidity Sweeps. Uzofunda ukuthi ungenza kanjani confluence phakathi kwehlandla elikhulu nencane ukuze ungene ngqo ngaphandle kokulahlekelwa yimali (low drawdown). Bukela le vidiyo efakwe ngezansi ukuze ujule.",
+            content_en: "Welcome to class 12 of our IMALI Elite sequences. In this master class, we focus on the Relative Strength Index (RSI) indicator as demonstrated in the lecture recording. You will learn how to add the RSI indicator on MT4 or MT5 platforms, leaving the period at the default of 14. We analyze the critical level boundaries of 70 (Overbought) and 30 (Oversold). Learn to execute high-precision sells when RSI climbs above 75, and buy positions when RSI dips below 20. Watch the high-fidelity video below and use the interactive RSI graphs to study these core market rules.",
+            content_zu: "Siyakwamukela esigabeni seshumi nambili se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokujulile ngokusebenzisa i-indicator ebizwa nge-RSI (Relative Strength Index). Uzofunda ukuyifaka ku-MT4 noma ku-MT5, usebenzise i-default period engu-14 kanye nama-level angu-70 no-30. Sifunda ukungena ku-Sell uma i-RSI iku-75 nangaphezulu, naku-Buy uma i-RSI iku-20 nangaphansi. Bukela le vidiyo efakwe ngezansi ukuze ujule.",
             resources: [
               {
-                name_en: "IMALI-NGESIZULU_Elite_Price_Confluence_Syllabus.pdf",
-                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Price_Confluence_Syllabus.pdf",
+                name_en: "IMALI-NGESIZULU_Elite_RSI_Trading_Syllabus.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-RSI_Trading_Syllabus.pdf",
                 type: "pdf",
                 url: "#",
                 pdfContent_en: `==================================================================
    IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
-   LESSON NOTES: ADVANCED CONFLUENCE & MULTI-TIMEFRAME CODES
+   LESSON NOTES: RELATIVE STRENGTH INDEX (RSI) INDICATOR MECHANICS
    VIDEO COMPANION REFERENCE MATERIAL
 ==================================================================
 
-1. THE CONFLUENCE MATRIX
-- Aligning the Weekly/Daily institutional bias is mandatory before seeking intraday setups.
-- Identify the 4-Hour Order Block coordinates to define your primary execution boundaries.
-- Cross-reference with the 15-Minute timeframe to witness structural displacement.
+1. UNDERSTANDING THE RSI INDICATOR
+- RSI stands for Relative Strength Index. It is an oscillator that measures the speed and change of price movements.
+- It oscillates between 0 and 100 to show the strength or weakness of the current market momentum.
+- The standard, default Period for calculation is 14 (representing the last 14 candlesticks on the selected timeframe).
 
-2. PRECISION ENTRY PROTOCOLS
-- Limit execution strictly to NY/London session overlaps.
-- Restrict lot sizes dynamically to keep drawdown below 1% of total portfolio balance.
-- Place stop-loss targets strictly 2 pips beyond the 15M invalidation wick extremes.
+2. KEY RSI BOUNDARIES AND TRADING RULES
+- Overbought Level (70): When the RSI crosses above 70, the asset is considered overbought, suggesting a potential downward reversal.
+- Oversold Level (30): When the RSI crosses below 30, the asset is considered oversold, suggesting a potential upward reversal.
+- VVIP High-Precision Execution Rules (from Lesson Video):
+  * Look for a Sell Position when the RSI climbs past 75 (extreme overbought).
+  * Look for a Buy Position when the RSI drops below 20 (extreme oversold).
+  * Always cross-reference with candlestick rejection shapes (wick sweeps) on the main chart before executing.
 
-3. STRATEGIC POSITION GROWTH
-- Target opposing high-timeframe structural liquidity pools to maximize risk-to-reward metrics.
-- Keep execution rules simple, disciplined, and strictly rules-based.`,
+3. STRATEGIC POSITION MANAGEMENT
+- Place your protective stop-loss 1.5 to 2 pips beyond the high/low candlestick wick that triggered the RSI extreme.
+- Maintain strict risk rules: never risk more than 1% of your total balance on any single execution.`,
                 pdfContent_zu: `==================================================================
    IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
-   AMAN COMODITY AMALUNGO: IZIBALO ZECONFLUENCE NE-EXECUTION CODES
+   AMAN COMODITY AMALUNGO: RELATIVE STRENGTH INDEX (RSI) INDICATOR
    IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
 ==================================================================
 
-1. IMITHETHO YECONFLUENCE
-- Qinisekisa njalo ukuthi bias isuke ihambisana ne Weekly noma Daily frame ngaphambi kokuvula i-trade.
-- Thola indawo ye-4-Hour Order Block ukuze ugade amazinga abalulekile.
-- Qondanisa isikhundla kwi-15M timeframe ukuze uqinisekise inyanga nenhla yentengo.
+1. UKUQONDA I-RSI INDICATOR
+- I-RSI imele i-Relative Strength Index. Umshini wokukala amandla emakethe kanye nejubane lokuhamba kwentengo.
+- Ihamba phakathi kuka 0 no 100 ikhombisa ukuthi imakethe inamandla kangakanani kuleso sikhathi na.
+- Isikhathi sokubala (Period) sishiywa ku-14 okuyi-default.
 
-2. ISINYATHELO SOKUNGENA OKUNEMBILE (ENTRIES)
-- Hlonipha izikhathi zomnyakazo we-London ne-New York sessions kuphela.
-- Gcina usayizi we-lots usekela ukugcina drawdown ingaphansi kuka 1% we-portfolio yakho.
-- Sula stop loss sakho sibe ngu 2 pips nje phesheya kwaleyo wick evikelayo.
+2. IMITHETHO KANYE NAMALEVELS OKUHWEBA NGE-RSI
+- Overbought Level (70): Uma i-RSI idlula u-70, kusho ukuthi intengo inyuke kakhulu, kungenzeka iqale ukwehla maduzane.
+- Oversold Level (30): Uma i-RSI yehla ngaphansi kuka-30, kusho ukuthi intengo yehle kakhulu, kungenzeka iqale ukunyuka.
+- Imithetho ye-VVIP ye-High-Precision Entries (efundiswe kuvidiyo):
+  * Bheka i-Sell Position uma i-RSI iku-75 nangaphezulu (extreme overbought).
+  * Bheka i-Buy Position uma i-RSI iku-20 nangaphansi (extreme oversold).
+  * Qondanisa njalo namakhandlela anemizila emide (wick sweeps) eshadini elikhulu ngaphambi kokuvula i-trade.
 
-3. UKUPHATHWA KWEZINZUZO
-- Khomba izindawo ze-liquidity ezikude kwi-high timeframe ukuze ukhulise inzuzo phakathi kwengozi.`
+3. UKUPHATHWA KWEZINZUZO NEMARGIN
+- Sula stop loss sakho sibe phakathi kuka 1.5 no 2 pips phesheya kwensika kabi (wick sweep) eyabangela i-RSI extreme.
+- Hlonipha ingozi: ungalokothi ufake ingozi engaphezu kuka 1% we-capital balance yakho.`
               }
             ],
             quiz: {
               id: "elite_onedrive_confluence_quiz_1",
-              title_en: "VVIP Elite Technical Confluence Assessment Quiz",
-              title_zu: "Ukuhlolwa Kwezibalo ze-Confluence ne-Precision Entries ka-VVIP Elite",
+              title_en: "VVIP RSI Indicator Assessment Quiz",
+              title_zu: "Ukuhlolwa Kwezibalo ne-Execution ye-RSI Indicator ka-VVIP Elite",
               questions: [
                 {
                   id: "elite_onedrive_confluence_q1",
-                  question_en: "What is the primary requirement for a high-probability confluence setup?",
-                  question_zu: "Yini edingekayo kuqala ngaphambi kokuthola isethi enethuba eliphezulu leconfluence?",
+                  question_en: "What is the full meaning of the RSI indicator and its default calculation period?",
+                  question_zu: "Lisho ukuthini igama elithi RSI emakethe ye-trading, futhi isebenza nge-default period emingaki?",
                   options_en: [
-                    "Alignment of high-timeframe institutional bias with lower-timeframe entry sweep triggers",
-                    "A crossover of multiple retail trendline indicators on low timeframes",
-                    "Entering random lot sizes based on high-impact daily news alerts",
-                    "Setting static stop loss boundaries on middle indicators only"
+                    "Relative Strength Index with default period 14",
+                    "Retail Selling Index with period 21",
+                    "Risk Strength Indicator with period 7",
+                    "Rapid Stochastic Index with period 50"
                   ],
                   options_zu: [
-                    "Ukuhambisana kwe-high-timeframe institutional bias kanye ne-lower-timeframe entry sweep indicators",
-                    "Ukuhlanganisa ama-trendlines amaningi atholakala mahhala kwi-timeframe encane",
-                    "Ukungena usebenzisa i-lots engahlelekile emuva kokuvela kwe-news elula",
-                    "Ukubeka ama-stop loss levels ku-middle timeframe usebenzisa lagging indicators kuphela"
+                    "Relative Strength Index ene-default period engu-14",
+                    "Retail Selling Index ene-period engu-21",
+                    "Risk Strength Indicator ene-period engu-7",
+                    "Rapid Stochastic Index ene-period engu-50"
                   ],
                   correctAnswerIndex: 0
                 }

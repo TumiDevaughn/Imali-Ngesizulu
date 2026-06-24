@@ -394,6 +394,500 @@ export const AUDIO_CLASS_TYPES = [
 
 function StepChartGraphic({ lessonId, stepIndex, language }: { lessonId: string; stepIndex: number; language: string }) {
   const isZulu = language === "zu";
+
+  // RSI Custom Interactive Simulator for Lesson 12
+  if (lessonId === "elite_onedrive_lesson_12") {
+    const [rsiAdded, setRsiAdded] = useState(false);
+    const [rsiPeriod, setRsiPeriod] = useState(14);
+    const [obLevel, setObLevel] = useState(70);
+    const [osLevel, setOsLevel] = useState(30);
+    const [tradeActive, setTradeActive] = useState<"sell" | "buy" | null>(null);
+    const [pnl, setPnl] = useState(0);
+    const [tradeLogged, setTradeLogged] = useState<string[]>([]);
+
+    useEffect(() => {
+      let interval: any;
+      if (tradeActive) {
+        interval = setInterval(() => {
+          setPnl(prev => {
+            const change = Math.random() * 8 + 4; // average positive growth
+            return prev + change;
+          });
+        }, 1000);
+      } else {
+        setPnl(0);
+      }
+      return () => clearInterval(interval);
+    }, [tradeActive]);
+
+    const handleExecuteTrade = (type: "sell" | "buy") => {
+      setTradeActive(type);
+      setPnl(0);
+    };
+
+    const handleCloseTrade = () => {
+      if (tradeActive) {
+        const profit = pnl.toFixed(2);
+        const logMsg = isZulu 
+          ? `[ OK ] Uhwebo lwe-${tradeActive.toUpperCase()} luvaliwe ngenzuzo ye-+$${profit} USD (Ama-Rules ka-1% angenile)`
+          : `[ SUCCESS ] Closed ${tradeActive.toUpperCase()} execution with floating profit of +$${profit} USD (1% Risk Rules Applied)`;
+        setTradeLogged(prev => [logMsg, ...prev]);
+        setTradeActive(null);
+      }
+    };
+
+    if (stepIndex === 0) {
+      // Step 1: Adding the RSI Indicator
+      return (
+        <div className="w-full bg-zinc-950 font-mono text-[10px] p-6 text-zinc-400 select-none overflow-hidden rounded-xl border border-zinc-900 space-y-4">
+          <div className="flex justify-between border-b border-zinc-900 pb-2">
+            <span className="text-[#D4AF37] font-bold uppercase tracking-wider">🖥️ MT4/MT5 METATRADER PANEL - XAUUSD</span>
+            <span className="text-zinc-500 font-bold">STEP 1: ADD INDICATOR</span>
+          </div>
+          
+          {/* Main Price Chart */}
+          <div className="h-28 bg-black/60 rounded-lg p-2 border border-zinc-900 flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute top-2 right-2 text-[8px] text-zinc-600">GOLD H4 CHART</div>
+            {/* Simple price visual representation */}
+            <svg className="w-full h-full text-zinc-800" viewBox="0 0 400 100">
+              <path d="M 10,80 L 80,60 L 150,75 L 220,40 L 290,55 L 350,20 L 390,35" fill="none" stroke="#27272a" strokeWidth="1.5" />
+              {/* Some dummy candlesticks */}
+              <line x1="80" y1="40" x2="80" y2="80" stroke="#10b981" strokeWidth="1" />
+              <rect x="76" y="50" width="8" height="20" fill="#10b981" />
+              <line x1="150" y1="50" x2="150" y2="90" stroke="#ef4444" strokeWidth="1" />
+              <rect x="146" y="60" width="8" height="20" fill="#ef4444" />
+              <line x1="220" y1="20" x2="220" y2="60" stroke="#10b981" strokeWidth="1" />
+              <rect x="216" y="30" width="8" height="20" fill="#10b981" />
+              <line x1="290" y1="30" x2="290" y2="70" stroke="#ef4444" strokeWidth="1" />
+              <rect x="286" y="40" width="8" height="20" fill="#ef4444" />
+            </svg>
+          </div>
+
+          {/* Indicator Window */}
+          <div className="h-24 bg-black/80 rounded-lg border border-zinc-900/80 flex flex-col justify-between relative overflow-hidden p-3">
+            <div className="absolute top-2 right-2 text-[7px] text-zinc-600 font-bold font-mono">INDICATOR WINDOW 1</div>
+            {rsiAdded ? (
+              <div className="w-full h-full flex flex-col justify-between pt-2">
+                <div className="flex justify-between text-[8px] text-[#D4AF37] font-semibold border-b border-zinc-900 pb-1">
+                  <span>Relative Strength Index (14) - ACTIVE</span>
+                  <span>Levels: 70 / 30</span>
+                </div>
+                {/* Simulated RSI oscillating line */}
+                <svg className="w-full h-full text-[#D4AF37]" viewBox="0 0 400 60">
+                  {/* Overbought Level Line */}
+                  <line x1="0" y1="15" x2="400" y2="15" stroke="#ef4444" strokeWidth="0.5" strokeDasharray="3,3" />
+                  <text x="5" y="12" fill="#ef4444" className="text-[6px]">OB 70</text>
+                  
+                  {/* Oversold Level Line */}
+                  <line x1="0" y1="45" x2="400" y2="45" stroke="#10b981" strokeWidth="0.5" strokeDasharray="3,3" />
+                  <text x="5" y="42" fill="#10b981" className="text-[6px]">OS 30</text>
+
+                  {/* RSI line wave */}
+                  <path d="M 0,30 C 50,10 100,50 150,25 C 200,8 250,48 300,32 C 350,15 380,42 400,30" fill="none" stroke="#D4AF37" strokeWidth="1.2" />
+                </svg>
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center space-y-2 text-center">
+                <span className="text-[9px] text-zinc-600 font-bold uppercase tracking-wider">
+                  {isZulu ? "I-Indicator Window 1 Ivulekile" : "Indicator Window 1: Empty"}
+                </span>
+                <p className="text-[8.5px] text-zinc-500 max-w-xs leading-relaxed">
+                  {isZulu 
+                    ? "Chofoza inkinobho engezansi ukuze ufake i-RSI oscillator ku-shadi lakho njengoba kuboniswe kuvidiyo." 
+                    : "Click the golden button below to inject the RSI oscillator onto your platform as shown in the lecture recording."}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-zinc-900">
+            <span className="text-zinc-500 text-[8.5px]">
+              {rsiAdded 
+                ? (isZulu ? "✅ I-RSI ifakiwe kahle! Qhubekela esinyathelweni 2." : "✅ RSI successfully added! Move to Step 2.") 
+                : (isZulu ? "I-RSI ayikafakwa emakethe." : "RSI indicator offline.")}
+            </span>
+            <button
+              onClick={() => setRsiAdded(true)}
+              disabled={rsiAdded}
+              className={`px-4 py-2 rounded text-[9px] font-bold tracking-widest uppercase transition-all duration-300 ${
+                rsiAdded 
+                  ? "bg-zinc-900 text-zinc-500 cursor-not-allowed border border-zinc-800" 
+                  : "bg-[#D4AF37] hover:bg-[#b8952d] text-black shadow-[0_0_12px_rgba(214,175,55,0.3)] animate-pulse"
+              }`}
+            >
+              {isZulu ? "＋ FAKA I-RSI INDICATOR (14)" : "＋ ADD RSI INDICATOR (DEFAULT 14)"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (stepIndex === 1) {
+      // Step 2: Configuring Default Parameters
+      // Generate a dynamic path based on rsiPeriod to show it actually works!
+      const generateDynamicWave = () => {
+        const segments = 120;
+        let points = [];
+        for (let i = 0; i <= segments; i++) {
+          const x = (i / segments) * 360 + 20;
+          // Period adjusts frequency of wave
+          const frequency = (rsiPeriod / 14) * 0.25;
+          const y = 30 + Math.sin(i * frequency) * 18 + Math.cos(i * 0.1) * 4;
+          points.push(`${i === 0 ? 'M' : 'L'} ${x},${y}`);
+        }
+        return points.join(" ");
+      };
+
+      const obY = 10 + (100 - obLevel) * 0.5; // map 100..0 to 10..60
+      const osY = 10 + (100 - osLevel) * 0.5;
+
+      return (
+        <div className="w-full bg-zinc-950 font-mono text-[10px] p-6 text-zinc-400 select-none overflow-hidden rounded-xl border border-zinc-900 space-y-4">
+          <div className="flex justify-between border-b border-zinc-900 pb-2">
+            <span className="text-[#D4AF37] font-bold uppercase tracking-wider">⚙️ RSI CONFIGURATION CONTROLLER</span>
+            <span className="text-zinc-500 font-bold">STEP 2: PARAMETERS</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Chart Column */}
+            <div className="md:col-span-2 space-y-2">
+              <div className="text-[8px] text-zinc-500 uppercase font-black">Interactive Chart Indicator Visualizer</div>
+              <div className="h-32 bg-black rounded-lg border border-zinc-900/80 p-3 flex flex-col justify-between relative">
+                <div className="absolute top-1.5 right-2 text-[7px] text-zinc-600 font-bold">RSI ( {rsiPeriod} ) SCREENER</div>
+                
+                <svg className="w-full h-full" viewBox="0 0 400 60">
+                  {/* Dynamic Overbought Line */}
+                  <line x1="10" y1={obY} x2="390" y2={obY} stroke="#ef4444" strokeWidth="0.75" strokeDasharray="3,2" />
+                  <text x="350" y={obY - 2} fill="#ef4444" className="text-[5px] font-bold">OB {obLevel}</text>
+                  
+                  {/* Dynamic Oversold Line */}
+                  <line x1="10" y1={osY} x2="390" y2={osY} stroke="#10b981" strokeWidth="0.75" strokeDasharray="3,2" />
+                  <text x="350" y={osY - 2} fill="#10b981" className="text-[5px] font-bold">OS {osLevel}</text>
+
+                  {/* Dotted median 50 line */}
+                  <line x1="10" y1="30" x2="390" y2="30" stroke="#27272a" strokeWidth="0.5" strokeDasharray="4,4" />
+                  <text x="15" y="28" fill="#52525b" className="text-[5px]">MID 50</text>
+
+                  {/* RSI line wave dynamically updating */}
+                  <path d={generateDynamicWave()} fill="none" stroke="#D4AF37" strokeWidth="1.2" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Controls Column */}
+            <div className="space-y-4 bg-zinc-950/60 p-3 rounded-lg border border-zinc-900 flex flex-col justify-center">
+              <div className="space-y-2">
+                <div className="flex justify-between text-[8.5px]">
+                  <span className="text-zinc-400">RSI Period:</span>
+                  <span className="text-[#D4AF37] font-bold">{rsiPeriod}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="5" 
+                  max="30" 
+                  value={rsiPeriod} 
+                  onChange={(e) => setRsiPeriod(Number(e.target.value))}
+                  className="w-full accent-[#D4AF37] cursor-pointer h-1 bg-zinc-900 rounded" 
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-[8.5px]">
+                  <span className="text-zinc-400">Overbought Level:</span>
+                  <span className="text-red-400 font-bold">{obLevel}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="65" 
+                  max="85" 
+                  value={obLevel} 
+                  onChange={(e) => setObLevel(Number(e.target.value))}
+                  className="w-full accent-red-500 cursor-pointer h-1 bg-zinc-900 rounded" 
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-[8.5px]">
+                  <span className="text-zinc-400">Oversold Level:</span>
+                  <span className="text-green-400 font-bold">{osLevel}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="15" 
+                  max="35" 
+                  value={osLevel} 
+                  onChange={(e) => setOsLevel(Number(e.target.value))}
+                  className="w-full accent-green-500 cursor-pointer h-1 bg-zinc-900 rounded" 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-zinc-900/40 p-2.5 rounded-lg border border-zinc-900 flex items-center justify-between text-[8.5px]">
+            <span>
+              {isZulu 
+                ? "Thola ukuthi i-Period eyashintshwa iguqula kanjani ukuminyana kwegagasi kwi-visualizer eceleni." 
+                : "Observe how modifying the RSI Period compresses or relaxes the oscillator wave density dynamically."}
+            </span>
+            <span className="text-[#D4AF37] font-bold uppercase tracking-wider">REALTIME RENDER</span>
+          </div>
+        </div>
+      );
+    }
+
+    if (stepIndex === 2) {
+      // Step 3: Extreme Overbought (RSI > 75) for Sell Entries
+      return (
+        <div className="w-full bg-zinc-950 font-mono text-[10px] p-6 text-zinc-400 select-none overflow-hidden rounded-xl border border-zinc-900 space-y-4">
+          <div className="flex justify-between border-b border-zinc-900 pb-2 bg-red-950/10 p-2 rounded border border-red-900/20">
+            <span className="text-red-500 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              🚨 {isZulu ? "UKUSHANELEKA KWEMALI EMBI / VVIP SELL ALERT" : "VVIP HIGH-PRECISION SELL ALERT DETECTED"}
+            </span>
+            <span className="text-zinc-500 font-bold">STEP 3: OVERBOUGHT ENTRY</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Simulated Chart */}
+            <div className="h-36 bg-black rounded-lg border border-zinc-900 p-3 flex flex-col justify-between relative">
+              <span className="absolute top-1.5 right-2 text-[6.5px] text-red-500/80 font-black animate-pulse uppercase tracking-wider font-mono">Extreme Rejection Area</span>
+              
+              <div className="text-[7px] text-zinc-500 font-bold uppercase font-mono">XAUUSD H4 & RSI (14) Integration</div>
+              <svg className="w-full h-full flex-1 mt-1" viewBox="0 0 300 80">
+                {/* Horizontal Level line at 75 */}
+                <line x1="0" y1="20" x2="300" y2="20" stroke="#ef4444" strokeWidth="0.5" strokeDasharray="3,3" />
+                <text x="250" y="16" fill="#ef4444" className="text-[4.5px] font-bold">OB 70+ CRITICAL LEVEL</text>
+
+                {/* Simulated Price Rally & Peak wick */}
+                <path d="M 10,70 L 60,60 L 110,40 L 160,50 L 210,15 L 220,10 L 230,45" fill="none" stroke="#a1a1aa" strokeWidth="1" />
+                {/* Candle wick sweeping double top */}
+                <line x1="210" y1="5" x2="210" y2="40" stroke="#10b981" strokeWidth="0.75" />
+                {/* Rejection Circle */}
+                <circle cx="210" cy="5" r="3.5" fill="none" stroke="#ef4444" strokeWidth="0.75" className="animate-ping" />
+                <circle cx="210" cy="5" r="2" fill="#ef4444" />
+                <text x="180" y="4" fill="#ef4444" className="text-[5px] font-extrabold tracking-widest">SWEEP HIGH</text>
+
+                {/* RSI line rising above 75 */}
+                <path d="M 10,50 C 60,40 110,35 160,45 C 200,42 205,10 210,8 C 215,8 220,38 230,42" fill="none" stroke="#ef4444" strokeWidth="1.2" />
+                {/* Glowing alert circle on RSI */}
+                <circle cx="210" cy="8" r="2.5" fill="#ef4444" />
+                <text x="216" y="12" fill="#ef4444" className="text-[5px] font-bold">RSI: 78.5</text>
+              </svg>
+            </div>
+
+            {/* Simulated Live Trade Dashboard */}
+            <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-3.5 flex flex-col justify-between">
+              <div>
+                <div className="text-[8.5px] text-zinc-500 font-bold uppercase tracking-wider mb-2">SYSTEM EXECUTION PANEL</div>
+                
+                {tradeActive === "sell" ? (
+                  <div className="space-y-3 animate-fade-in text-left">
+                    <div className="flex items-center space-x-2 bg-red-950/20 border border-red-900/30 p-2 rounded-md">
+                      <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                      <span className="text-[9px] text-red-400 font-bold uppercase tracking-widest">LIVE SELL CONTRACT ACTIVE</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[8px] bg-zinc-900/40 p-2 rounded border border-zinc-900">
+                      <div>
+                        <span className="text-zinc-500">Asset Pair:</span>
+                        <p className="text-white font-bold">GOLD (XAUUSD)</p>
+                      </div>
+                      <div>
+                        <span className="text-zinc-500">Lot Size (1% rule):</span>
+                        <p className="text-[#D4AF37] font-bold">0.10 Lots</p>
+                      </div>
+                      <div>
+                        <span className="text-zinc-500">Entry Price:</span>
+                        <p className="text-white font-mono">$2345.00 USD</p>
+                      </div>
+                      <div>
+                        <span className="text-zinc-500">Stop Loss:</span>
+                        <p className="text-red-400 font-mono">$2347.00 USD</p>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center bg-zinc-900 p-2 rounded border border-zinc-850">
+                      <span className="text-zinc-400 text-[8.5px]">{isZulu ? "Inzuzo Ebonakalayo:" : "Floating Profit:"}</span>
+                      <span className="text-green-400 font-mono font-black text-xs animate-pulse">
+                        +${pnl.toFixed(2)} USD
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2 text-zinc-400 text-left py-1">
+                    <p className="text-[8.5px] leading-relaxed">
+                      {isZulu 
+                        ? "Umugqa we-RSI unyuke wadlula u-75 phezulu, okuqinisekisa i-extreme momentum sweep emakethe. Lokhu kuyisethulo sekhethelo soku-Sell." 
+                        : "The RSI line has breached past 75, confirming extreme overbought retail traps. Align this with structural resistance to unlock a sniper sell."}
+                    </p>
+                    <div className="p-2 bg-zinc-900/30 rounded border border-zinc-900 text-zinc-500 text-[7.5px] leading-relaxed">
+                      {isZulu 
+                        ? "Isilinganiso sokuvalela i-risk sika-1% simiswe ngokuphelele ngama-pips angu-2 ngaphezu kwaleyo high." 
+                        : "Risk assessment calculated: 1.0% portfolio exposure, stop-loss secured 2.0 pips past invalidation."}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-3 border-t border-zinc-900/80 flex gap-2">
+                {tradeActive === "sell" ? (
+                  <button 
+                    onClick={handleCloseTrade}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded text-[9px] uppercase tracking-wider transition-colors shadow-md font-mono"
+                  >
+                    {isZulu ? "VALA UHWEBO USECURISHE INZUZO" : "CLOSE EXECUTION & SECURE PROFIT"}
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => handleExecuteTrade("sell")}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded text-[9px] uppercase tracking-wider transition-colors shadow-md animate-bounce font-mono"
+                  >
+                    {isZulu ? "VULA I-PRECISION SELL ORDER" : "EXECUTE PRECISION SELL (1% RISK)"}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Logs */}
+          {tradeLogged.length > 0 && (
+            <div className="bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-900 text-left text-[7.5px] text-zinc-500 space-y-1">
+              <div className="font-bold text-zinc-400 uppercase text-[8px] border-b border-zinc-900 pb-1 mb-1">Academy Transaction Log</div>
+              {tradeLogged.map((log, idx) => (
+                <p key={idx} className="font-mono text-green-500/90">{log}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (stepIndex === 3) {
+      // Step 4: Extreme Oversold (RSI < 20) for Buy Entries
+      return (
+        <div className="w-full bg-zinc-950 font-mono text-[10px] p-6 text-zinc-400 select-none overflow-hidden rounded-xl border border-zinc-900 space-y-4">
+          <div className="flex justify-between border-b border-zinc-900 pb-2 bg-green-950/10 p-2 rounded border border-green-900/20">
+            <span className="text-green-500 font-bold uppercase tracking-wider flex items-center gap-1.5 font-mono">
+              🟢 {isZulu ? "UKUSHANELEKA KWEMALI EMBI / VVIP BUY ALERT" : "VVIP HIGH-PRECISION BUY ALERT DETECTED"}
+            </span>
+            <span className="text-zinc-500 font-bold">STEP 4: OVERSOLD ENTRY</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Simulated Chart */}
+            <div className="h-36 bg-black rounded-lg border border-zinc-900 p-3 flex flex-col justify-between relative">
+              <span className="absolute bottom-1.5 right-2 text-[6.5px] text-green-500/80 font-black animate-pulse uppercase tracking-wider font-mono">Extreme Rebound Area</span>
+              
+              <div className="text-[7px] text-zinc-500 font-bold uppercase font-mono">XAUUSD H4 & RSI (14) Integration</div>
+              <svg className="w-full h-full flex-1 mt-1" viewBox="0 0 300 80">
+                {/* Horizontal Level line at 20 */}
+                <line x1="0" y1="60" x2="300" y2="60" stroke="#10b981" strokeWidth="0.5" strokeDasharray="3,3" />
+                <text x="250" y="56" fill="#10b981" className="text-[4.5px] font-bold">OS 30- CRITICAL LEVEL</text>
+
+                {/* Simulated Price Plunge & Bottom wick */}
+                <path d="M 10,15 L 60,25 L 110,45 L 160,35 L 210,65 L 220,70 L 230,35" fill="none" stroke="#a1a1aa" strokeWidth="1" />
+                {/* Candle wick sweeping support */}
+                <line x1="210" y1="40" x2="210" y2="75" stroke="#ef4444" strokeWidth="0.75" />
+                {/* Rejection Circle */}
+                <circle cx="210" cy="75" r="3.5" fill="none" stroke="#10b981" strokeWidth="0.75" className="animate-ping" />
+                <circle cx="210" cy="75" r="2" fill="#10b981" />
+                <text x="180" y="78" fill="#10b981" className="text-[5px] font-extrabold tracking-widest">SWEEP LOW</text>
+
+                {/* RSI line falling below 20 */}
+                <path d="M 10,30 C 60,35 110,40 160,30 C 200,35 205,68 210,72 C 215,72 220,42 230,38" fill="none" stroke="#10b981" strokeWidth="1.2" />
+                {/* Glowing alert circle on RSI */}
+                <circle cx="210" cy="72" r="2.5" fill="#10b981" />
+                <text x="216" y="68" fill="#10b981" className="text-[5px] font-bold">RSI: 16.5</text>
+              </svg>
+            </div>
+
+            {/* Simulated Live Trade Dashboard */}
+            <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-3.5 flex flex-col justify-between">
+              <div>
+                <div className="text-[8.5px] text-zinc-500 font-bold uppercase tracking-wider mb-2 font-mono">SYSTEM EXECUTION PANEL</div>
+                
+                {tradeActive === "buy" ? (
+                  <div className="space-y-3 animate-fade-in text-left">
+                    <div className="flex items-center space-x-2 bg-green-950/20 border border-green-900/30 p-2 rounded-md font-mono">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                      <span className="text-[9px] text-green-400 font-bold uppercase tracking-widest">LIVE BUY CONTRACT ACTIVE</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[8px] bg-zinc-900/40 p-2 rounded border border-zinc-900">
+                      <div>
+                        <span className="text-zinc-500">Asset Pair:</span>
+                        <p className="text-white font-bold">GOLD (XAUUSD)</p>
+                      </div>
+                      <div>
+                        <span className="text-zinc-500">Lot Size (1% rule):</span>
+                        <p className="text-[#D4AF37] font-bold">0.10 Lots</p>
+                      </div>
+                      <div>
+                        <span className="text-zinc-500">Entry Price:</span>
+                        <p className="text-white font-mono">$2310.00 USD</p>
+                      </div>
+                      <div>
+                        <span className="text-zinc-500">Stop Loss:</span>
+                        <p className="text-green-400 font-mono">$2308.00 USD</p>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center bg-zinc-900 p-2 rounded border border-zinc-850">
+                      <span className="text-zinc-400 text-[8.5px]">{isZulu ? "Inzuzo Ebonakalayo:" : "Floating Profit:"}</span>
+                      <span className="text-green-400 font-mono font-black text-xs animate-pulse">
+                        +${pnl.toFixed(2)} USD
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2 text-zinc-400 text-left py-1">
+                    <p className="text-[8.5px] leading-relaxed">
+                      {isZulu 
+                        ? "Umugqa we-RSI uwedlulile u-20 wehla, okuqinisekisa ukuthi amabhange anyakazise imakethe ngezansi. Linda ikhandlela le-support litshiye wick sweep bese u-buy." 
+                        : "The RSI line has plummeted below 20, trapping breakout sellers in extreme panic zones. Wait for buyer rejection wick sweeps at support to trigger a low-drawdown buy."}
+                    </p>
+                    <div className="p-2 bg-zinc-900/30 rounded border border-zinc-900 text-zinc-500 text-[7.5px] leading-relaxed">
+                      {isZulu 
+                        ? "Isilinganiso sokuvalela i-risk simiswe ngokugcwele sasekelwa ngama-pips angu-2 ngaphansi kwaleyo swing low." 
+                        : "Risk assessment verified: Stop loss safely anchored 2.0 pips below bottom wick limits under 1% capital exposure rules."}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-3 border-t border-zinc-900/80 flex gap-2">
+                {tradeActive === "buy" ? (
+                  <button 
+                    onClick={handleCloseTrade}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded text-[9px] uppercase tracking-wider transition-colors shadow-md font-mono"
+                  >
+                    {isZulu ? "VALA UHWEBO USECURISHE INZUZO" : "CLOSE EXECUTION & SECURE PROFIT"}
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => handleExecuteTrade("buy")}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded text-[9px] uppercase tracking-wider transition-colors shadow-md animate-bounce font-mono"
+                  >
+                    {isZulu ? "VULA I-PRECISION BUY ORDER" : "EXECUTE PRECISION BUY (1% RISK)"}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Logs */}
+          {tradeLogged.length > 0 && (
+            <div className="bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-900 text-left text-[7.5px] text-zinc-500 space-y-1">
+              <div className="font-bold text-zinc-400 uppercase text-[8px] border-b border-zinc-900 pb-1 mb-1">Academy Transaction Log</div>
+              {tradeLogged.map((log, idx) => (
+                <p key={idx} className="font-mono text-green-500/90">{log}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+  }
+
   const isPa = lessonId.includes("pa_") || lessonId.includes("price_") || lessonId.includes("candlestick") || lessonId === "elite_l2" || lessonId === "elite_l3" || lessonId === "elite_l7" || lessonId === "elite_onedrive_lesson_1" || lessonId === "elite_onedrive_lesson_5" || lessonId === "elite_onedrive_lesson_6" || lessonId === "elite_onedrive_lesson_7" || lessonId === "elite_onedrive_lesson_8" || lessonId === "elite_onedrive_lesson_9" || lessonId === "elite_onedrive_lesson_10" || lessonId === "elite_onedrive_lesson_11" || lessonId === "elite_onedrive_lesson_12";
   const isPsych = lessonId.includes("psych_") || lessonId.includes("mind") || lessonId.includes("plan") || lessonId === "elite_l8" || lessonId === "elite_onedrive_lesson_4";
   const isRisk = lessonId.includes("risk_") || lessonId.includes("leverage") || lessonId.includes("formula") || lessonId === "elite_l5" || lessonId === "elite_l9" || lessonId === "elite_onedrive_lesson_2";
@@ -1490,31 +1984,31 @@ function getLessonSteps(lesson: any, language: string) {
   } else if (lesson.id === "elite_onedrive_lesson_12") {
     return [
       {
-        title: isZulu ? "Isinyathelo 1: Ukuhlanganisa i-Multi-Timeframe Structure" : "Step 1: Formulating Multi-Timeframe Confluence Bounds",
+        title: isZulu ? "Isinyathelo 1: Ukufaka i-RSI Indicator kwi-MT4/MT5" : "Step 1: Adding the RSI Indicator on MT4/MT5",
         description: isZulu 
-          ? "Hlola isihloko se-Monthly, i-Weekly, kanye ne-Daily trend ukuze ubone ukuthi i-institutional flow iqonde kuliphi icala ngqo." 
-          : "Synthesize the Monthly, Weekly, and Daily market structures to define the absolute long-term order flow direction.",
+          ? "Vula ishadi lakho, chofoza ku-indicators, uye kuma-Oscillators, bese ukhetha i-Relative Strength Index (RSI) njengoba kukhonjisiwe kuvidiyo." 
+          : "Open your trading platform chart, click on indicators, navigate to Oscillators, and select Relative Strength Index (RSI) as demonstrated in the lecture video.",
         imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
       },
       {
-        title: isZulu ? "Isinyathelo 2: Ukubona ama-Order Blocks Awaqinile kwi-4-Hour Chart" : "Step 2: Pinpointing the 4-Hour Mitigation Block",
+        title: isZulu ? "Isinyathelo 2: Ukusetha ama-Default Parameters (Period 14 & Levels 70/30)" : "Step 2: Configuring Default Parameters (Period 14 & Levels 70/30)",
         description: isZulu 
-          ? "Dweba amazinga entengo lapho kuvela khona i-Order Block emikhulu ukuze ukwazi ukuthola imingcele yehlandla lakho." 
-          : "Map out the strong 4-Hour Order Block or Mitigation Block zone. This establishes the high-probability baseline for premium entries.",
+          ? "Setha isikhathi sokubala (Period) sibe ku-14. Gcina amazinga emingcele eku-70 (Overbought Threshold) kanye naku-30 (Oversold Threshold) ukuze ulandelele amandla." 
+          : "Set the calculation period parameter to 14. Keep the default boundary level parameters at 70 (Overbought threshold) and 30 (Oversold threshold) to track market momentum.",
         imageUrl: "https://images.unsplash.com/photo-1590283620387-122e17e4d2d4?q=80&w=800&auto=format&fit=crop"
       },
       {
-        title: isZulu ? "Isinyathelo 3: Ukulinda i-Liquidity Sweep kwi-15-Minute Trigger Frame" : "Step 3: Triggering on lower-timeframe liquidity sweep",
+        title: isZulu ? "Isinyathelo 3: Ukubona i-Extreme Overbought (RSI > 75) ye-Sell Entries" : "Step 3: Identifying Extreme Overbought (RSI > 75) for Sell Entries",
         description: isZulu 
-          ? "Linda intengo ishanele indawo ye-liquidity kwi-15-minute frame ngokushesha, emuva kwalokho yehlele kwi-entry trigger." 
-          : "Wait for a low-timeframe (15-minute or 5-minute) liquidity sweep. Look for displacement structure shift and a clear Fair Value Gap.",
+          ? "Uma umugqa we-RSI ukhuphuka ungaphezu kuka-75, kukhombisa ukuthi imakethe inyuke kakhulu. Linda ikhandlela lokwenqaba (wick sweep) eshadini elikhulu ukuze uthathe i-Sell." 
+          : "When the RSI line climbs past 75, it indicates extreme overbought conditions. Wait for a candlestick rejection wick sweep at resistance to enter a high-precision Sell position.",
         imageUrl: "https://images.unsplash.com/photo-1642390091310-1ecf37332152?q=80&w=800&auto=format&fit=crop"
       },
       {
-        title: isZulu ? "Isinyathelo 4: Ukungena nge-Sniper Execution & Strict Drawdown Limits" : "Step 4: Executing Sniper Entry with strict risk limits",
+        title: isZulu ? "Isinyathelo 4: Ukubona i-Extreme Oversold (RSI < 20) ye-Buy Entries" : "Step 4: Identifying Extreme Oversold (RSI < 20) for Buy Entries",
         description: isZulu 
-          ? "Thola ukungena kwi-Fair Value Gap ngokuqinisekileyo, ubeke safety stop loss sakho sibe ngu 2 pips phesheya kwaleyo wick evikelayo." 
-          : "Enter directly on the mitigation boundary. Anchor your stop loss 2 pips beyond the invalidation level to maintain excellent reward-to-risk dynamics.",
+          ? "Uma umugqa we-RSI wehla ngaphansi kuka-20, kusho ukuthi intengo yehle kakhulu. Linda amakhandlela okwenqaba kwabathengi (support wick sweep) ukuze uthathe i-Buy." 
+          : "When the RSI line plunges below 20, the asset is extremely oversold. Wait for buyer rejection wicks on the main chart to trigger a low-drawdown, sniper Buy entry.",
         imageUrl: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop"
       }
     ];
@@ -1684,6 +2178,7 @@ export default function App() {
   const [activeRole, setActiveRole] = useState<Role>(Role.STUDENT);
   const [visibleProfileTab, setVisibleProfileTab] = useState<Role>(Role.STUDENT);
   const [activeTab, setActiveTab] = useState<string>("dashboard");
+  const [useDirectPlayer, setUseDirectPlayer] = useState<boolean>(false);
   const [showReferences, setShowReferences] = useState<boolean>(() => {
     return localStorage.getItem("imali_show_references") === "true";
   });
@@ -5895,15 +6390,33 @@ export default function App() {
                            {activeLesson.videoUrl && activeLesson.videoUrl !== "#" && (
                              <div className="p-6 pb-2 border-b border-zinc-800 bg-zinc-950/50">
                                <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-zinc-800 bg-black shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
-                                 {activeLesson.videoUrl.includes("1drv.ms") ? (
-                                    isUnshortening ? (
+                                 {activeLesson.videoUrl.includes("jumpshare.com") || activeLesson.videoUrl.includes("jmp.sh") ? (
+                                   <iframe
+                                     id="js_video_iframe"
+                                     src={activeLesson.videoUrl.includes("/embed/") ? activeLesson.videoUrl : `https://jumpshare.com/embed/${activeLesson.videoUrl.split('/').pop()?.split('?')[0]}`}
+                                     className="absolute top-0 left-0 w-full h-full border-0 animate-fade-in bg-black"
+                                     frameBorder="0"
+                                     allowFullScreen
+                                     title={language === "en" ? activeLesson.title_en : activeLesson.title_zu}
+                                   />
+                                 ) : activeLesson.videoUrl.includes("1drv.ms") ? (
+                                    useDirectPlayer ? (
+                                      <video
+                                        src={getOneDriveDirectUrl(activeLesson.videoUrl)}
+                                        controls
+                                        className="absolute top-0 left-0 w-full h-full object-contain bg-black animate-fade-in"
+                                        poster={activeLesson.imageUrl || undefined}
+                                        preload="metadata"
+                                        playsInline
+                                      />
+                                    ) : (!useDirectPlayer && isUnshortening) ? (
                                       <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950 text-[#D4AF37] space-y-4 font-sans animate-pulse">
                                         <div className="w-10 h-10 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
                                         <p className="text-xs font-semibold tracking-wider uppercase font-mono">
                                           {language === "en" ? "Initializing Premium Stream..." : "Ilungiselela Ividiyo..."}
                                         </p>
                                       </div>
-                                    ) : unshortenedUrls && unshortenedUrls.embedUrl ? (
+                                    ) : (!useDirectPlayer && unshortenedUrls && unshortenedUrls.embedUrl) ? (
                                       <iframe
                                         src={unshortenedUrls.embedUrl}
                                         className="absolute top-0 left-0 w-full h-full border-0 animate-fade-in bg-black"
@@ -5946,24 +6459,55 @@ export default function App() {
                            )}
  
                            {activeLesson.videoUrl && activeLesson.videoUrl.includes("1drv.ms") && (
-                             <div className="mx-6 mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-zinc-400 bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-800/80 font-sans gap-2 animate-fade-in shadow-lg">
-                               <div className="flex items-center space-x-2">
-                                 <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
-                                 <span>
-                                   {language === "en" 
-                                     ? "Streaming premium high-fidelity video from Microsoft OneDrive" 
-                                     : "Udlala isifundo esiphezulu esivela ku-Microsoft OneDrive"}
-                                 </span>
+                             <div className="mx-6 mt-4 flex flex-col space-y-3 bg-zinc-950/80 p-4 rounded-xl border border-zinc-800/80 font-sans animate-fade-in shadow-lg">
+                               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-zinc-400">
+                                 <div className="flex items-center space-x-2">
+                                   <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+                                   <span className="font-semibold text-zinc-300">
+                                     {language === "en" 
+                                       ? "Microsoft OneDrive Streaming Options" 
+                                       : "Izinketho Zokusakaza ze-OneDrive"}
+                                   </span>
+                                 </div>
+                                 <div className="flex items-center gap-2">
+                                   <button
+                                     onClick={() => setUseDirectPlayer(true)}
+                                     className={`px-3 py-1.5 rounded-lg text-[10px] font-bold font-mono transition-all cursor-pointer ${
+                                       useDirectPlayer 
+                                         ? "bg-[#D4AF37] text-black shadow-[0_0_8px_rgba(214,175,55,0.2)]" 
+                                         : "bg-zinc-900 hover:bg-zinc-800 text-zinc-400 border border-zinc-800"
+                                     }`}
+                                   >
+                                     {language === "en" ? "📺 DIRECT PLAYER" : "📺 ISIDLALI ESINGAPHAMBILI"}
+                                   </button>
+                                   <button
+                                     onClick={() => setUseDirectPlayer(false)}
+                                     className={`px-3 py-1.5 rounded-lg text-[10px] font-bold font-mono transition-all cursor-pointer ${
+                                       !useDirectPlayer 
+                                         ? "bg-[#D4AF37] text-black shadow-[0_0_8px_rgba(214,175,55,0.2)]" 
+                                         : "bg-zinc-900 hover:bg-zinc-800 text-zinc-400 border border-zinc-800"
+                                     }`}
+                                   >
+                                     {language === "en" ? "🔗 EMBED FRAME" : "🔗 INGCALASIZINDA YE-EMBED"}
+                                   </button>
+                                 </div>
                                </div>
-                               <a
-                                 href={activeLesson.videoUrl}
-                                 target="_blank"
-                                 rel="noopener noreferrer"
-                                 className="inline-flex items-center space-x-1 text-[#D4AF37] hover:text-[#f3cd50] transition-colors font-medium font-mono border-b border-dashed border-[#D4AF37]/40 hover:border-[#f3cd50] pb-0.5"
-                               >
-                                 <span>{language === "en" ? "Open in OneDrive" : "Vula ku-OneDrive"}</span>
-                                 <ExternalLink className="w-3.5 h-3.5" />
-                               </a>
+                               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-2 border-t border-zinc-900 gap-2 text-[11px] text-zinc-500">
+                                 <span>
+                                   {useDirectPlayer 
+                                     ? (language === "en" ? "Plays raw stream in standard browser player. Note: This may fail or require login for certain protected files." : "Idlala i-stream ngqo esidlalini se-browser. Qaphela: Lokhu kungase kwehluleke noma kudingeke ukungena ngemvume.") 
+                                     : (language === "en" ? "Recommended. Uses OneDrive official embed player. Plays seamlessly without authentication." : "Inconyelwe. Isebenzisa isidlali sika-OneDrive esisemthethweni. Idlala kahle ngaphandle kokungena ngemvume.")}
+                                 </span>
+                                 <a
+                                   href={activeLesson.videoUrl}
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   className="inline-flex items-center space-x-1 text-[#D4AF37] hover:text-[#f3cd50] transition-colors font-medium font-mono border-b border-dashed border-[#D4AF37]/40 hover:border-[#f3cd50] pb-0.5 self-start sm:self-auto"
+                                 >
+                                   <span>{language === "en" ? "Open in OneDrive" : "Vula ku-OneDrive"}</span>
+                                   <ExternalLink className="w-3.5 h-3.5" />
+                                 </a>
+                               </div>
                              </div>
                            )}
 
