@@ -300,6 +300,23 @@ function convertOneDriveUrl(unshortenedUrl: string) {
     const params = urlObj.searchParams;
     const resid = params.get("resid");
     const authkey = params.get("authkey");
+    const redeem = params.get("redeem");
+
+    if (redeem) {
+      // If there is a redeem token, keep /redir in the path for embedding
+      // because /embed does not support the redeem token validation/redemption flow.
+      if (!params.has("embed")) {
+        urlObj.searchParams.set("embed", "1");
+      }
+      const embedUrl = urlObj.toString();
+      
+      // For downloadUrl, we use the /download path if possible
+      const downloadUrlObj = new URL(unshortenedUrl);
+      downloadUrlObj.pathname = downloadUrlObj.pathname.replace("/redir", "/download");
+      const directUrl = downloadUrlObj.toString();
+      
+      return { embedUrl, directUrl };
+    }
 
     if (resid && authkey) {
       return {

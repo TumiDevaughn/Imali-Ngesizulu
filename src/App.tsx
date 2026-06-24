@@ -40,7 +40,8 @@ import {
   Volume2,
   VolumeX,
   Cloud,
-  Youtube
+  Youtube,
+  ExternalLink
 } from "lucide-react";
 import { Role, User, Course, Lesson, Language, ChatMessage } from "./types";
 import type { Notification as AppNotification } from "./types";
@@ -5944,6 +5945,28 @@ export default function App() {
                              </div>
                            )}
  
+                           {activeLesson.videoUrl && activeLesson.videoUrl.includes("1drv.ms") && (
+                             <div className="mx-6 mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-zinc-400 bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-800/80 font-sans gap-2 animate-fade-in shadow-lg">
+                               <div className="flex items-center space-x-2">
+                                 <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+                                 <span>
+                                   {language === "en" 
+                                     ? "Streaming premium high-fidelity video from Microsoft OneDrive" 
+                                     : "Udlala isifundo esiphezulu esivela ku-Microsoft OneDrive"}
+                                 </span>
+                               </div>
+                               <a
+                                 href={activeLesson.videoUrl}
+                                 target="_blank"
+                                 rel="noopener noreferrer"
+                                 className="inline-flex items-center space-x-1 text-[#D4AF37] hover:text-[#f3cd50] transition-colors font-medium font-mono border-b border-dashed border-[#D4AF37]/40 hover:border-[#f3cd50] pb-0.5"
+                               >
+                                 <span>{language === "en" ? "Open in OneDrive" : "Vula ku-OneDrive"}</span>
+                                 <ExternalLink className="w-3.5 h-3.5" />
+                               </a>
+                             </div>
+                           )}
+
                            {/* Lesson Written Transcript content & downloadable premium tools */}
                            <div className="p-6 space-y-8">
                              
