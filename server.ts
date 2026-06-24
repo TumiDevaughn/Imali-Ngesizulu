@@ -236,6 +236,116 @@ app.post("/api/contact", async (req, res) => {
   });
 });
 
+// 5. OneDrive shortened link resolver
+app.post("/api/unshorten", async (req, res) => {
+  const { url } = req.body;
+  if (!url) {
+    return res.status(400).json({ error: "URL is required" });
+  }
+
+  // If it's not a shortened OneDrive link, return as-is
+  if (!url.includes("1drv.ms")) {
+    return res.json({ original: url, resolved: url, embedUrl: url, directUrl: url });
+  }
+
+  try {
+    console.log(`Unshortening OneDrive link: ${url}`);
+    
+    // Perform fetch with manual redirects to capture the 301/302 location
+    const response = await fetch(url, {
+      method: "HEAD",
+      redirect: "manual",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+      }
+    });
+
+    const location = response.headers.get("location");
+    if (!location) {
+      console.warn(`No redirect Location header found for: ${url}. Fetching with follow redirects...`);
+      // Fallback: fetch with normal follow and get the final URL
+      const fullResponse = await fetch(url, {
+        method: "GET",
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+      });
+      const resolvedUrl = fullResponse.url;
+      const converted = convertOneDriveUrl(resolvedUrl);
+      return res.json({ original: url, resolved: resolvedUrl, ...converted });
+    }
+
+    console.log(`Resolved location: ${location}`);
+    const converted = convertOneDriveUrl(location);
+    return res.json({ original: url, resolved: location, ...converted });
+
+  } catch (err: any) {
+    console.error("Failed to unshorten OneDrive URL:", err);
+    // Return a fallback conversion using base64 mechanism if fetch fails
+    const fallbackDirect = getFallbackOneDriveDirectUrl(url);
+    return res.json({ 
+      original: url, 
+      resolved: url, 
+      embedUrl: fallbackDirect,
+      directUrl: fallbackDirect,
+      error: err.message
+    });
+  }
+});
+
+// Helper to convert unshortened live.com URL to correct embed and direct download links
+function convertOneDriveUrl(unshortenedUrl: string) {
+  try {
+    const urlObj = new URL(unshortenedUrl);
+    const params = urlObj.searchParams;
+    const resid = params.get("resid");
+    const authkey = params.get("authkey");
+
+    if (resid && authkey) {
+      return {
+        embedUrl: `https://onedrive.live.com/embed?resid=${encodeURIComponent(resid)}&authkey=${encodeURIComponent(authkey)}`,
+        directUrl: `https://onedrive.live.com/download?resid=${encodeURIComponent(resid)}&authkey=${encodeURIComponent(authkey)}`
+      };
+    }
+    
+    if (unshortenedUrl.includes("/embed")) {
+      return {
+        embedUrl: unshortenedUrl,
+        directUrl: unshortenedUrl.replace("/embed", "/download")
+      };
+    }
+    if (unshortenedUrl.includes("/download")) {
+      return {
+        embedUrl: unshortenedUrl.replace("/download", "/embed"),
+        directUrl: unshortenedUrl
+      };
+    }
+
+    const embedUrl = unshortenedUrl.replace("/redir", "/embed").replace("/view", "/embed");
+    const directUrl = unshortenedUrl.replace("/redir", "/download").replace("/view", "/download");
+    return { embedUrl, directUrl };
+  } catch (e) {
+    const embedUrl = unshortenedUrl.replace("/redir", "/embed").replace("/view", "/embed");
+    const directUrl = unshortenedUrl.replace("/redir", "/download").replace("/view", "/download");
+    return { embedUrl, directUrl };
+  }
+}
+
+// Fallback base64-based Graph API sharing URL generator if the server fetch fails
+function getFallbackOneDriveDirectUrl(url: string) {
+  try {
+    const cleanUrl = url.split("?")[0];
+    const base64 = Buffer.from(cleanUrl).toString("base64");
+    const safeBase64 = base64
+      .replace(/=/g, "")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_");
+    return `https://api.onedrive.com/v1.0/shares/u!${safeBase64}/root/content`;
+  } catch (e) {
+    return url;
+  }
+}
+
 // Serve assets
 async function startServer() {
   const distPath = path.join(process.cwd(), "dist");

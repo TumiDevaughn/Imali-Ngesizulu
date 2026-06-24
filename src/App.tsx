@@ -2227,7 +2227,15 @@ export default function App() {
   // Helper to render user avatars with nice dynamic initials fallback
   const renderAvatar = (avatarUrl: string, name: string) => {
     if (avatarUrl && (avatarUrl.startsWith("data:") || avatarUrl.startsWith("http")) && !avatarUrl.includes("unsplash.com")) {
-      return <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />;
+      return <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover animate-fade-in" />;
+    }
+    // Fallback logo if there is no student or active profile
+    if (activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim())) {
+      return (
+        <div className="w-full h-full bg-black flex items-center justify-center overflow-hidden">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4uzEWWNy1jf56wz_ZrI_1tC3EV9jzmA2m6g&s" alt="Academy Logo" className="w-full h-full object-cover rounded-full" />
+        </div>
+      );
     }
     return (
       <div className="w-full h-full bg-gradient-to-br from-[#D4AF37] to-[#996515] flex items-center justify-center text-black font-extrabold text-lg select-none">
@@ -2235,6 +2243,71 @@ export default function App() {
       </div>
     );
   };
+
+  const getOneDriveDirectUrl = (url: string) => {
+    if (!url) return "";
+    if (!url.includes("1drv.ms")) return url;
+    try {
+      const cleanUrl = url.split("?")[0];
+      const base64 = btoa(cleanUrl);
+      const safeBase64 = base64
+        .replace(/=/g, "")
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_");
+      return `https://api.onedrive.com/v1.0/shares/u!${safeBase64}/root/content`;
+    } catch (e) {
+      console.error("Error converting OneDrive URL:", e);
+      return url;
+    }
+  };
+
+  const [unshortenedUrls, setUnshortenedUrls] = useState<{ embedUrl: string; directUrl: string } | null>(null);
+  const [isUnshortening, setIsUnshortening] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (activeLesson && activeLesson.videoUrl && activeLesson.videoUrl.includes("1drv.ms")) {
+      setIsUnshortening(true);
+      setUnshortenedUrls(null);
+      
+      fetch("/api/unshorten", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: activeLesson.videoUrl })
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP error " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (data && data.embedUrl) {
+            setUnshortenedUrls({
+              embedUrl: data.embedUrl,
+              directUrl: data.directUrl || data.embedUrl
+            });
+          } else {
+            const fallbackDirect = getOneDriveDirectUrl(activeLesson.videoUrl);
+            setUnshortenedUrls({
+              embedUrl: fallbackDirect,
+              directUrl: fallbackDirect
+            });
+          }
+        })
+        .catch(err => {
+          console.error("Error unshortening video URL:", err);
+          const fallbackDirect = getOneDriveDirectUrl(activeLesson.videoUrl);
+          setUnshortenedUrls({
+            embedUrl: fallbackDirect,
+            directUrl: fallbackDirect
+          });
+        })
+        .finally(() => {
+          setIsUnshortening(false);
+        });
+    } else {
+      setUnshortenedUrls(null);
+      setIsUnshortening(false);
+    }
+  }, [activeLesson?.id, activeLesson?.videoUrl]);
 
   // Class Unlock States
   const [classroomUnlocked, setClassroomUnlocked] = useState<boolean>(() => {
@@ -3667,15 +3740,25 @@ export default function App() {
             <div className="bg-gradient-to-b from-white/5 to-transparent border border-white/5 backdrop-blur-md p-4 rounded-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-12 h-12 bg-[#D4AF37]/5 rounded-bl-full"></div>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full border border-[#D4AF37]/40 overflow-hidden relative shrink-0">
-                  {renderAvatar(currentUser.avatar, currentUser.name)}
+                <div className="w-10 h-10 rounded-full border border-[#D4AF37]/40 overflow-hidden relative shrink-0 flex items-center justify-center bg-black">
+                  {activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim()) ? (
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4uzEWWNy1jf56wz_ZrI_1tC3EV9jzmA2m6g&s" alt="Imali Academy Logo" className="w-full h-full object-cover rounded-full" />
+                  ) : (
+                    renderAvatar(currentUser.avatar, currentUser.name)
+                  )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-xs font-bold text-white tracking-wide truncate">{currentUser.name || translateText("new_scholar", language)}</h4>
+                  <h4 className="text-xs font-bold text-white tracking-wide truncate">
+                    {activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim()) ? "Imali Academy" : (currentUser.name || translateText("new_scholar", language))}
+                  </h4>
                   <p className="text-[9px] text-[#D4AF37] uppercase font-mono tracking-widest mt-0.5">
-                    {activeRole === Role.STUDENT && translateText("role_student", language)}
-                    {activeRole === Role.INSTRUCTOR && translateText("role_instructor", language)}
-                    {activeRole === Role.ADMIN && translateText("role_admin", language)}
+                    {activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim()) ? "Academy Portal" : (
+                      <>
+                        {activeRole === Role.STUDENT && translateText("role_student", language)}
+                        {activeRole === Role.INSTRUCTOR && translateText("role_instructor", language)}
+                        {activeRole === Role.ADMIN && translateText("role_admin", language)}
+                      </>
+                    )}
                   </p>
                 </div>
               </div>
@@ -5812,16 +5895,33 @@ export default function App() {
                              <div className="p-6 pb-2 border-b border-zinc-800 bg-zinc-950/50">
                                <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-zinc-800 bg-black shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
                                  {activeLesson.videoUrl.includes("1drv.ms") ? (
-                                   // Microsoft OneDrive iframe viewer support
-                                   <iframe
-                                     src={activeLesson.videoUrl}
-                                     className="absolute top-0 left-0 w-full h-full border-0 animate-fade-in"
-                                     frameBorder="0"
-                                     scrolling="no"
-                                     allowFullScreen
-                                     title={language === "en" ? activeLesson.title_en : activeLesson.title_zu}
-                                   />
-                                 ) : activeLesson.videoUrl.includes("youtube.com") || activeLesson.videoUrl.includes("youtu.be") ? (
+                                    isUnshortening ? (
+                                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950 text-[#D4AF37] space-y-4 font-sans animate-pulse">
+                                        <div className="w-10 h-10 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
+                                        <p className="text-xs font-semibold tracking-wider uppercase font-mono">
+                                          {language === "en" ? "Initializing Premium Stream..." : "Ilungiselela Ividiyo..."}
+                                        </p>
+                                      </div>
+                                    ) : unshortenedUrls && unshortenedUrls.embedUrl ? (
+                                      <iframe
+                                        src={unshortenedUrls.embedUrl}
+                                        className="absolute top-0 left-0 w-full h-full border-0 animate-fade-in bg-black"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        title={language === "en" ? activeLesson.title_en : activeLesson.title_zu}
+                                      />
+                                    ) : (
+                                      <video
+                                        src={getOneDriveDirectUrl(activeLesson.videoUrl)}
+                                        controls
+                                        className="absolute top-0 left-0 w-full h-full object-contain bg-black animate-fade-in"
+                                        poster={activeLesson.imageUrl || undefined}
+                                        preload="metadata"
+                                        playsInline
+                                      />
+                                    )
+                                  ) : activeLesson.videoUrl.includes("youtube.com") || activeLesson.videoUrl.includes("youtu.be") ? (
                                    <iframe
                                      src={activeLesson.videoUrl.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
                                      className="absolute top-0 left-0 w-full h-full border-0 animate-fade-in"
