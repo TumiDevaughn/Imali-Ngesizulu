@@ -3022,7 +3022,43 @@ export default function App() {
   const [studentProgress, setStudentProgress] = useState(() => {
     const local = localStorage.getItem("imali_student_progress");
     const defaultState = {
-      enrolledCourses: ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", "elite_onedrive_confluence_masterclass", "elite_onedrive_mt4_masterclass", "elite_onedrive_mt5_masterclass", "elite_onedrive_mt5_adv_masterclass", "elite_onedrive_mt5_indicators_masterclass", "elite_onedrive_mt5_mobile_masterclass", "elite_onedrive_mt5_execution_masterclass", "elite_onedrive_risk_mgt_masterclass", "elite_onedrive_trading_psychology_masterclass", "pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
+      enrolledCourses: [
+        "elite_onedrive_video_masterclass",
+        "elite_onedrive_hedging_masterclass",
+        "elite_onedrive_orderflow_masterclass",
+        "elite_onedrive_psychology_masterclass",
+        "elite_onedrive_liquidity_masterclass",
+        "elite_onedrive_reversal_masterclass",
+        "elite_onedrive_supplydemand_masterclass",
+        "elite_onedrive_amd_masterclass",
+        "elite_onedrive_inducement_masterclass",
+        "elite_onedrive_macro_masterclass",
+        "elite_onedrive_funding_masterclass",
+        "elite_onedrive_confluence_masterclass",
+        "elite_onedrive_mt4_masterclass",
+        "elite_onedrive_mt5_masterclass",
+        "elite_onedrive_mt5_adv_masterclass",
+        "elite_onedrive_mt5_indicators_masterclass",
+        "elite_onedrive_mt5_mobile_masterclass",
+        "elite_onedrive_mt5_execution_masterclass",
+        "elite_onedrive_risk_mgt_masterclass",
+        "elite_onedrive_trading_psychology_masterclass",
+        "elite_onedrive_c21_masterclass",
+        "elite_onedrive_c22_masterclass",
+        "elite_onedrive_c23_masterclass",
+        "elite_onedrive_c24_masterclass",
+        "elite_onedrive_c25_masterclass",
+        "elite_onedrive_c26_masterclass",
+        "elite_onedrive_c27_masterclass",
+        "elite_onedrive_c28_masterclass",
+        "elite_onedrive_c29_masterclass",
+        "elite_onedrive_c30_masterclass",
+        "elite_onedrive_c31_masterclass",
+        "elite_onedrive_c32_masterclass",
+        "elite_onedrive_c33_masterclass",
+        "pa_elite_candlestick_physics_mastery",
+        "elite_forex_elite_pathway"
+      ],
       completedCourses: [],
       progress: {
         "elite_onedrive_video_masterclass": 0,
@@ -3045,6 +3081,19 @@ export default function App() {
         "elite_onedrive_mt5_execution_masterclass": 0,
         "elite_onedrive_risk_mgt_masterclass": 0,
         "elite_onedrive_trading_psychology_masterclass": 0,
+        "elite_onedrive_c21_masterclass": 0,
+        "elite_onedrive_c22_masterclass": 0,
+        "elite_onedrive_c23_masterclass": 0,
+        "elite_onedrive_c24_masterclass": 0,
+        "elite_onedrive_c25_masterclass": 0,
+        "elite_onedrive_c26_masterclass": 0,
+        "elite_onedrive_c27_masterclass": 0,
+        "elite_onedrive_c28_masterclass": 0,
+        "elite_onedrive_c29_masterclass": 0,
+        "elite_onedrive_c30_masterclass": 0,
+        "elite_onedrive_c31_masterclass": 0,
+        "elite_onedrive_c32_masterclass": 0,
+        "elite_onedrive_c33_masterclass": 0,
         "pa_elite_candlestick_physics_mastery": 100,
         "elite_forex_elite_pathway": 10,
       },
@@ -3139,6 +3188,19 @@ export default function App() {
           if (!enrolled.includes("elite_onedrive_trading_psychology_masterclass")) {
             enrolled.push("elite_onedrive_trading_psychology_masterclass");
           }
+          if (!enrolled.includes("elite_onedrive_c21_masterclass")) enrolled.push("elite_onedrive_c21_masterclass");
+          if (!enrolled.includes("elite_onedrive_c22_masterclass")) enrolled.push("elite_onedrive_c22_masterclass");
+          if (!enrolled.includes("elite_onedrive_c23_masterclass")) enrolled.push("elite_onedrive_c23_masterclass");
+          if (!enrolled.includes("elite_onedrive_c24_masterclass")) enrolled.push("elite_onedrive_c24_masterclass");
+          if (!enrolled.includes("elite_onedrive_c25_masterclass")) enrolled.push("elite_onedrive_c25_masterclass");
+          if (!enrolled.includes("elite_onedrive_c26_masterclass")) enrolled.push("elite_onedrive_c26_masterclass");
+          if (!enrolled.includes("elite_onedrive_c27_masterclass")) enrolled.push("elite_onedrive_c27_masterclass");
+          if (!enrolled.includes("elite_onedrive_c28_masterclass")) enrolled.push("elite_onedrive_c28_masterclass");
+          if (!enrolled.includes("elite_onedrive_c29_masterclass")) enrolled.push("elite_onedrive_c29_masterclass");
+          if (!enrolled.includes("elite_onedrive_c30_masterclass")) enrolled.push("elite_onedrive_c30_masterclass");
+          if (!enrolled.includes("elite_onedrive_c31_masterclass")) enrolled.push("elite_onedrive_c31_masterclass");
+          if (!enrolled.includes("elite_onedrive_c32_masterclass")) enrolled.push("elite_onedrive_c32_masterclass");
+          if (!enrolled.includes("elite_onedrive_c33_masterclass")) enrolled.push("elite_onedrive_c33_masterclass");
           parsed.enrolledCourses = enrolled;
           if (!parsed.progress) parsed.progress = {};
           if (parsed.progress["elite_onedrive_video_masterclass"] === undefined) {
@@ -3201,6 +3263,19 @@ export default function App() {
           if (parsed.progress["elite_onedrive_trading_psychology_masterclass"] === undefined) {
             parsed.progress["elite_onedrive_trading_psychology_masterclass"] = 0;
           }
+          if (parsed.progress["elite_onedrive_c21_masterclass"] === undefined) parsed.progress["elite_onedrive_c21_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c22_masterclass"] === undefined) parsed.progress["elite_onedrive_c22_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c23_masterclass"] === undefined) parsed.progress["elite_onedrive_c23_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c24_masterclass"] === undefined) parsed.progress["elite_onedrive_c24_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c25_masterclass"] === undefined) parsed.progress["elite_onedrive_c25_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c26_masterclass"] === undefined) parsed.progress["elite_onedrive_c26_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c27_masterclass"] === undefined) parsed.progress["elite_onedrive_c27_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c28_masterclass"] === undefined) parsed.progress["elite_onedrive_c28_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c29_masterclass"] === undefined) parsed.progress["elite_onedrive_c29_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c30_masterclass"] === undefined) parsed.progress["elite_onedrive_c30_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c31_masterclass"] === undefined) parsed.progress["elite_onedrive_c31_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c32_masterclass"] === undefined) parsed.progress["elite_onedrive_c32_masterclass"] = 0;
+          if (parsed.progress["elite_onedrive_c33_masterclass"] === undefined) parsed.progress["elite_onedrive_c33_masterclass"] = 0;
           return parsed;
         }
       } catch (e) {
