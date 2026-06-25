@@ -3022,7 +3022,7 @@ export default function App() {
   const [studentProgress, setStudentProgress] = useState(() => {
     const local = localStorage.getItem("imali_student_progress");
     const defaultState = {
-      enrolledCourses: ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", "elite_onedrive_confluence_masterclass", "elite_onedrive_mt4_masterclass", "elite_onedrive_mt5_masterclass", "pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
+      enrolledCourses: ["elite_onedrive_video_masterclass", "elite_onedrive_hedging_masterclass", "elite_onedrive_orderflow_masterclass", "elite_onedrive_psychology_masterclass", "elite_onedrive_liquidity_masterclass", "elite_onedrive_reversal_masterclass", "elite_onedrive_supplydemand_masterclass", "elite_onedrive_amd_masterclass", "elite_onedrive_inducement_masterclass", "elite_onedrive_macro_masterclass", "elite_onedrive_funding_masterclass", "elite_onedrive_confluence_masterclass", "elite_onedrive_mt4_masterclass", "elite_onedrive_mt5_masterclass", "elite_onedrive_mt5_adv_masterclass", "elite_onedrive_mt5_indicators_masterclass", "elite_onedrive_mt5_mobile_masterclass", "elite_onedrive_mt5_execution_masterclass", "elite_onedrive_risk_mgt_masterclass", "elite_onedrive_trading_psychology_masterclass", "pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
       completedCourses: [],
       progress: {
         "elite_onedrive_video_masterclass": 0,
@@ -3039,6 +3039,12 @@ export default function App() {
         "elite_onedrive_confluence_masterclass": 0,
         "elite_onedrive_mt4_masterclass": 0,
         "elite_onedrive_mt5_masterclass": 0,
+        "elite_onedrive_mt5_adv_masterclass": 0,
+        "elite_onedrive_mt5_indicators_masterclass": 0,
+        "elite_onedrive_mt5_mobile_masterclass": 0,
+        "elite_onedrive_mt5_execution_masterclass": 0,
+        "elite_onedrive_risk_mgt_masterclass": 0,
+        "elite_onedrive_trading_psychology_masterclass": 0,
         "pa_elite_candlestick_physics_mastery": 100,
         "elite_forex_elite_pathway": 10,
       },
@@ -3115,6 +3121,24 @@ export default function App() {
           if (!enrolled.includes("elite_onedrive_mt5_masterclass")) {
             enrolled.push("elite_onedrive_mt5_masterclass");
           }
+          if (!enrolled.includes("elite_onedrive_mt5_adv_masterclass")) {
+            enrolled.push("elite_onedrive_mt5_adv_masterclass");
+          }
+          if (!enrolled.includes("elite_onedrive_mt5_indicators_masterclass")) {
+            enrolled.push("elite_onedrive_mt5_indicators_masterclass");
+          }
+          if (!enrolled.includes("elite_onedrive_mt5_mobile_masterclass")) {
+            enrolled.push("elite_onedrive_mt5_mobile_masterclass");
+          }
+          if (!enrolled.includes("elite_onedrive_mt5_execution_masterclass")) {
+            enrolled.push("elite_onedrive_mt5_execution_masterclass");
+          }
+          if (!enrolled.includes("elite_onedrive_risk_mgt_masterclass")) {
+            enrolled.push("elite_onedrive_risk_mgt_masterclass");
+          }
+          if (!enrolled.includes("elite_onedrive_trading_psychology_masterclass")) {
+            enrolled.push("elite_onedrive_trading_psychology_masterclass");
+          }
           parsed.enrolledCourses = enrolled;
           if (!parsed.progress) parsed.progress = {};
           if (parsed.progress["elite_onedrive_video_masterclass"] === undefined) {
@@ -3158,6 +3182,24 @@ export default function App() {
           }
           if (parsed.progress["elite_onedrive_mt5_masterclass"] === undefined) {
             parsed.progress["elite_onedrive_mt5_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_mt5_adv_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_mt5_adv_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_mt5_indicators_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_mt5_indicators_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_mt5_mobile_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_mt5_mobile_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_mt5_execution_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_mt5_execution_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_risk_mgt_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_risk_mgt_masterclass"] = 0;
+          }
+          if (parsed.progress["elite_onedrive_trading_psychology_masterclass"] === undefined) {
+            parsed.progress["elite_onedrive_trading_psychology_masterclass"] = 0;
           }
           return parsed;
         }

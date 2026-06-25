@@ -1529,6 +1529,570 @@ const staticCoursesData: Course[] = [
     ]
   },
   {
+    id: "elite_onedrive_mt5_adv_masterclass",
+    title_en: "IMALI Elite Strategy 15: MetaTrader 5 (MT5) Advanced Multi-Asset Execution",
+    title_zu: "I-IMALI Elite Strategy 15: Ukusebenzisa i-MT5 Advanced Multi-Asset Execution",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The fifteenth instalment of our premier video elite mentorship. Advanced study of MT5 order execution models, multi-timeframe correlation matrices, and custom indicators for expert traders.",
+    description_zu: "Incenye yeshumi nesihlanu yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Ukuhlaziya amasu okuhweba athuthukile we-MT5, i-multi-timeframe analysis, nokuphathwa kwama-orders ahlukene.",
+    thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_mt5_adv_mod_1",
+        title_en: "Module 1: Advanced MT5 Asset Control",
+        title_zu: "Isifundo 1: Amasu Athuthukile we-MT5",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_15",
+            title_en: "Class 15: Master Class Video - MetaTrader 5 (MT5) Advanced Order Types, Options & Settings",
+            title_zu: "Isigaba 15: Ividiyo ye-Master Class - Ukusebenzisa i-MT5 Advanced Orders nama-Settings Thuthukile",
+            duration: "65 Mins",
+            videoUrl: "https://jumpshare.com/embed/XvUDGqEA6ChFAImlKvVh",
+            imageUrl: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 15 of our IMALI Elite sequences. In this master class, we delve into advanced order execution strategies on MetaTrader 5. You will learn to use specialized pending orders, configure multi-asset profiles, utilize the built-in economic calendar alerts, and implement precise tracking methods for high-frequency trading setups.",
+            content_zu: "Siyakwamukela esigabeni seshumi nesihlanu se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngezindlela ezithuthukile zokuphatha ama-orders ku-MetaTrader 5 (MT5). Uzofunda ukusebenzisa ama-specialized pending orders, ukuhlela ama-multi-asset profiles, nokusebenzisa i-Economic Calendar ukubeka ama-alerts alungile ngaphambi kwezindaba.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_MT5_Advanced_Syllabus.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-MT5_Advanced_Syllabus.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: METATRADER 5 (MT5) ADVANCED LEVEL
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. HIGH-SPEED EXECUTION IN MT5
+- How MT5 processes multiple orders concurrently compared to MT4's single-thread model.
+- Setting up custom trade volumes and hotkeys for rapid position execution.
+
+2. MULTI-ASSET CORRELATION
+- Monitoring indices (US30, NAS100) alongside major USD currency pairs to establish direction confluence.
+- Configuring your workspace profile to track related assets seamlessly.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: METATRADER 5 (MT5) ADVANCED LEVEL
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. UKUSHESHA KWEMITHETHO KU-MT5
+- Indlela i-MT5 ekwazi ngayo ukuhlela ama-orders amaningi ngesikhathi esisodwa.
+- Ukulungisa ama-hotkeys namavolumu athize (lot sizes) ukuvula ama-trades ngokushesha okukhulu.
+
+2. UKUHLANGANA KWAMA-ASSETS (CORRELATION)
+- Ukuhlola ama-indices (US30, NAS100) kanye nama-USD currency pairs ukuze uthole isiqiniseko somgwaqo wentengo.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_mt5_adv_quiz_1",
+              title_en: "VVIP MT5 Advanced Assessment Quiz",
+              title_zu: "Ukuhlolwa Kokusetshenziswa Okuthuthukile Kwe-MT5 ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_mt5_adv_q1",
+                  question_en: "Which feature of MT5 allows you to trade different assets under a single unified environment with advanced speed?",
+                  question_zu: "Yikuphi okukhethekile ku-MT5 okukuvumela ukuthi uhwebe ama-assets ahlukene ngesivinini esiphezulu?",
+                  options_en: [
+                    "Multi-threaded execution engine",
+                    "Netting integration only",
+                    "Historical data limits",
+                    "Basic alert system"
+                  ],
+                  options_zu: [
+                    "I-Multi-threaded execution engine",
+                    "Ukuhambisana kwe-Netting kuphela",
+                    "Ukulinganiselwa kwedatha yomlando",
+                    "I-Basic alert system"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_mt5_indicators_masterclass",
+    title_en: "IMALI Elite Strategy 16: MT5 Technical Indicators & Custom Template Integration",
+    title_zu: "I-IMALI Elite Strategy 16: Ukufaka Ama-Indicators Nama-Templates ku-MT5",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The sixteenth instalment of our premier video elite mentorship. Master the setup of customized technical indicators, oscillators, and Fibonacci retracements to save standard template profiles.",
+    description_zu: "Incenye yeshumi nesithupha yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ulwazi lokufaka amashadi ama-indicators ahlukene afana ne-RSI, Moving Averages, ne-Fibonacci, bese uwagcina njengama-templates.",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_mt5_ind_mod_1",
+        title_en: "Module 1: MT5 Custom Styling & Settings",
+        title_zu: "Isifundo 1: Ukuhlela Amashadi nama-Indicators ku-MT5",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_16",
+            title_en: "Class 16: Master Class Video - MT5 Custom Technical Indicators, Color Schemes & Workspace Layouts",
+            title_zu: "Isigaba 16: Ividiyo ye-Master Class - Custom Indicators, Imibala Yama-Charts, ne-Layout Layouts",
+            duration: "60 Mins",
+            videoUrl: "https://jumpshare.com/embed/gFfZOOvmpbt9KzdGz4M2",
+            imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 16 of our IMALI Elite sequences. In this master class, we focus on custom styles and layouts. You will learn how to design eye-safe chart layouts, load complex multi-layer indicators, draw institutional Fibonacci lines, and organize multiple windows concurrently for dynamic confluence.",
+            content_zu: "Siyakwamukela esigabeni seshumi nesithupha se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokuhlela nokuhlunga amashadi akho kwi-MT5. Uzofunda ukushintsha imibala yamlengiso, ukufaka ama-indicators phezulu kwelinye ishadi, nokusebenzisa ama-tools afana ne-Fibonacci ukuze uthole ama-reversal points.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_MT5_Styling_Guide.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-MT5_Styling_Guide.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: MT5 TEMPLATE & INDICATOR OPTIMIZATION
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. VISUAL WORKSPACE SETUP
+- Using properties window (F8) to customize gridlines, candlesticks, and background contrast.
+- Saving default templates so every new asset window automatically opens with identical settings.
+
+2. FIBONACCI RETRACEMENT PROPERTIES
+- Configuring custom institutional levels like 50%, 61.8%, and 78.6% (Optimal Trade Entry - OTE) inside MT5.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: MT5 TEMPLATE & INDICATOR OPTIMIZATION
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. UKULUNGISELELA ISAKHIWO SE-WORKSPACE
+- Ukusebenzisa iwindi lamasethingi (F8) ukulungisa amagridi, amakhandlela, nombala we-background.
+- Ukugcina isakhiwo njenge-Default Template ukuze wonke amashadi amasha avuleke ngendlela efanayo.
+
+2. FIBONACCI RETRACEMENT SETTINGS
+- Ukufaka ama-levels abalulekile wamabhange anjengo 50%, 61.8%, kanye no 78.6% (Optimal Trade Entry) ku-MT5 tool.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_mt5_ind_quiz_1",
+              title_en: "VVIP MT5 Indicator Assessment Quiz",
+              title_zu: "Ukuhlolwa Kwama-Indicators ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_mt5_ind_q1",
+                  question_en: "Which shortcut key opens the Chart Properties window in MetaTrader platforms?",
+                  question_zu: "Yisiphi isinqamuleli sekhibhodi (shortcut key) esivula iwindi le-Properties leshadi?",
+                  options_en: [
+                    "F8",
+                    "F9",
+                    "F10",
+                    "F12"
+                  ],
+                  options_zu: [
+                    "F8",
+                    "F9",
+                    "F10",
+                    "F12"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_mt5_mobile_masterclass",
+    title_en: "IMALI Elite Strategy 17: MetaTrader 5 (MT5) Mobile Trading App Optimization",
+    title_zu: "I-IMALI Elite Strategy 17: Ukusebenzisa i-MT5 Mobile Application ku-Phone",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The seventeenth instalment of our premier video elite mentorship. Complete guide to configuring MetaTrader 5 on Android or iOS devices, setting up instant mobile push alerts, and executing trades from anywhere.",
+    description_zu: "Incenye yeshumi nesikhombisa yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Funda ukulungisa nokuphatha i-MT5 kwisimo seselula (mobile phone) yakho, ukusetha ama-notification alerts, nama-execution ohambeni.",
+    thumbnail: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_mt5_mob_mod_1",
+        title_en: "Module 1: Mobile Interface Execution",
+        title_zu: "Isifundo 1: Ukusebenzisa i-MT5 ku-Phone",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_17",
+            title_en: "Class 17: Master Class Video - MT5 Mobile Interface, Real-time Charts & Execution on Android/iOS",
+            title_zu: "Isigaba 17: Ividiyo ye-Master Class - MT5 Mobile App, Amashadi, ne-Execution yeselula",
+            duration: "65 Mins",
+            videoUrl: "https://jumpshare.com/embed/F3iE05MDtq3VL6bB52zA",
+            imageUrl: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 17 of our IMALI Elite sequences. This master class walks you through using MT5 on your phone. You will learn how to add your broker account, modify crosshair tools, view candlestick details, place and adjust Stop Loss and Take Profit levels, and receive crucial push alerts directly from your desktop MT5 platform to your mobile device.",
+            content_zu: "Siyakwamukela esigabeni seshumi nesikhombisa se IMALI Elite sequence yethu. Kule vidiyo, sikhombisa igxathu negxathu lokusebenzisa i-MT5 application kuselula yakho (Android noma iOS). Uzofunda ukufaka i-broker account yakho, ukusebenzisa i-crosshair tool, ukusetha nokushintsha i-Stop Loss kanye ne-Take Profit, kanye nokuthola ama-alert notifications.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_MT5_Mobile_Guide.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-MT5_Mobile_Guide.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: MT5 MOBILE APP SETUPS & NOTIFICATIONS
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. BROKER SYNCHRONIZATION
+- Searching for broker servers under the 'New Account' page.
+- Logging in securely using your Master password and choosing the Demo/Real server environment.
+
+2. PUSH NOTIFICATION ALERTS
+- Locating your MetaQuotes ID inside your mobile MT5 app settings.
+- Registering this ID on your desktop terminal to forward price and order status triggers instantly to your phone.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: MT5 MOBILE APP SETUPS & NOTIFICATIONS
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. UKUHLANGANISA I-BROKER ACCOUNTS
+- Ukufuna ama-server ommeleli (broker) wakho ekhasini elithi 'New Account'.
+- Ukungena usebenzisa i-password yakho kanye nokukhetha i-Demo noma i-Live server efanele.
+
+2. PUSH NOTIFICATION ALERTS
+- Ukuthola i-MetaQuotes ID yakho kumasethingi we-app yakho yeselula.
+- Ukufaka le ID kwikhompuyutha yakho ukuze ithumele ama-alerts entengo kumakhalekhukhwini wakho.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_mt5_mob_quiz_1",
+              title_en: "VVIP MT5 Mobile Assessment Quiz",
+              title_zu: "Ukuhlolwa Kokusetshenziswa Kwe-MT5 Mobile ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_mt5_mob_q1",
+                  question_en: "What unique ID is required to forward price alerts from a desktop platform to your MT5 mobile application?",
+                  question_zu: "Iyiphi i-ID ekhethekile edingekayo ukuze ithumele ama-price alerts kusuka kukhompyutha kuya kwisicelo sakho seselula (mobile application)?",
+                  options_en: [
+                    "MetaQuotes ID",
+                    "Broker Account ID",
+                    "IP Address ID",
+                    "Terminal License ID"
+                  ],
+                  options_zu: [
+                    "MetaQuotes ID",
+                    "Broker Account ID",
+                    "IP Address ID",
+                    "Terminal License ID"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_mt5_execution_masterclass",
+    title_en: "IMALI Elite Strategy 18: MT5 Execution Mechanics, Market Orders & Slippage Management",
+    title_zu: "I-IMALI Elite Strategy 18: Izindlela zoku-Executa, Order Flow ne-Slippage kwi-MT5",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The eighteenth instalment of our premier video elite mentorship. Demystifying execution speeds, spreads, depth of market liqudity, and navigating slippage during high-volatility news events.",
+    description_zu: "Incenye yeshumi nesishiyagalombili yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Izindlela ezithuthukile zokuphatha ukungena emakethe, ukubala i-spread, nokuphatha isimo se-slippage uma kunezindaba ezinkulu.",
+    thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_mt5_exec_mod_1",
+        title_en: "Module 1: Execution & Liquidity Speeds",
+        title_zu: "Isifundo 1: Isivinini ne-Liquidity Emakethe",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_18",
+            title_en: "Class 18: Master Class Video - MT5 High-Speed Market Entry, Spread Analysis & Trade Management",
+            title_zu: "Isigaba 18: Ividiyo ye-Master Class - Market Entry, Ukuhlaziya i-Spread, nokuPhathwa kwe-Trade ku-MT5",
+            duration: "65 Mins",
+            videoUrl: "https://jumpshare.com/embed/JlSXVNYoM1p57kY2UZID",
+            imageUrl: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 18 of our IMALI Elite sequences. In this master class, we analyze order filling policies inside MT5. You will learn about Fill or Kill (FOK), Immediate or Cancel (IOC), and how spreads widen during market transitions. We cover how to manage stop-loss slippage and utilize high-speed VPS hosting to ensure instantaneous execution.",
+            content_zu: "Siyakwamukela esigabeni seshumi nesishiyagalombili se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngezindlela amabhange agcwalisa ngazo ama-orders ethu (order filling policies). Uzofunda nge-Fill or Kill (FOK), i-Immediate or Cancel (IOC), nendlela i-spread eshintsha ngayo uma emakethe kunomnyakazo omkhulu noma uma kuvulwa amaseshini amasha.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_MT5_Execution_Manual.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-MT5_Execution_Manual.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ORDER FILLING POLICIES & VPS METRICS
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. MT5 ORDER FILLING POLICIES
+- Fill or Kill (FOK): The order can be executed only in the specified volume. If not available, it is cancelled.
+- Immediate or Cancel (IOC): Allows partial fills. The remaining unfulfilled volume is cancelled immediately.
+
+2. VIRTUAL PRIVATE SERVER (VPS) ADVANTAGES
+- Minimizing ping latencies between your MT5 platform and the broker's liquidity servers to sub-millisecond ranges to prevent slippage.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: ORDER FILLING POLICIES & VPS METRICS
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. IZINDLELA ZOKUGCWALISA AMA-ORDERS (MT5 FILLING POLICIES)
+- Fill or Kill (FOK): Uhlobo loku-execute oluvula kuphela uma usayizi owufunayo ukhona wonke, uma kungenjalo i-order liyavalwa.
+- Immediate or Cancel (IOC): Ivumela ukuthi i-order livulwe ngalowo thamo okhonayo emakethe njengamanje, bese ezinye ezisele zikhanselwe khona lapho.
+
+2. INZUZO YOKUSEBENZISA I-VPS (VIRTUAL PRIVATE SERVER)
+- Ukunciphisa i-latency (isikhathi sentambo phakathi kwakho ne-broker) ukuze i-Stop Loss ne-Market Order kungabi ne-slippage.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_mt5_exec_quiz_1",
+              title_en: "VVIP MT5 Execution Assessment Quiz",
+              title_zu: "Ukuhlolwa Kokusetshenziswa ne-Execution ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_mt5_exec_q1",
+                  question_en: "What filling policy executes an order only in the specified volume, otherwise cancels it completely?",
+                  question_zu: "Iyiphi i-filling policy egcwalisa i-order kuphela uma usayizi ogcwele ukhona, kungenjalo ikhansela i-order lonke?",
+                  options_en: [
+                    "Fill or Kill (FOK)",
+                    "Immediate or Cancel (IOC)",
+                    "Return / Pass",
+                    "Market Maker Only"
+                  ],
+                  options_zu: [
+                    "Fill or Kill (FOK)",
+                    "Immediate or Cancel (IOC)",
+                    "Return / Pass",
+                    "Market Maker Only"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_risk_mgt_masterclass",
+    title_en: "IMALI Elite Strategy 19: Advanced Risk Management, Position Sizing & Margin Calculations",
+    title_zu: "I-IMALI Elite Strategy 19: Ukulawulwa Kwe-Risk, Ukubala Usayizi we-Lot, ne-Margin kwi-MT4/MT5",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The nineteenth instalment of our premier video elite mentorship. Comprehensive mathematical breakdowns of leverage, free margin, equity management, and using position sizing calculators to maintain flawless risk discipline.",
+    description_zu: "Incenye yeshumi nesishiyagalolunye yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Ukubala ngokomthetho wezibalo ngesimo se-leverage, margin, size ye-lot, nendlela yokuvikela i-trading capital.",
+    thumbnail: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_risk_mod_1",
+        title_en: "Module 1: Professional Capital Protection",
+        title_zu: "Isifundo 1: Ukuvikela Izimali Njenge-Professional",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_19",
+            title_en: "Class 19: Master Class Video - Position Sizing Strategies, Stop Loss Placement & Drawdown Rules",
+            title_zu: "Isigaba 19: Ividiyo ye-Master Class - Position Sizing, Ukubeka i-Stop Loss, nemithetho ye-Drawdown",
+            duration: "65 Mins",
+            videoUrl: "https://jumpshare.com/embed/lBVeZTXTdPHMxrwMqXmb",
+            imageUrl: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 19 of our IMALI Elite sequences. In this master class, we study the core mathematical pillars of professional trading: leverage, margin requirements, free margin boundaries, and drawdown prevention. Learn how to size your lots based on precise percentage rules (e.g. 1-2% maximum risk per trade) and use custom calculators to manage capital.",
+            content_zu: "Siyakwamukela esigabeni seshumi nesishiyagalolunye se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokubala i-risk ne-margin. Uzofunda ukusebenzisa i-position sizing ukuthola ukuthi iyiphi i-lot size efanele i-account yakho, nendlela yokubeka i-Stop Loss ukuze ungalandeli imizwa yakho (risk management rules).",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Risk_Formula_Sheet.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Risk_Formula_Sheet.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: PROFESSIONAL RISK MATHEMATICS
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. THE POSITION SIZING FORMULA
+- Lot Size = (Account Balance * Risk Percentage) / (Stop Loss in Pips * Pip Value)
+- Keep risk constant (1% or 2% maximum) on every trade to survive statistical variance.
+
+2. MARGIN CALL & STOP OUT MECHANICS
+- Margin Level = (Equity / Used Margin) * 100
+- Stop Out occurs when Margin Level dips below broker's threshold (typically 30% - 50%), forcing liquidations.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: PROFESSIONAL RISK MATHEMATICS
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. IFOMULA YOKUBALA USAYIZI WE-LOT (POSITION SIZING)
+- Usayizi we-Lot = (Capital * Usayizi we-Risk) / (Isikhala se-Stop Loss * Pip Value)
+- Vikela i-capital yakho ngokuthatha i-risk engu 1% noma 2% kuphela nge-trade eyodwa.
+
+2. MARGIN CALL KANYE NE-STOP OUT
+- Margin Level = (Equity / Used Margin) * 100
+- I-Stop Out yenzeka uma imali yakho isiphelele kakhulu size sifike emgqeni wommeleli wakho (broker stop out line).`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_risk_quiz_1",
+              title_en: "VVIP Risk Management Assessment Quiz",
+              title_zu: "Ukuhlolwa Kokulawulwa kwe-Risk ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_risk_q1",
+                  question_en: "What is the industry-standard maximum recommended risk percentage per trade for retail traders?",
+                  question_zu: "Iyiphi i-percentage ye-risk enconyelwayo njalo uma uvula i-trade eyodwa ukuze ugcine i-account yakho iphephile?",
+                  options_en: [
+                    "1% to 2%",
+                    "5% to 10%",
+                    "20% to 30%",
+                    "50% or more"
+                  ],
+                  options_zu: [
+                    "1% kuye ku-2%",
+                    "5% kuye ku-10%",
+                    "20% kuye ku-30%",
+                    "50% nangaphezulu"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_trading_psychology_masterclass",
+    title_en: "IMALI Elite Strategy 20: Elite Trading Psychology, Discipline & Professional Account Scaling",
+    title_zu: "I-IMALI Elite Strategy 20: Trading Psychology ePhakeme, Ukuzilungisa, nokuKhulisa i-Account",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The twentieth instalment of our premier video elite mentorship. Mastering mental frameworks, eliminating FOMO (Fear Of Missing Out), neutralizing greed/fear, and creating a scalable trading business model.",
+    description_zu: "Incenye yamashumi amabili nembano yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Ukulawula imizwa nomqondo emakethe, ukugwema i-FOMO (Fear of Missing Out), nendlela yokukhulisa i-trading business lakho.",
+    thumbnail: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_psych_mod_1",
+        title_en: "Module 1: Mental Mastery & Strategy Execution",
+        title_zu: "Isifundo 1: Ukulawula Umqondo Nemizwa Yokuhweba",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_20",
+            title_en: "Class 20: Master Class Video - Emotional Control, Overtrading Elimination & Elite Trader Mindset",
+            title_zu: "Isigaba 20: Ividiyo ye-Master Class - Ukulawula Imizwa, Ukugwema i-Overtrading, noMoya we-Elite Trader",
+            duration: "65 Mins",
+            videoUrl: "https://jumpshare.com/embed/SVwq4chiZNmXsdDLkNT0",
+            imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 20 of our IMALI Elite sequences. In this crowning master class, we analyze the physiological challenges of active trading. You will discover how greed and fear operate in real-time execution settings, explore strategies to eliminate FOMO and overtrading, and study how professional fund managers scale accounts while maintaining absolute consistency.",
+            content_zu: "Siyakwamukela esigabeni samashumi amabili se IMALI Elite sequence yethu. Kule vidiyo, sikhuluma ngenkinga enkulu edla abahwebi: Umqondo nemicabango kwi-Trading. Uzofunda ukuthi ukwesaba nomhobholo (fear and greed) kushintsha kanjani imiphumela yakho, nendlela yokugcina umqondo ozolile njalo.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_Trading_Psychology_Guide.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-Trading_Psychology_Guide.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: ELITE TRADER COGNITIVE DISCIPLINE
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. OVERCOMING COGNITIVE BIASES IN TRADING
+- Recency Bias: Overemphasizing the results of your most recent trades, causing you to deviate from rules.
+- Loss Aversion: Holding onto losing trades past your stop loss in hopes they will reverse.
+
+2. BUILDING A TRADING ROUTINE
+- Establish static pre-market checklists.
+- Log every single trade in a physical or digital journal to create clear feedback loops for optimization.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: ELITE TRADER COGNITIVE DISCIPLINE
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. UKULAWULA IMICABANGO ENGALUNGILE
+- Recency Bias: Ukuthatha imiphumela yama-trades akho asanda kwenzeka njengomthetho, okukwenza uphule imithetho yakho.
+- Loss Aversion: Ukubamba i-trade elahlekelayo ngale kwe-Stop Loss yakho ngethemba lokuthi lizobuya.
+
+2. UKWAKHA I-TRADING JOURNAL
+- Bhala phansi njalo ama-trades akho ukuze ubuke amaphutha akho bese uwashintsha ngendlela efanele.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_psych_quiz_1",
+              title_en: "VVIP Trading Psychology Assessment Quiz",
+              title_zu: "Ukuhlolwa kwe-Psychology Yokuhweba ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_psych_q1",
+                  question_en: "What psychological bias refers to holding losing positions past your stop loss in the false hope of price recovery?",
+                  question_zu: "Yikuphi ukukhubazeka komqondo okubangela ukuthi umhwebi abambe i-trade elahlekelayo kude kakhulu ngethemba lokuthi intengo izobuya?",
+                  options_en: [
+                    "Loss Aversion Bias",
+                    "Recency Bias",
+                    "Confirmation Bias",
+                    "Gambler's Fallacy"
+                  ],
+                  options_zu: [
+                    "Loss Aversion Bias",
+                    "Recency Bias",
+                    "Confirmation Bias",
+                    "Gambler's Fallacy"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "pa_elite_candlestick_physics_mastery",
     title_en: "The Master Guide to Institutional Candlestick Physics & Liquidity Analysis",
     title_zu: "Incwadi Engezamabhange Emakethe Nomthetho Wentengo Wamakhandlela",
@@ -3649,7 +4213,13 @@ const allowedIds = [
   "elite_onedrive_funding_masterclass",
   "elite_onedrive_confluence_masterclass",
   "elite_onedrive_mt4_masterclass",
-  "elite_onedrive_mt5_masterclass"
+  "elite_onedrive_mt5_masterclass",
+  "elite_onedrive_mt5_adv_masterclass",
+  "elite_onedrive_mt5_indicators_masterclass",
+  "elite_onedrive_mt5_mobile_masterclass",
+  "elite_onedrive_mt5_execution_masterclass",
+  "elite_onedrive_risk_mgt_masterclass",
+  "elite_onedrive_trading_psychology_masterclass"
 ];
 
 export const coursesData: Course[] = staticCoursesData.filter(c => allowedIds.includes(c.id));
