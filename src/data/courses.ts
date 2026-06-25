@@ -1303,6 +1303,232 @@ const staticCoursesData: Course[] = [
     ]
   },
   {
+    id: "elite_onedrive_mt4_masterclass",
+    title_en: "IMALI Elite Strategy 13: MetaTrader 4 (MT4) Platform Mastery & Workspace Customization",
+    title_zu: "I-IMALI Elite Strategy 13: Ukusetshenziswa kwe-MetaTrader 4 (MT4) ne-Workspace Customization",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The thirteenth instalment of our premier video elite mentorship. Complete guide to navigating the MetaTrader 4 desktop terminal, saving customized template profiles, adding standard and custom technical indicators, and masterfully deploying pending orders.",
+    description_zu: "Incenye yeshumi nantathu yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ulwazi oluphelele lokusebenzisa i-MetaTrader 4 desktop terminal, ukuhlela i-workspace nemibala yamashadi, ukufaka ama-indicators, kanye nokuphatha ama-pending orders.",
+    thumbnail: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_mt4_mod_1",
+        title_en: "Module 1: MetaTrader 4 Desktop Platform Setup",
+        title_zu: "Isifundo 1: Ukulungisa i-MetaTrader 4 Platform",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_13",
+            title_en: "Class 13: Master Class Video - MetaTrader 4 (MT4) Terminal Setup, Layouts & Technical Customization",
+            title_zu: "Isigaba 13: Ividiyo ye-Master Class - Ukulungisa i-MT4 Layouts, Amashadi, nama-Technical Tools",
+            duration: "60 Mins",
+            videoUrl: "https://jumpshare.com/embed/3viCyM0duwg3VLKhCZHV",
+            imageUrl: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 13 of our IMALI Elite sequences. In this master class, we focus on the MetaTrader 4 (MT4) platform as demonstrated in the lecture recording. You will learn how to navigate the Market Watch, Navigator, and Terminal panes, customize chart colors, load template files, and apply technical indicators. We also study critical order mechanics including instant market execution, Buy/Sell Limits, and Buy/Sell Stops to elevate your execution speed.",
+            content_zu: "Siyakwamukela esigabeni seshumi nantathu se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokujulile ngokusebenzisa i-platform ye-MetaTrader 4 (MT4). Uzofunda ukuhlela i-Market Watch, i-Navigator pane, namashadi akho ngokuphelele. Sifunda futhi izinhlobo ezehlukene zama-orders afana ne-Market Execution, Buy/Sell Limit, kuye ku-Buy/Sell Stop ukuze ukwazi ukuvula ama-trades ngokushesha nangobunyoningco.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_MT4_Platform_Syllabus.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-MT4_Platform_Syllabus.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: METATRADER 4 (MT4) PLATFORM MASTER CLASS
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. OVERVIEW OF METATRADER 4 (MT4)
+- MT4 is the industry-standard trading platform for retail forex traders, praised for its speed and reliability.
+- Key Interface Components:
+  * Market Watch: Lists real-time bid/ask prices for selected currency pairs.
+  * Navigator: Quick access to trading accounts, custom indicators, templates, and EAs.
+  * Terminal: Bottom panel displaying active trades, account balance, history, and exposure.
+
+2. CHART CUSTOMIZATION & INDICATOR DEPLOYMENT
+- Customize candlestick colors by pressing F8 to bring up the Chart Properties window.
+- Save chart profiles as Templates (.tpl) to easily apply your preferred RSI, moving averages, or custom layout to any new chart.
+- Drag and drop indicators from the Navigator window directly onto the active chart.
+
+3. EXECUTION TYPES & PENDING ORDERS
+- Instant Execution: Enters the market immediately at the best available price.
+- Buy Limit: Place below current market price, anticipating an upward reversal after hitting the level.
+- Sell Limit: Place above current market price, anticipating a downward reversal after hitting the level.
+- Buy Stop: Place above current market price, anticipating price will continue climbing after breaking out.
+- Sell Stop: Place below current market price, anticipating price will continue dropping after breaking out.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: METATRADER 4 (MT4) PLATFORM MASTER CLASS
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. SIFUNDA NGE-METATRADER 4 (MT4)
+- I-MT4 iyipulatifomu yokuhweba edume kakhulu emhlabeni jikelele kubahwebi bama-currency.
+- Izinto Eziyinhloko kwi-Interface:
+  * Market Watch: Ikhombisa intengo yangempela (Bid/Ask) yama-currency pairs.
+  * Navigator: Ukuthola ama-trading accounts akho, izinto zokubala (indicators), nama-templates.
+  * Terminal: Iwindi elingezansi elikhombisa ama-trades avuliwe, i-balance, ne-history.
+
+2. UKUHLELA AMASHADI NOKUFAKA AMA-INDICATORS
+- Shintsha imibala yamakhandlela ngokucindezela u-F8 kukhibhodi yakho ukuze uvule iwindi le-Properties.
+- Gcina i-layout yakho njenge-Template (.tpl) ukuze ukwazi ukuyifaka kalula kunoma yiliphi elinye ishadi elisha.
+- Hudula ama-indicators kusuka kwi-Navigator uwafake ngqo eshadini elisebenzayo.
+
+3. IZINHLOBO ZAMA-ORDERS KWI-MT4
+- Market Execution: Ukungena emakethe khona manje ngentengo ekhona.
+- Buy Limit: Ifakwa ngaphansi kwentengo yamanje, ilindele ukuthi intengo inyuke emva kokuyithinta.
+- Sell Limit: Ifakwa phezulu kwentengo yamanje, ilindele ukuthi intengo yehle emva kokuyithinta.
+- Buy Stop: Ifakwa phezulu kwentengo yamanje, ilindele ukuthi intengo iqhubeke nokunyuka.
+- Sell Stop: Ifakwa ngaphansi kwentengo yamanje, ilindele ukuthi intengo iqhubeke nokwehla.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_mt4_quiz_1",
+              title_en: "VVIP MT4 Platform Assessment Quiz",
+              title_zu: "Ukuhlolwa Kokusetshenziswa Kwe-MetaTrader 4 (MT4) ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_mt4_q1",
+                  question_en: "Which pending order type is placed BELOW the current market price anticipating an upward price reversal?",
+                  question_zu: "Yiluphi uhlobo lwe-pending order olufakwa NGAPHANSI kwentengo yamanje ngenhloso yokuthi intengo azonyuka emva kokuyithinta?",
+                  options_en: [
+                    "Buy Limit",
+                    "Buy Stop",
+                    "Sell Limit",
+                    "Sell Stop"
+                  ],
+                  options_zu: [
+                    "Buy Limit",
+                    "Buy Stop",
+                    "Sell Limit",
+                    "Sell Stop"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "elite_onedrive_mt5_masterclass",
+    title_en: "IMALI Elite Strategy 14: MetaTrader 5 (MT5) Next-Gen Platform Mastery & Advanced Features",
+    title_zu: "I-IMALI Elite Strategy 14: Ukusetshenziswa kwe-MetaTrader 5 (MT5) ne-Advanced Features",
+    category_en: "Elite Technical Confluence",
+    category_zu: "Ukuhlanganisa Isakhiwo Se-Confluence",
+    difficulty_en: "VVIP Elite to Expert",
+    difficulty_zu: "Izinga Eliphezulu le-VVIP",
+    duration_en: "45 Hours",
+    duration_zu: "Amahora angu-45",
+    description_en: "The fourteenth instalment of our premier video elite mentorship. Comprehensive analysis of the MetaTrader 5 platform features, including advanced multi-timeframe navigation, built-in Economic Calendar, Depth of Market (DOM) analysis, and Netting vs Hedging accounts.",
+    description_zu: "Incenye yeshumi nane yohlelo lokuqeqesha ngezifundo zevidiyo eziphezulu. Thola ulwazi lokusebenzisa i-MetaTrader 5 (MT5) platform, okufaka phakathi ama-timeframes amasha, i-Depth of Market (DOM), ne-Economic Calendar ekhethekile.",
+    thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+    instructorName: "Jean-Louis Cele & Thabiso Khumalo",
+    rating: 5.0,
+    studentsCount: 0,
+    modules: [
+      {
+        id: "elite_onedrive_mt5_mod_1",
+        title_en: "Module 1: MetaTrader 5 Advanced Capabilities",
+        title_zu: "Isifundo 1: Amandla Thuthukile we-MetaTrader 5",
+        lessons: [
+          {
+            id: "elite_onedrive_lesson_14",
+            title_en: "Class 14: Master Class Video - MetaTrader 5 (MT5) Multi-Timeframe Charts, Hedging vs Netting & DOM Mechanics",
+            title_zu: "Isigaba 14: Ividiyo ye-Master Class - Ukusebenzisa i-MT5 Advanced Features, Hedging ne-DOM Mechanics",
+            duration: "65 Mins",
+            videoUrl: "https://jumpshare.com/embed/bisjSnbSVbjPzGKqEf4m",
+            imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
+            content_en: "Welcome to class 14 of our IMALI Elite sequences. This master class focuses on the advanced MetaTrader 5 (MT5) platform. You will discover the powerful upgrades from MT4 to MT5, including 21 timeframes, a built-in economic calendar, and the advanced Depth of Market (DOM) tool. Learn the critical distinction between Hedging and Netting account modes, how to run multiple positions in the same asset simultaneously, and configure automated alerts. Watch the detailed video below to master MT5.",
+            content_zu: "Siyakwamukela esigabeni seshumi nane se IMALI Elite sequence yethu. Kule vidiyo, sifunda ngokujulile nge-platform entsha ne-advanced ye-MetaTrader 5 (MT5). Uzothola izinto ezintsha ezikuyi-MT5 ezingekho kwi-MT4, njengama-timeframes angu-21, i-Economic Calendar eyakhelwe ngaphakathi, ne-Depth of Market (DOM). Funda ngokuhlukana kwe-Hedging ne-Netting accounts ukuze ukwazi ukuhweba njenge-professional. Bukela le vidiyo efakwe ngezansi.",
+            resources: [
+              {
+                name_en: "IMALI-NGESIZULU_Elite_MT5_Platform_Syllabus.pdf",
+                name_zu: "IMALI-NGESIZULU_Incwadi_Ye-MT5_Platform_Syllabus.pdf",
+                type: "pdf",
+                url: "#",
+                pdfContent_en: `==================================================================
+   IMALI NGESIZULU ACADEMY - PRIVATE CURRICULUM NOTES
+   LESSON NOTES: METATRADER 5 (MT5) PLATFORM MASTER CLASS
+   VIDEO COMPANION REFERENCE MATERIAL
+==================================================================
+
+1. METATRADER 5 (MT5) PLATFORM EVOLUTION
+- MT5 is designed as a multi-asset trading platform, supporting forex, stocks, futures, and indices natively.
+- Major upgrades from MT4:
+  * Timeframes: Expanded from 9 to 21 distinct timeframe views for precision multi-timeframe analysis.
+  * Built-in Economic Calendar: Displays high-impact macro news releases directly inside the terminal.
+  * MQL5 Language: Enhanced execution speed and strategy backtesting efficiency.
+
+2. NETTING VS HEDGING ACCOUNT MODES
+- Netting Mode (Standard for stock markets): Merges all positions in a single financial instrument. If you buy 1 lot and buy another 1 lot, it merges into a single position of 2 lots.
+- Hedging Mode (Standard for forex markets): Allows multiple independent positions in the same instrument, including opposite directions (Buy and Sell at the same time). Essential for complex execution strategies.
+
+3. DEPTH OF MARKET (DOM) ANALYSIS
+- DOM displays real-time buy and sell orders at different price levels close to current market quotes.
+- Provides insights into liquidity density, revealing major institution support/resistance boundaries before price action occurs.`,
+                pdfContent_zu: `==================================================================
+   IMALI NGESIZULU ACADEMY - AMALUNGO OKUFUNDA AYISISEKELO
+   AMAN COMODITY AMALUNGO: METATRADER 5 (MT5) PLATFORM MASTER CLASS
+   IMINININGWANE YEVIDIYO NOMHLAHLANDLELA WOMGWAQO
+==================================================================
+
+1. UKUTHUTHUKA KWE-METATRADER 5 (MT5)
+- I-MT5 yakhelwe ukuhweba ama-assets ahlukahlukene afana nama-forex, amasheya (stocks), nama-futures.
+- Izinto ezintsha nezibalulekile kwi-MT5:
+  * Timeframes: Inyusiwe isuka ku-9 yaya ku-21 timeframes ezahlukene ukuze ungenise ngokuphelele.
+  * Economic Calendar: Ikhombisa izindaba zezimali ezizayo ngaphakathi kwi-terminal yakho.
+  * MQL5: I-programming language enikeza isivinini phezulu kune-MT4.
+
+2. UKUHLUKANA KWE-NETTING NE-HEDGING ACCOUNTS
+- Netting Mode: Ihlanganisa wonke ama-positions endaweni eyodwa. Uma uthenga i-1 lot uphinde uthenge enye i-1 lot, kuhlanganiswa kube yi-2 lots.
+- Hedging Mode: Ikuvumela ukuthi uvule ama-trades amaningi azimele ku-currency pair eyodwa, ngisho ama-trades ahlukene (Buy no-Sell ngesikhathi esisodwa). Kubalulekile ekulawuleni ingozi.
+
+3. DEPTH OF MARKET (DOM) ANALYSIS
+- I-DOM ikhombisa umthamo wama-orders (Buy and Sell orders) asendaweni eseduze nentengo yamanje.
+- Ikusiza ukuba ubone izindawo lapho amabhange amakhulu efake khona imali eningi ngaphambi kokuthi intengo ifike khona.`
+              }
+            ],
+            quiz: {
+              id: "elite_onedrive_mt5_quiz_1",
+              title_en: "VVIP MT5 Platform Assessment Quiz",
+              title_zu: "Ukuhlolwa Kokusetshenziswa Kwe-MetaTrader 5 (MT5) ka-VVIP Elite",
+              questions: [
+                {
+                  id: "elite_onedrive_mt5_q1",
+                  question_en: "What is the key advantage of the Hedging Mode over the Netting Mode in MetaTrader 5?",
+                  question_zu: "Yini inzuzo enkulu ye-Hedging Mode uma iqhathaniswa ne-Netting Mode kwi-MetaTrader 5?",
+                  options_en: [
+                    "It allows holding multiple separate and opposite positions in the same currency pair",
+                    "It automatically places trades for you without risk settings",
+                    "It combines all orders into a single average price point",
+                    "It closes all your positions instantly when you lose connection"
+                  ],
+                  options_zu: [
+                    "Ikuvumela ukuba uvule ama-positions amaningi azimele kuhlanganise no-Buy no-Sell ngesikhathi esisodwa",
+                    "Ikuvulela ama-trades ngokwayo ngaphandle kokuhlela i-risk",
+                    "Ihlanganisa wonke ama-orders endaweni eyodwa phezulu kwe-average price",
+                    "Ivala wonke ama-trades ngesikhathi esisodwa uma uphelelwa yi-internet"
+                  ],
+                  correctAnswerIndex: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "pa_elite_candlestick_physics_mastery",
     title_en: "The Master Guide to Institutional Candlestick Physics & Liquidity Analysis",
     title_zu: "Incwadi Engezamabhange Emakethe Nomthetho Wentengo Wamakhandlela",
@@ -3421,7 +3647,9 @@ const allowedIds = [
   "elite_onedrive_inducement_masterclass",
   "elite_onedrive_macro_masterclass",
   "elite_onedrive_funding_masterclass",
-  "elite_onedrive_confluence_masterclass"
+  "elite_onedrive_confluence_masterclass",
+  "elite_onedrive_mt4_masterclass",
+  "elite_onedrive_mt5_masterclass"
 ];
 
 export const coursesData: Course[] = staticCoursesData.filter(c => allowedIds.includes(c.id));
