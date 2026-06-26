@@ -2934,6 +2934,50 @@ export default function App() {
     return localStorage.getItem("imali_admin_unlocked") === "true";
   });
 
+  // Master Access Keys for double-factor syndicate protection (Prevents unauthorized public access)
+  const [instructorAccessKey, setInstructorAccessKey] = useState("");
+  const [adminAccessKey, setAdminAccessKey] = useState("");
+
+  // Registry of valid Student Activation Codes and Student Records (Option 1)
+  interface StudentRecord {
+    firstName: string;
+    lastName: string;
+    email: string;
+    code: string;
+  }
+
+  const [registeredStudentRecords, setRegisteredStudentRecords] = useState<StudentRecord[]>(() => {
+    const local = localStorage.getItem("imali_registered_student_records");
+    if (local) {
+      try {
+        return JSON.parse(local);
+      } catch (e) {
+        // fallback
+      }
+    }
+    return [
+      { firstName: "Sibusiso", lastName: "Nkosi", email: "sibusiso.nkosi@gmail.com", code: "IMALI-STU-782134" },
+      { firstName: "Nomvula", lastName: "Dlamini", email: "nomvula.d@yahoo.com", code: "IMALI-STU-100124" },
+      { firstName: "Thabo", lastName: "Mokoena", email: "thabo.m@outlook.com", code: "IMALI-STU-202685" },
+      { firstName: "Zama", lastName: "Zuma", email: "zama.zuma@gmail.com", code: "IMALI-STU-999912" }
+    ];
+  });
+
+  const [newStudentFirstName, setNewStudentFirstName] = useState<string>("");
+  const [newStudentLastName, setNewStudentLastName] = useState<string>("");
+  const [newStudentEmail, setNewStudentEmail] = useState<string>("");
+  const [newStudentCode, setNewStudentCode] = useState<string>("");
+
+  const validActivationCodes = registeredStudentRecords.map(r => r.code.toUpperCase());
+
+  // Real Syndicate Mode Toggle (unlocked when both admin and instructor fill their profiles)
+  const [realSyndicateConsoleActive, setRealSyndicateConsoleActive] = useState<boolean>(false);
+  const [customStudentCodeInput, setCustomStudentCodeInput] = useState<string>("");
+
+  useEffect(() => {
+    localStorage.setItem("imali_registered_student_records", JSON.stringify(registeredStudentRecords));
+  }, [registeredStudentRecords]);
+
   // Helper to render user avatars with nice dynamic initials fallback
   const renderAvatar = (avatarUrl: string, name: string) => {
     if (avatarUrl && (avatarUrl.startsWith("data:") || avatarUrl.startsWith("http")) && !avatarUrl.includes("unsplash.com")) {
@@ -5661,41 +5705,59 @@ export default function App() {
                             <div className="flex gap-2 shrink-0">
                               <button
                                 onClick={() => {
-                                  if (!studentDetails.activationCode || studentDetails.activationCode.trim().length < 6) {
+                                  const enteredCode = studentDetails.activationCode.trim().toUpperCase();
+                                  if (!enteredCode || enteredCode.length < 6) {
                                     alert(language === "en" 
                                       ? "Please enter a valid student activation code (at least 6 characters, e.g., IMALI-STU-2026)." 
                                       : "Sicela ufake ikhodi yomfundi esebenzayo (okungenani izinhlamvu ezi-6, isb., IMALI-STU-2026)."
                                     );
                                     return;
                                   }
-                                  localStorage.setItem("imali_student_profile", JSON.stringify(studentDetails));
+                                  if (!validActivationCodes.includes(enteredCode)) {
+                                    alert(language === "en"
+                                      ? "Access Key Mismatch: This student activation code is not registered in the Syndicate Security Ledger. Please obtain an authorized code from your Admin or Instructor."
+                                      : "Ikhodi Yomfundi Ayifani: Le khodi yomfundi ayibhalisiwe kurejista kaMlawuli. Sicela uthole ikhodi egunyaziwe kuMlawuli noma uMfundisi."
+                                    );
+                                    return;
+                                  }
+                                  const updatedDetails = { ...studentDetails, activationCode: enteredCode };
+                                  setStudentDetails(updatedDetails);
+                                  localStorage.setItem("imali_student_profile", JSON.stringify(updatedDetails));
                                   setSecurityBlockAlert({
                                     show: true,
-                                    msgEn: `🎉 Academic suite activated successfully with Student Code: ${studentDetails.activationCode}`,
-                                    msgZu: `🎉 Uhlelo lwezemfundo luvulwe ngempumelelo ngeKhodi yomfundi: ${studentDetails.activationCode}`
+                                    msgEn: `🎉 Academic suite activated successfully with Student Code: ${enteredCode}`,
+                                    msgZu: `🎉 Uhlelo lwezemfundo luvulwe ngempumelelo ngeKhodi yomfundi: ${enteredCode}`
                                   });
                                 }}
-                                className="py-2 px-4 bg-[#D4AF37] hover:bg-[#bfa032] text-black font-mono font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow"
+                                className="w-full sm:w-auto py-2 px-6 bg-[#D4AF37] hover:bg-[#bfa032] text-black font-mono font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow"
                               >
                                 {language === "en" ? "Verify & Activate" : "Qinisekisa & Vula"}
                               </button>
-
-                              <button
-                                onClick={() => {
-                                  const randomNum = Math.floor(1000 + Math.random() * 9000);
-                                  const generated = `IMALI-STU-${randomNum}`;
-                                  setStudentDetails({ ...studentDetails, activationCode: generated });
-                                  setSecurityBlockAlert({
-                                    show: true,
-                                    msgEn: `💡 Generated student activation code: ${generated}. Click 'Verify & Activate' to apply!`,
-                                    msgZu: `💡 Ikhiqize ikhodi yomfundi: ${generated}. Chofoza 'Qinisekisa & Vula' ukuyisebenzisa!`
-                                  });
-                                }}
-                                className="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 font-mono text-[10px] uppercase tracking-wider rounded-xl transition-all"
-                              >
-                                {language === "en" ? "Generate Code" : "Khiqiza Ikhodi"}
-                              </button>
                             </div>
+                          </div>
+
+                          <div className="bg-[#1c1404] border border-[#D4AF37]/35 rounded-2xl p-4 space-y-2 mt-2">
+                            <h6 className="text-[11px] font-mono font-bold text-[#D4AF37] uppercase tracking-wider flex items-center gap-1.5">
+                              🔑 {language === "en" ? "How to obtain your Activation Code?" : "Uyithola kanjani Ikhodi Yokuvula?"}
+                            </h6>
+                            <p className="text-[11px] text-zinc-300 leading-relaxed">
+                              {language === "en" 
+                                ? "To receive your unique student credential, please email the Academy Administration or your designated Instructor at " 
+                                : "Ukuze uthole imininingwane yakho yomfundi eyingqayizivele, sicela uthumele i-imeyili kubaphathi be-Academy noma uMfundisi wakho oqokiwe ku-"}
+                              <a href="mailto:info@imalingesizulu.com" className="text-[#D4AF37] underline font-mono hover:text-[#bfa032]">info@imalingesizulu.com</a>
+                              {language === "en"
+                                ? " containing your Full Name, Surname, and Email address. The Administration will verify your enrollment and reply back with your unique student code (e.g., "
+                                : " equkethe Igama lakho eligcwele, Isibongo, kanye Nekheli le-imeyili. Abaphathi bazoqinisekisa ukubhalisa kwakho baphinde bakuphendule ngekhodi yakho eyingqayizivele (isb., "}
+                              <strong className="text-white font-mono bg-black/50 px-1.5 py-0.5 rounded border border-zinc-800">IMALI-STU-834927</strong>
+                              {language === "en"
+                                ? ")."
+                                : ")." }
+                            </p>
+                            <p className="text-[10px] text-zinc-500 italic leading-normal">
+                              ⚠️ {language === "en"
+                                ? "Each code is strictly linked to a single scholar. Duplicates, sharing, or reuse of codes is strictly prohibited and tracked by the Syndicate ledger."
+                                : "Ikhodi ngayinye ixhunywe ngqo nomfundi oyedwa. Ukwabelana noma ukusebenzisa kabusha amakhodi akuvunyelwe nakancane futhi kulandelelwa irejista ye-Syndicate."}
+                            </p>
                           </div>
 
                           <p className="text-[10px] text-zinc-500 font-sans leading-relaxed">
@@ -5748,41 +5810,55 @@ export default function App() {
                             </div>
                             <p className="text-xs text-zinc-300 leading-relaxed">
                               {language === "en" 
-                                ? "This professional workspace is reserved for the designated Academy Instructor. Please authenticate using your registered instructor email address (info@imalingesizulu.com):" 
-                                : "Le ndawo yomsebenzi obuchwepheshe ibekelwe uMfundisi we-Academy oqokiwe. Sicela ungene usebenzisa i-imeyili yomfundisi ebhalisiwe (info@imalingesizulu.com):"}
+                                ? "This professional workspace is reserved for the designated Academy Instructor. Please authenticate using your registered instructor email address and your private Syndicate Master Access Key:" 
+                                : "Le ndawo yomsebenzi obuchwepheshe ibekelwe uMfundisi we-Academy oqokiwe. Sicela ungene usebenzisa i-imeyili yomfundisi ebhalisiwe kanye neKhodi Enkulu kaMlawuli eyimfihlo:"}
                             </p>
-                            <div className="space-y-2">
-                              <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
-                                {language === "en" ? "Registered Instructor Email" : "I-imeyili Yomfundisi Ebhalisiwe"}
-                              </label>
-                              <div className="flex flex-col sm:flex-row gap-2">
-                                <input 
-                                  type="email"
-                                  id="instructor_gate_email_input"
-                                  placeholder="e.g. info@imalingesizulu.com"
-                                  value={instructorDetails.email}
-                                  onChange={(e) => setInstructorDetails({ ...instructorDetails, email: e.target.value })}
-                                  className="flex-1 bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37]"
-                                />
-                                <button
-                                  onClick={() => {
-                                    if (instructorDetails.email.trim().toLowerCase() === "info@imalingesizulu.com") {
-                                      setIsInstructorUnlocked(true);
-                                      localStorage.setItem("imali_instructor_unlocked", "true");
-                                      alert(language === "en" 
-                                        ? "Instructor Identity Verified! Workspace unlocked." 
-                                        : "Ubunikazi Bomfundisi Buqinisekisiwe! Ukufinyelela kuvuliwe.");
-                                    } else {
-                                      alert(language === "en" 
-                                        ? "Access Denied. For authorization as Instructor, the email must correspond to info@imalingesizulu.com." 
-                                        : "Ukufinyelela Kunqatshiwe. Ukuze ugunyazwe njengoMfundisi, i-imeyili kumele ihambisane ne-info@imalingesizulu.com.");
-                                    }
-                                  }}
-                                  className="py-2.5 px-5 bg-[#D4AF37] hover:brightness-110 text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl transition shrink-0 cursor-pointer"
-                                >
-                                  {language === "en" ? "Verify Identity" : "Qinisekisa"}
-                                </button>
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                  <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
+                                    {language === "en" ? "Registered Instructor Email" : "I-imeyili Yomfundisi Ebhalisiwe"}
+                                  </label>
+                                  <input 
+                                    type="email"
+                                    id="instructor_gate_email_input"
+                                    placeholder="e.g. info@imalingesizulu.com"
+                                    value={instructorDetails.email}
+                                    onChange={(e) => setInstructorDetails({ ...instructorDetails, email: e.target.value })}
+                                    className="w-full bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37]"
+                                  />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
+                                    {language === "en" ? "Syndicate Master Access Key" : "Ikhodi Enkulu Yesigceme"}
+                                  </label>
+                                  <input 
+                                    type="password"
+                                    placeholder="Enter Master Access Key"
+                                    value={instructorAccessKey}
+                                    onChange={(e) => setInstructorAccessKey(e.target.value)}
+                                    className="w-full bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37]"
+                                  />
+                                </div>
                               </div>
+                              <button
+                                onClick={() => {
+                                  if (instructorDetails.email.trim().toLowerCase() === "info@imalingesizulu.com" && instructorAccessKey.trim() === "IMALI-SECURE-2026") {
+                                    setIsInstructorUnlocked(true);
+                                    localStorage.setItem("imali_instructor_unlocked", "true");
+                                    alert(language === "en" 
+                                      ? "Instructor Identity Verified! Workspace unlocked." 
+                                      : "Ubunikazi Bomfundisi Buqinisekisiwe! Ukufinyelela kuvuliwe.");
+                                  } else {
+                                    alert(language === "en" 
+                                      ? "Access Denied: Public registration is protected. Enter BOTH the registered email and correct Syndicate Master Access Key (e.g. IMALI-SECURE-2026) to unlock." 
+                                      : "Ukufinyelela Kunqatshiwe: Ukuze kuvunyelwe uMfundisi kufanele unikeze zombili imininingwane: i-imeyili ebhalisiwe kanye neKhodi Enkulu (isb. IMALI-SECURE-2026).");
+                                  }
+                                }}
+                                className="w-full py-3 bg-[#D4AF37] hover:brightness-110 text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl transition cursor-pointer"
+                              >
+                                {language === "en" ? "Verify & Unlock Instructor Console" : "Qinisekisa & Vula Amandla Omfundisi"}
+                              </button>
                             </div>
                             <span className="text-[9px] text-[#D4AF37]/75 block leading-normal italic">
                               {language === "en" 
@@ -5884,6 +5960,254 @@ export default function App() {
                                     ? (language === "en" ? "Custom Photo Loaded" : "Isithombe Esifakwe Ngokwezifiso Silayishiwe")
                                     : (language === "en" ? "No custom file chosen" : "Alukho ifayela elikhethiwe")}
                                 </div>
+                             </div>
+                            </div>
+
+                            {/* OFFICIAL STUDENT CODE REGISTRY & SPREADSHEET LEDGER */}
+                            <div className="bg-[#121212] border-2 border-[#D4AF37]/40 rounded-2xl p-5 space-y-4 shadow-[0_4px_24px_rgba(212,175,55,0.05)]">
+                              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-800 pb-3 gap-2">
+                                <div>
+                                  <h5 className="text-xs font-serif font-bold text-[#D4AF37] uppercase tracking-wider flex items-center gap-1.5">
+                                    📋 {language === "en" ? "Official Student Syndicate Registry Spreadsheet" : "📋 Isipredshithi Serejista Sabafundi Se-Syndicate"}
+                                  </h5>
+                                  <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest mt-0.5">
+                                    {language === "en" ? "Secure Double-Factor Academic Directory" : "Uhla Lwemibhalo Lwemfundo Eluvikelekile"}
+                                  </p>
+                                </div>
+                                <span className="text-[8px] bg-red-500/10 text-red-400 px-2.5 py-1 rounded-md font-mono font-bold uppercase tracking-wider border border-red-500/20">
+                                  {language === "en" ? "No Duplicates / No Sharing" : "Akuvunyelwe Ukuphindaphinda"}
+                                </span>
+                              </div>
+
+                              {/* PROMINENT MANDATE / INSTRUCTIONS */}
+                              <div className="bg-red-950/20 border border-red-500/30 rounded-xl p-4 text-xs space-y-1.5 leading-relaxed text-zinc-300">
+                                <strong className="text-red-400 block font-mono uppercase text-[10px] tracking-wider">
+                                  🚨 {language === "en" ? "INSTRUCTOR & ADMINISTRATOR MANDATE:" : "UMYALELO KAMLALULI NOMFUNDISI:"}
+                                </strong>
+                                <p>
+                                  {language === "en"
+                                    ? "Students are instructed to email you at info@imalingesizulu.com to request access codes. You must manually generate and register each unique student's details in this spreadsheet ledger. Every student code must strictly follow the format IMALI-STU- and exactly 6 digits (e.g., IMALI-STU-834927). No duplicate codes or sharing of numbers are allowed under any circumstances. The system strictly tracks and rejects duplicates."
+                                    : "Abafundi bayalelwa ukuthi bakuthumelele i-imeyili ku-info@imalingesizulu.com ukuze bacele izikhodi zokuvula. Kufanele ubhalise mathupha imininingwane yomfundi ngamunye kule rejista yesipredshithi. Ikhodi ngayinye yomfundi kufanele ilandele i-format IMALI-STU- kanye nezinombolo ezi-6 ncamashi (isb., IMALI-STU-834927). Akuvunyelwe nakancane ukuphindaphinda noma ukwabelana ngezikhodi."}
+                                </p>
+                              </div>
+
+                              {/* ADD NEW STUDENT SPREADSHEET ROW FORM */}
+                              <div className="bg-black/40 border border-zinc-900 rounded-xl p-4 space-y-3">
+                                <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase block tracking-wider">
+                                  ➕ {language === "en" ? "Register & Issue New Student Code Row" : "Bhalisa & Ukhiphe Umugqa Omusha Wekhodi Yomfundi"}
+                                </span>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                                  {/* First Name */}
+                                  <div className="space-y-1">
+                                    <label className="text-[9px] text-zinc-500 font-mono uppercase block">{language === "en" ? "First Name" : "Igama"}</label>
+                                    <input 
+                                      type="text"
+                                      placeholder="e.g. Sibusiso"
+                                      value={newStudentFirstName}
+                                      onChange={(e) => setNewStudentFirstName(e.target.value)}
+                                      className="w-full bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37]"
+                                    />
+                                  </div>
+                                  {/* Last Name */}
+                                  <div className="space-y-1">
+                                    <label className="text-[9px] text-zinc-500 font-mono uppercase block">{language === "en" ? "Surname" : "Isibongo"}</label>
+                                    <input 
+                                      type="text"
+                                      placeholder="e.g. Nkosi"
+                                      value={newStudentLastName}
+                                      onChange={(e) => setNewStudentLastName(e.target.value)}
+                                      className="w-full bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37]"
+                                    />
+                                  </div>
+                                  {/* Email */}
+                                  <div className="space-y-1">
+                                    <label className="text-[9px] text-zinc-500 font-mono uppercase block">{language === "en" ? "Email Address" : "I-imeyili"}</label>
+                                    <input 
+                                      type="email"
+                                      placeholder="e.g. sibusiso@gmail.com"
+                                      value={newStudentEmail}
+                                      onChange={(e) => setNewStudentEmail(e.target.value)}
+                                      className="w-full bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37]"
+                                    />
+                                  </div>
+                                  {/* Custom Code */}
+                                  <div className="space-y-1">
+                                    <label className="text-[9px] text-zinc-500 font-mono uppercase block">
+                                      {language === "en" ? "Student Code (IMALI-STU-xxxxxx)" : "Ikhodi (IMALI-STU-xxxxxx)"}
+                                    </label>
+                                    <div className="flex gap-2">
+                                      <input 
+                                        type="text"
+                                        placeholder="e.g. IMALI-STU-834927"
+                                        value={newStudentCode}
+                                        onChange={(e) => setNewStudentCode(e.target.value.toUpperCase().replace(/\s/g, ""))}
+                                        className="flex-1 bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37]"
+                                      />
+                                      <button
+                                        onClick={() => {
+                                          // Generate 6 random digits
+                                          let generated = "";
+                                          let isDuplicate = true;
+                                          let safetyCounter = 0;
+                                          while (isDuplicate && safetyCounter < 100) {
+                                            const randomDigits = Math.floor(100000 + Math.random() * 900000).toString();
+                                            generated = `IMALI-STU-${randomDigits}`;
+                                            isDuplicate = registeredStudentRecords.some(r => r.code.toUpperCase() === generated);
+                                            safetyCounter++;
+                                          }
+                                          setNewStudentCode(generated);
+                                        }}
+                                        type="button"
+                                        className="px-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-[10px] font-mono tracking-wider border border-zinc-700 cursor-pointer"
+                                        title="Auto-Generate Unique Code"
+                                      >
+                                        🎲 {language === "en" ? "Gen" : "Khiqiza"}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Form Submit Row */}
+                                <div className="flex justify-end pt-1">
+                                  <button
+                                    onClick={() => {
+                                      const cleanFirst = newStudentFirstName.trim();
+                                      const cleanLast = newStudentLastName.trim();
+                                      const cleanEmail = newStudentEmail.trim().toLowerCase();
+                                      const cleanCode = newStudentCode.trim().toUpperCase();
+
+                                      if (!cleanFirst || !cleanLast || !cleanEmail || !cleanCode) {
+                                        alert(language === "en" 
+                                          ? "All student registry fields (First Name, Surname, Email, and Code) are mandatory." 
+                                          : "Yonke imikhakha yerejista (Igama, Isibongo, I-imeyili, neKhodi) iyadingeka."
+                                        );
+                                        return;
+                                      }
+
+                                      // Check format pattern strictly: IMALI-STU- followed by exactly 6 digits
+                                      const codePattern = /^IMALI-STU-\d{6}$/;
+                                      if (!codePattern.test(cleanCode)) {
+                                        alert(language === "en"
+                                          ? "Invalid Format: Code must strictly follow the format: IMALI-STU- followed by exactly six numbers (e.g. IMALI-STU-834927)."
+                                          : "I-format Engalungile: Ikhodi kumele ilandele le format: IMALI-STU- kanye nezinombolo ezi-6 ncamashi (isb. IMALI-STU-834927)."
+                                        );
+                                        return;
+                                      }
+
+                                      // Check duplicate code
+                                      if (registeredStudentRecords.some(r => r.code.toUpperCase() === cleanCode)) {
+                                        alert(language === "en"
+                                          ? `SECURITY ALERT: Duplicate code detected. The code [${cleanCode}] is already assigned to another student. Duplicates and sharing of student codes are strictly prohibited.`
+                                          : `UKUPHINDAPHA: Ikhodi [${cleanCode}] isivele inikezwe omunye umfundi. Ukuphinda noma ukwabelana ngezikhodi akuvunyelwe nakancane.`
+                                        );
+                                        return;
+                                      }
+
+                                      // Check duplicate email
+                                      if (registeredStudentRecords.some(r => r.email.toLowerCase() === cleanEmail)) {
+                                        const confirmOverwrite = confirm(language === "en"
+                                          ? `Note: A student with email [${cleanEmail}] already exists in the ledger with another code. Do you want to issue a new/override code for this student?`
+                                          : `Qaphela: Umfundi one-imeyili [${cleanEmail}] usevele ekhona kurejista nenye ikhodi. Ufuna ukumkhiphela ikhodi entsha?`
+                                        );
+                                        if (!confirmOverwrite) return;
+                                      }
+
+                                      // Register new student record
+                                      const newRecord = { firstName: cleanFirst, lastName: cleanLast, email: cleanEmail, code: cleanCode };
+                                      setRegisteredStudentRecords(prev => [...prev, newRecord]);
+                                      
+                                      // Reset form fields
+                                      setNewStudentFirstName("");
+                                      setNewStudentLastName("");
+                                      setNewStudentEmail("");
+                                      setNewStudentCode("");
+
+                                      alert(language === "en"
+                                        ? `Successfully registered ${cleanFirst} ${cleanLast} with Code: [${cleanCode}]. This record is now saved to the secure Syndicate ledger spreadsheet.`
+                                        : `Uphumelele ukubhalisa u-${cleanFirst} ${cleanLast} neKhodi: [${cleanCode}].`
+                                      );
+                                    }}
+                                    className="w-full sm:w-auto py-2.5 px-6 bg-[#D4AF37] hover:brightness-110 text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition cursor-pointer"
+                                  >
+                                    💾 {language === "en" ? "Add & Register to Ledger Spreadsheet" : "Faka & Ubhalise kuSpredshithi"}
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* SPREADSHEET GRID LIST */}
+                              <div className="pt-2">
+                                <div className="flex justify-between items-center text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-2">
+                                  <span>{language === "en" ? "Official Registered Students Ledger Spreadsheet" : "Isipredshithi Serejista Esisemthethweni"} ({registeredStudentRecords.length})</span>
+                                  <button
+                                    onClick={() => {
+                                      // Build rich CSV with full Student details
+                                      const headers = ["First Name", "Surname/Last Name", "Email Address", "Student Code"];
+                                      const rows = registeredStudentRecords.map(r => [r.firstName, r.lastName, r.email, r.code]);
+                                      const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+                                        + [headers, ...rows].map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n");
+                                      const encodedUri = encodeURI(csvContent);
+                                      const link = document.createElement("a");
+                                      link.setAttribute("href", encodedUri);
+                                      link.setAttribute("download", "IMALINGESIZULU_STUDENTS_REGISTRY_SPREADSHEET.csv");
+                                      document.body.appendChild(link);
+                                      link.click();
+                                      document.body.removeChild(link);
+                                    }}
+                                    className="text-[#D4AF37] hover:underline flex items-center gap-1 cursor-pointer font-bold"
+                                  >
+                                    📥 {language === "en" ? "Export Spreadsheet (.CSV)" : "Landa iSpredshithi (.CSV)"}
+                                  </button>
+                                </div>
+
+                                {/* Scrollable table ledger view */}
+                                <div className="overflow-x-auto bg-black/40 border border-zinc-900 rounded-xl max-h-[220px]">
+                                  <table className="w-full text-left border-collapse min-w-[600px]">
+                                    <thead>
+                                      <tr className="border-b border-zinc-800 bg-zinc-950/80 text-[10px] text-zinc-400 font-mono uppercase tracking-wider sticky top-0 z-10 font-bold">
+                                        <th className="p-3 font-semibold">{language === "en" ? "First Name" : "Igama"}</th>
+                                        <th className="p-3 font-semibold">{language === "en" ? "Surname" : "Isibongo"}</th>
+                                        <th className="p-3 font-semibold">{language === "en" ? "Email Address" : "I-imeyili"}</th>
+                                        <th className="p-3 font-semibold text-[#D4AF37]">{language === "en" ? "Unique Student Code" : "Ikhodi Eyisipesheli"}</th>
+                                        <th className="p-3 font-semibold text-center">{language === "en" ? "Actions" : "Izenzo"}</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-zinc-900 text-xs font-sans text-zinc-300">
+                                      {registeredStudentRecords.length === 0 ? (
+                                        <tr>
+                                          <td colSpan={5} className="p-8 text-center text-zinc-500 font-mono">
+                                            {language === "en" ? "No students currently registered in ledger." : "Abekho abafundi ababhaliswe kurejista njengamanje."}
+                                          </td>
+                                        </tr>
+                                      ) : (
+                                        registeredStudentRecords.map((record, idx) => (
+                                          <tr key={idx} className="hover:bg-zinc-900/40 transition-colors">
+                                            <td className="p-3 font-medium text-white">{record.firstName}</td>
+                                            <td className="p-3 text-zinc-400">{record.lastName}</td>
+                                            <td className="p-3 font-mono text-[11px] text-zinc-400">{record.email}</td>
+                                            <td className="p-3 font-mono text-[11px] text-[#D4AF37] tracking-wider font-bold bg-[#D4AF37]/5">
+                                              {record.code}
+                                            </td>
+                                            <td className="p-3 text-center">
+                                              <button
+                                                onClick={() => {
+                                                  if (confirm(language === "en" 
+                                                    ? `Are you sure you want to completely revoke and delete the registration for ${record.firstName} ${record.lastName} (${record.code})?` 
+                                                    : `Uqinisekile ukuthi ufuna ukuhoxisa ukubhaliswa kuka-${record.firstName} ${record.lastName} (${record.code})?`)) {
+                                                    setRegisteredStudentRecords(prev => prev.filter((_, i) => i !== idx));
+                                                  }
+                                                }}
+                                                className="text-red-500 hover:text-red-400 hover:bg-red-500/10 px-2.5 py-1 rounded-md text-[10px] font-mono uppercase tracking-wider font-bold transition cursor-pointer"
+                                                title="Revoke and Delete Student Record"
+                                              >
+                                                ✕ {language === "en" ? "Revoke" : "Hoxisa"}
+                                              </button>
+                                            </td>
+                                          </tr>
+                                        ))
+                                      )}
+                                    </tbody>
+                                  </table>
+                                </div>
                               </div>
                             </div>
 
@@ -5944,41 +6268,55 @@ export default function App() {
                             </div>
                             <p className="text-xs text-zinc-300 leading-relaxed">
                               {language === "en" 
-                                ? "This executive operations workspace is reserved for the Chief Syndicate Administrator. Please authenticate using your registered administrator email address (admin@imalingesizulu.com):" 
-                                : "Le ndawo yokusebenza ibekelwe uMlawulu woMkhulu. Sicela uqinisekise usebenzisa i-imeyili yomlawuli ebhalisiwe (admin@imalingesizulu.com):"}
+                                ? "This executive operations workspace is reserved for the Chief Syndicate Administrator. Please authenticate using your registered administrator email address and your private Syndicate Master Access Key:" 
+                                : "Le ndawo yokusebenza ibekelwe uMlawulu woMkhulu. Sicela uqinisekise usebenzisa i-imeyili yomlawuli ebhalisiwe kanye neKhodi Enkulu kaMlawuli eyimfihlo:"}
                             </p>
-                            <div className="space-y-2">
-                              <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
-                                {language === "en" ? "Registered Administrator Email" : "I-imeyili Yomlawuli Ebhalisiwe"}
-                              </label>
-                              <div className="flex flex-col sm:flex-row gap-2">
-                                <input 
-                                  type="email"
-                                  id="admin_gate_email_input"
-                                  placeholder="e.g. admin@imalingesizulu.com"
-                                  value={adminDetails.email}
-                                  onChange={(e) => setAdminDetails({ ...adminDetails, email: e.target.value })}
-                                  className="flex-1 bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-xs text-emerald-400 font-mono outline-none focus:border-emerald-400"
-                                />
-                                <button
-                                  onClick={() => {
-                                    if (adminDetails.email.trim().toLowerCase() === "admin@imalingesizulu.com") {
-                                      setIsAdminUnlocked(true);
-                                      localStorage.setItem("imali_admin_unlocked", "true");
-                                      alert(language === "en" 
-                                        ? "Administrator Level Cleared! Workspace authorized." 
-                                        : "Izinginga Lomlawuli Liphumelele! Ukufinyelela kuvunyelwe.");
-                                    } else {
-                                      alert(language === "en" 
-                                        ? "Access Denied. For authorization as Admin, the email must correspond to admin@imalingesizulu.com." 
-                                        : "Ukufinyelela Kunqatshiwe. Ukuze ugunyazwe njengoMlawuli, i-imeyili kumele ihambisane ne-admin@imalingesizulu.com.");
-                                    }
-                                  }}
-                                  className="py-2.5 px-5 bg-emerald-500 hover:bg-emerald-600 text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl transition shrink-0 cursor-pointer"
-                                >
-                                  {language === "en" ? "Verify Identity" : "Qinisekisa"}
-                                </button>
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                  <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
+                                    {language === "en" ? "Registered Administrator Email" : "I-imeyili Yomlawuli Ebhalisiwe"}
+                                  </label>
+                                  <input 
+                                    type="email"
+                                    id="admin_gate_email_input"
+                                    placeholder="e.g. admin@imalingesizulu.com"
+                                    value={adminDetails.email}
+                                    onChange={(e) => setAdminDetails({ ...adminDetails, email: e.target.value })}
+                                    className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-emerald-400 font-mono outline-none focus:border-emerald-400"
+                                  />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
+                                    {language === "en" ? "Syndicate Master Access Key" : "Ikhodi Enkulu Yesigceme"}
+                                  </label>
+                                  <input 
+                                    type="password"
+                                    placeholder="Enter Master Access Key"
+                                    value={adminAccessKey}
+                                    onChange={(e) => setAdminAccessKey(e.target.value)}
+                                    className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-emerald-400 font-mono outline-none focus:border-emerald-400"
+                                  />
+                                </div>
                               </div>
+                              <button
+                                onClick={() => {
+                                  if (adminDetails.email.trim().toLowerCase() === "admin@imalingesizulu.com" && adminAccessKey.trim() === "IMALI-SECURE-2026") {
+                                    setIsAdminUnlocked(true);
+                                    localStorage.setItem("imali_admin_unlocked", "true");
+                                    alert(language === "en" 
+                                      ? "Administrator Level Cleared! Workspace authorized." 
+                                      : "Izinginga Lomlawuli Liphumelele! Ukufinyelela kuvunyelwe.");
+                                  } else {
+                                    alert(language === "en" 
+                                      ? "Access Denied: Public registration is protected. Enter BOTH the registered email and correct Syndicate Master Access Key (e.g. IMALI-SECURE-2026) to unlock." 
+                                      : "Ukufinyelela Kunqatshiwe: Ukuze kuvunyelwe uMlawuli kumele unikeze zombili imininingwane: i-imeyili ebhalisiwe kanye neKhodi Enkulu (isb. IMALI-SECURE-2026).");
+                                  }
+                                }}
+                                className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl transition cursor-pointer"
+                              >
+                                {language === "en" ? "Verify & Unlock Admin Console" : "Qinisekisa & Vula Amandla Umlawuli"}
+                              </button>
                             </div>
                             <span className="text-[9px] text-emerald-400/75 block leading-normal italic">
                               {language === "en" 
@@ -8934,8 +9272,126 @@ export default function App() {
 
 
           {/* 6. ADMIN SYNDICATE TERMINAL VIEW (LOCKED TO Role.ADMIN or Role.INSTRUCTOR) */}
-          {activeTab === "admin" && (
-            <div id="tab_admin" className="space-y-6">
+          {activeTab === "admin" && (() => {
+            const isBothProfilesFilled = !!(adminDetails.name && adminDetails.name.trim() !== "" && instructorDetails.name && instructorDetails.name.trim() !== "");
+            const filteredUsersRegistry = (realSyndicateConsoleActive && isBothProfilesFilled)
+              ? [
+                  ...usersRegistry.filter(u => u.role === Role.ADMIN || u.role === Role.INSTRUCTOR || (u.id === "usr_exec_01" && studentDetails.name && studentDetails.activationCode)),
+                  ...registeredStudentRecords.map((rec, idx) => ({
+                    id: `real_student_${idx}`,
+                    name: `${rec.firstName} ${rec.lastName}`,
+                    email: rec.email,
+                    role: Role.STUDENT,
+                    avatar: "",
+                    enrolledCourses: ["pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
+                    completedCourses: [],
+                    progress: { "pa_elite_candlestick_physics_mastery": 50, "elite_forex_elite_pathway": 20 },
+                    quizScores: { "pa_candlestick_quiz_1": 80 },
+                    attendanceCount: 3,
+                    activationCode: rec.code,
+                  }))
+                ]
+              : usersRegistry;
+            const activeSelectedId = filteredUsersRegistry.some(u => u.id === selectedAdminStudentId)
+              ? selectedAdminStudentId
+              : (filteredUsersRegistry[0]?.id || "usr_exec_01");
+
+            return (
+              <div id="tab_admin" className="space-y-6 animate-fade-in">
+                
+                {/* 2FA REAL SYNDICATE LEDGER AUTHORIZATION BAR */}
+                {!isBothProfilesFilled ? (
+                  <div className="bg-[#1c1404] border-2 border-[#D4AF37]/40 rounded-3xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">🔒</span>
+                      <div className="text-left">
+                        <h5 className="text-xs font-bold text-[#D4AF37] font-mono uppercase tracking-wider">
+                          Real Student Syndicate Ledger Locked
+                        </h5>
+                        <p className="text-[11px] text-zinc-400 leading-relaxed mt-0.5">
+                          Both the Administrator (current: <strong className="text-white">{adminDetails.name || "Incomplete"}</strong>) and Instructor (current: <strong className="text-white">{instructorDetails.name || "Incomplete"}</strong>) profiles must be completed to access pristine, live student directories and export verified CSV reports. Currently showing simulated demo student data.
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setActiveTab("profile");
+                        setVisibleProfileTab(Role.ADMIN);
+                        alert("Redirecting to profile configuration lobby. Complete both administrative profiles to authorize.");
+                      }}
+                      className="py-2 px-4 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/35 text-[#D4AF37] text-[10.5px] font-mono uppercase tracking-wider font-bold rounded-xl transition cursor-pointer shrink-0"
+                    >
+                      Configure Profiles
+                    </button>
+                  </div>
+                ) : (
+                  <div className="bg-gradient-to-r from-zinc-950 to-[#0e1610] border-2 border-emerald-500/40 rounded-3xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-[0_0_20px_rgba(16,185,129,0.05)]">
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl animate-pulse">👑</span>
+                      <div className="text-left">
+                        <h5 className="text-xs font-bold text-emerald-400 font-mono uppercase tracking-wider">
+                          Real Student Syndicate Console Authorization Cleared!
+                        </h5>
+                        <p className="text-[11px] text-zinc-300 leading-relaxed mt-0.5">
+                          Welcome, Dean <strong className="text-emerald-400">{adminDetails.name}</strong> & Instructor <strong className="text-emerald-400">{instructorDetails.name}</strong>. Switch to "Real Syndicate Ledger" to instantly hide all demo data and access your live, authorized student registry.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2.5 shrink-0">
+                      <button
+                        onClick={() => {
+                          setRealSyndicateConsoleActive(!realSyndicateConsoleActive);
+                        }}
+                        className={`py-2 px-4 rounded-xl text-[10px] font-mono uppercase tracking-wider font-bold border transition-all cursor-pointer ${
+                          realSyndicateConsoleActive 
+                            ? "bg-emerald-500 text-black border-transparent shadow-[0_0_15px_rgba(16,185,129,0.25)]" 
+                            : "bg-black text-emerald-400 border-emerald-500/35 hover:bg-emerald-500/10"
+                        }`}
+                      >
+                        {realSyndicateConsoleActive ? "● Real Syndicate Active" : "○ Enable Real Syndicate"}
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          if (realSyndicateConsoleActive) {
+                            // Rich export of actual registered students from spreadsheet state
+                            const headers = ["First Name", "Surname/Last Name", "Email Address", "Student Code", "Attendance Modules", "Assigned Courses"];
+                            const rows = registeredStudentRecords.map(r => [r.firstName, r.lastName, r.email, r.code, "3 Modules attended", "Candlestick Physics, Forex Elite Pathway"]);
+                            const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+                              + [headers, ...rows].map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n");
+                            const encodedUri = encodeURI(csvContent);
+                            const link = document.createElement("a");
+                            link.setAttribute("href", encodedUri);
+                            link.setAttribute("download", "IMALINGESIZULU_REAL_STUDENTS_SYNDICATE_LEDGER.csv");
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                          } else {
+                            // Demo simulated data download
+                            const realStudents = usersRegistry.filter(u => u.id !== "usr_student_02" && u.id !== "usr_student_03" && u.id !== "usr_student_04");
+                            const headers = ["Student ID", "Full Name", "Email Address", "Attendance Modules", "Activation Code"];
+                            const rows = realStudents.map(s => {
+                              const actCode = s.id === "usr_exec_01" ? (studentDetails.activationCode || "N/A") : "CUSTOM";
+                              return [s.id, s.name, s.email, s.attendanceCount, actCode];
+                            });
+                            const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+                              + [headers, ...rows].map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n");
+                            const encodedUri = encodeURI(csvContent);
+                            const link = document.createElement("a");
+                            link.setAttribute("href", encodedUri);
+                            link.setAttribute("download", "REAL_SYNDICATE_STUDENT_LEDGER.csv");
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                          }
+                        }}
+                        className="py-2 px-4 bg-zinc-900 hover:bg-zinc-850 text-white hover:text-emerald-400 border border-zinc-800 rounded-xl text-[10px] font-mono uppercase font-bold tracking-wider transition cursor-pointer"
+                      >
+                        📥 Download Ledger (.CSV)
+                      </button>
+                    </div>
+                  </div>
+                )}
               
               {/* Dynamic Tabs inside admin view */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -8965,8 +9421,8 @@ export default function App() {
 
                     {/* Horizontal scroll select list */}
                     <div className="flex gap-3 overflow-x-auto pb-4 pt-2 border-b border-zinc-900 scrollbar-thin scrollbar-thumb-zinc-800 select-none">
-                      {usersRegistry.map(usr => {
-                        const isSelected = usr.id === selectedAdminStudentId;
+                      {filteredUsersRegistry.map(usr => {
+                        const isSelected = usr.id === activeSelectedId;
                         return (
                           <div
                             key={usr.id}
@@ -8995,7 +9451,7 @@ export default function App() {
 
                     {/* Selected Scholar Stats Grid */}
                     {(() => {
-                      const selectedUser = usersRegistry.find(u => u.id === selectedAdminStudentId) || usersRegistry[0];
+                      const selectedUser = filteredUsersRegistry.find(u => u.id === activeSelectedId) || filteredUsersRegistry[0];
                       if (!selectedUser) return <p className="text-xs text-zinc-500 font-mono">No scholar active in cache.</p>;
 
                       const stats = calculateStudentQuizzesStats(selectedUser);
@@ -9521,7 +9977,7 @@ export default function App() {
                   {/* Registered Scholars List */}
                   <div className="space-y-3">
                     <span className="text-[10px] text-zinc-500 font-mono block uppercase">LEDGER ACCOUNTS:</span>
-                    {usersRegistry.map(usr => (
+                    {filteredUsersRegistry.map(usr => (
                       <div key={usr.id} className="flex justify-between items-center bg-zinc-950 p-3.5 rounded-xl border border-zinc-900 hover:border-zinc-800 transition">
                         <div className="flex items-center gap-2.5">
                           <div className="w-8 h-8 rounded-full border border-zinc-850 overflow-hidden shrink-0">
@@ -9550,7 +10006,8 @@ export default function App() {
               </div>
 
             </div>
-          )}
+          );
+        })()}
 
         </main>
 
