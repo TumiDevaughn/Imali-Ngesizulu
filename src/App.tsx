@@ -2192,7 +2192,7 @@ export default function App() {
   });
   
   // Audio Radio State Engine
-  const [currentStation, setCurrentStation] = useState<RadioStation | null>(null);
+  const [currentStation, setCurrentStation] = useState<RadioStation | null>(RADIO_STATIONS[0] || null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [radioVolume, setRadioVolume] = useState<number>(0.7);
   const [radioMuted, setRadioMuted] = useState<boolean>(false);
@@ -2395,7 +2395,13 @@ export default function App() {
   // Initialize and synchronize HTMLAudioElement
   useEffect(() => {
     const audio = new Audio();
-    audio.preload = "none";
+    const defaultStation = RADIO_STATIONS[0];
+    if (defaultStation) {
+      audio.src = defaultStation.url;
+      audio.preload = "auto";
+    } else {
+      audio.preload = "none";
+    }
     audioRef.current = audio;
 
     const handlePlaying = () => {
@@ -2497,7 +2503,42 @@ export default function App() {
     audio.addEventListener("waiting", handleWaiting);
     audio.addEventListener("error", handleError);
 
+    // Dynamic Autoplay triggers (complying with modern browser policies)
+    const attemptAutoplay = () => {
+      if (audio && defaultStation) {
+        audio.play()
+          .then(() => {
+            console.log("Bloomberg Radio Autoplay Succeeded.");
+            setIsPlaying(true);
+            setRadioLoading(false);
+            setRadioError(false);
+            removeAutoplayListeners();
+          })
+          .catch((err) => {
+            console.log("Autoplay waiting for user gesture:", err);
+          });
+      }
+    };
+
+    const removeAutoplayListeners = () => {
+      window.removeEventListener("click", attemptAutoplay);
+      window.removeEventListener("touchstart", attemptAutoplay);
+      window.removeEventListener("keydown", attemptAutoplay);
+    };
+
+    // Attempt autoplay immediately
+    const startTimeout = setTimeout(() => {
+      attemptAutoplay();
+    }, 800);
+
+    // Register gesture triggers to auto-play upon first user interaction with the page
+    window.addEventListener("click", attemptAutoplay);
+    window.addEventListener("touchstart", attemptAutoplay);
+    window.addEventListener("keydown", attemptAutoplay);
+
     return () => {
+      clearTimeout(startTimeout);
+      removeAutoplayListeners();
       audio.pause();
       audio.removeEventListener("playing", handlePlaying);
       audio.removeEventListener("pause", handlePause);
