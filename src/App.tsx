@@ -2827,20 +2827,21 @@ export default function App() {
           lowerName.includes("sarah") ||
           avatar.includes("unsplash.com")
         ) {
-          return { name: "", avatar: "", specialty: "", experience: "", bio: "" };
+          return { name: "", avatar: "", specialty: "", experience: "", bio: "", activationCode: "" };
         }
         return {
           name,
           avatar,
           specialty: parsed.specialty || "",
           experience: parsed.experience || "",
-          bio: parsed.bio || ""
+          bio: parsed.bio || "",
+          activationCode: parsed.activationCode || ""
         };
       } catch (e) {
-        return { name: "", avatar: "", specialty: "", experience: "", bio: "" };
+        return { name: "", avatar: "", specialty: "", experience: "", bio: "", activationCode: "" };
       }
     }
-    return { name: "", avatar: "", specialty: "", experience: "", bio: "" };
+    return { name: "", avatar: "", specialty: "", experience: "", bio: "", activationCode: "" };
   });
 
   const [instructorDetails, setInstructorDetails] = useState(() => {
@@ -4279,6 +4280,16 @@ export default function App() {
   };
 
   const handleEnroll = (courseId: string) => {
+    if (activeRole === Role.STUDENT && !studentDetails.activationCode) {
+      setSecurityBlockAlert({
+        show: true,
+        msgEn: "🔒 Enrollment Blocked: Please enter and verify your Imali Student Code under Academic Profiles to active courses.",
+        msgZu: "🔒 Ukubhalisa Kuvinjiwe: Sicela ufake futhi uqinisekise iKhodi Yomfundi yakho ye-Imali ngaphansi kwe-Academic Profiles ukuze uvule izifundo."
+      });
+      setActiveTab("dashboard");
+      setVisibleProfileTab(Role.STUDENT);
+      return;
+    }
     setStudentProgress(prev => {
       if (prev.enrolledCourses.includes(courseId)) return prev;
       return {
@@ -4348,6 +4359,17 @@ export default function App() {
   };
 
   const updateCourseProgressFully = (courseId: string) => {
+    if (activeRole === Role.STUDENT && !studentDetails.activationCode) {
+      setSecurityBlockAlert({
+        show: true,
+        msgEn: "🔒 Certification Locked: Please enter and verify your Imali Student Code under Academic Profiles to issue certificates.",
+        msgZu: "🔒 Isitifiketi Sivalekile: Sicela ufake futhi uqinisekise iKhodi Yomfundi yakho ye-Imali ngaphansi kwe-Academic Profiles ukuze uthole isitifiketi."
+      });
+      setActiveTab("dashboard");
+      setVisibleProfileTab(Role.STUDENT);
+      return;
+    }
+
     const course = courses.find(c => c.id === courseId);
     if (course) {
       const courseQuizzes = getCourseQuizzes(course);
@@ -4390,6 +4412,17 @@ export default function App() {
   };
 
   const handleSubmitQuiz = (courseId: string, quizId?: string) => {
+    if (activeRole === Role.STUDENT && !studentDetails.activationCode) {
+      setSecurityBlockAlert({
+        show: true,
+        msgEn: "🔒 Progress Saving Blocked: Enter and verify your Imali Student Code to save class progress.",
+        msgZu: "🔒 Ukulondoloza Inqubekelaphambili Kuvaliwe: Faka futhi uqinisekise iKhodi Yomfundi ukuze ulondoloze inqubekelaphambili."
+      });
+      setActiveTab("dashboard");
+      setVisibleProfileTab(Role.STUDENT);
+      return;
+    }
+
     setQuizSubmitted(true);
     setQuizScore(100); // Exec level clears!
 
@@ -5579,9 +5612,97 @@ export default function App() {
                           <textarea 
                             value={studentDetails.bio}
                             onChange={(e) => setStudentDetails({ ...studentDetails, bio: e.target.value })}
-                            className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-zinc-300 outline-none h-20 focus:border-[#D4AF37]"
+                            className="w-full bg-zinc-900 border border-zinc-850 p-3 rounded-xl text-xs text-zinc-300 outline-none h-20 focus:border-[#D4AF37]"
                             placeholder="What is your trading goal?"
                           />
+                        </div>
+
+                        {/* Imali Student Activation Code Section */}
+                        <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/20 p-5 rounded-2xl space-y-4">
+                          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div>
+                              <h4 className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase flex items-center gap-1.5">
+                                🔐 Imali Courses Activation
+                              </h4>
+                              <p className="text-[11px] text-zinc-400 mt-0.5">
+                                Enter your Student Code to activate advanced course tracking, class progress saving, and official certification issuance.
+                              </p>
+                            </div>
+                            <span className={`text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded border shrink-0 ${
+                              studentDetails.activationCode 
+                                ? "bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/35 animate-pulse" 
+                                : "bg-red-500/10 text-red-400 border-red-500/20"
+                            }`}>
+                              {studentDetails.activationCode 
+                                ? `👑 ACTIVE: ${studentDetails.activationCode}` 
+                                : "❌ UNACTIVATED (LOCKED)"}
+                            </span>
+                          </div>
+
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <div className="relative flex-1">
+                              <input 
+                                type="text"
+                                value={studentDetails.activationCode}
+                                onChange={(e) => setStudentDetails({ ...studentDetails, activationCode: e.target.value.toUpperCase() })}
+                                placeholder="Enter student code (e.g. IMALI-STU-7821)"
+                                className="w-full bg-zinc-950 border border-zinc-800 p-3 pl-3 pr-10 rounded-xl text-xs font-mono text-[#D4AF37] placeholder-zinc-650 outline-none focus:border-[#D4AF37] transition-all"
+                              />
+                              {studentDetails.activationCode && (
+                                <button 
+                                  onClick={() => setStudentDetails({ ...studentDetails, activationCode: "" })}
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-xs"
+                                >
+                                  ✕
+                                </button>
+                              )}
+                            </div>
+
+                            <div className="flex gap-2 shrink-0">
+                              <button
+                                onClick={() => {
+                                  if (!studentDetails.activationCode || studentDetails.activationCode.trim().length < 6) {
+                                    alert(language === "en" 
+                                      ? "Please enter a valid student activation code (at least 6 characters, e.g., IMALI-STU-2026)." 
+                                      : "Sicela ufake ikhodi yomfundi esebenzayo (okungenani izinhlamvu ezi-6, isb., IMALI-STU-2026)."
+                                    );
+                                    return;
+                                  }
+                                  localStorage.setItem("imali_student_profile", JSON.stringify(studentDetails));
+                                  setSecurityBlockAlert({
+                                    show: true,
+                                    msgEn: `🎉 Academic suite activated successfully with Student Code: ${studentDetails.activationCode}`,
+                                    msgZu: `🎉 Uhlelo lwezemfundo luvulwe ngempumelelo ngeKhodi yomfundi: ${studentDetails.activationCode}`
+                                  });
+                                }}
+                                className="py-2 px-4 bg-[#D4AF37] hover:bg-[#bfa032] text-black font-mono font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow"
+                              >
+                                {language === "en" ? "Verify & Activate" : "Qinisekisa & Vula"}
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  const randomNum = Math.floor(1000 + Math.random() * 9000);
+                                  const generated = `IMALI-STU-${randomNum}`;
+                                  setStudentDetails({ ...studentDetails, activationCode: generated });
+                                  setSecurityBlockAlert({
+                                    show: true,
+                                    msgEn: `💡 Generated student activation code: ${generated}. Click 'Verify & Activate' to apply!`,
+                                    msgZu: `💡 Ikhiqize ikhodi yomfundi: ${generated}. Chofoza 'Qinisekisa & Vula' ukuyisebenzisa!`
+                                  });
+                                }}
+                                className="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 font-mono text-[10px] uppercase tracking-wider rounded-xl transition-all"
+                              >
+                                {language === "en" ? "Generate Code" : "Khiqiza Ikhodi"}
+                              </button>
+                            </div>
+                          </div>
+
+                          <p className="text-[10px] text-zinc-500 font-sans leading-relaxed">
+                            💡 {language === "en" 
+                              ? "Students with an active code can fully track their course modules, save active class selections, and claim verifiable PDF study certifications upon 100% completion."
+                              : "Abafundi abanekhodi esebenzayo bangakwazi ukulandelela ngokuphelele amamojula abo ezifundo, balondoloze izigaba zamakilasi, futhi bafune izitifiketi zokufunda eziqinisekisiwe lapho beqeda u-100%."}
+                          </p>
                         </div>
 
                         {/* Direct action links to simulated role join */}
@@ -6526,7 +6647,20 @@ export default function App() {
                                   <div className="h-full bg-gradient-to-r from-[#996515] to-[#D4AF37]" style={{ width: `${progressVal}%` }}></div>
                                 </div>
                                 <button 
-                                  onClick={() => { setSelectedCourse(course); setActiveLesson(course.modules[0]?.lessons[0] || null); }}
+                                  onClick={() => {
+                                    if (activeRole === Role.STUDENT && !studentDetails.activationCode) {
+                                      setSecurityBlockAlert({
+                                        show: true,
+                                        msgEn: "🔒 Access Denied: Please activate your student account using your Imali Student Code to start studying.",
+                                        msgZu: "🔒 Ukufuneka Kokuvula: Sicela uvule i-akhawunti yakho yomfundi ngeKhodi yomfundi ukuze uqale ukufunda."
+                                      });
+                                      setActiveTab("dashboard");
+                                      setVisibleProfileTab(Role.STUDENT);
+                                      return;
+                                    }
+                                    setSelectedCourse(course);
+                                    setActiveLesson(course.modules[0]?.lessons[0] || null);
+                                  }}
                                   className="w-full py-3 bg-white/5 hover:bg-[#D4AF37]/20 border border-zinc-800 hover:border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-widest rounded-xl transition-all cursor-pointer"
                                 >
                                   {language === "en" ? "Open Curriculum Room" : "Ngena ekilasini lonke"}
@@ -7279,57 +7413,87 @@ export default function App() {
 
                       {/* LUXURY DIGITAL PATHWAY CERTIFICATE PREVIEW (Unlocks on 100%) */}
                       {currentUser.progress[selectedCourse.id] === 100 && (
-                        <div id="issued_certificate_frame" className="relative p-8 md:p-12 bg-gradient-to-br from-black via-zinc-950 to-[#0e0e0e] border-[3px] border-double border-[#D4AF37]/60 rounded-3xl space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.9)] overflow-hidden">
-                          
-                          {/* Absolute seals */}
-                          <div className="absolute top-[8%] right-[8%] w-32 h-32 opacity-25 pointer-events-none flex items-center justify-center">
-                            <ImaliLogo size={110} className="animate-spin-slow" />
+                        activeRole === Role.STUDENT && !studentDetails.activationCode ? (
+                          <div className="relative p-8 md:p-12 bg-gradient-to-br from-black via-zinc-950 to-[#0c0c0c] border-[3px] border-dashed border-[#D4AF37]/30 rounded-3xl space-y-6 shadow-xl text-center">
+                            <div className="mx-auto w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 text-xl">
+                              🔒
+                            </div>
+                            <div className="space-y-2">
+                              <h4 className="text-[#D4AF37] font-serif uppercase tracking-widest text-sm">Official Certificate Locked</h4>
+                              <p className="text-xs text-zinc-400 max-w-md mx-auto leading-relaxed">
+                                {language === "en" 
+                                  ? "You have completed 100% of this pathway! However, your official verifiable study certificate is locked until your student profile is active." 
+                                  : "Uqedele u-100% walesi sifundo! Kodwa-ke, isitifiketi sakho semfundo sivaliwe kuze kube i-akhawunti yakho yomfundi iyasebenza."}
+                              </p>
+                              <p className="text-[10px] text-[#D4AF37] font-mono bg-[#D4AF37]/5 border border-[#D4AF37]/15 p-2.5 rounded-lg max-w-xs mx-auto">
+                                {language === "en"
+                                  ? "Please verify your Imali Student Code under Academic Profiles to instantly sign and claim."
+                                  : "Sicela uqinisekise iKhodi yakho yomfundi ye-Imali ngaphansi kwe-Academic Profiles ukuze uthole."}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setActiveTab("dashboard");
+                                setVisibleProfileTab(Role.STUDENT);
+                              }}
+                              className="py-2.5 px-6 bg-gradient-to-r from-[#D4AF37] to-[#996515] text-black font-mono font-bold text-[10px] uppercase tracking-wider rounded-xl hover:brightness-110 transition shadow cursor-pointer"
+                            >
+                              {language === "en" ? "Go to Profiles Manager" : "Iya kuMphathi Wephrofayili"}
+                            </button>
                           </div>
-                          
-                          <div className="text-center space-y-4">
-                            <span className="text-[10px] text-[#D4AF37] font-mono tracking-[0.4em] uppercase block">
-                              {translateText("cert_title", language)}
-                            </span>
-                            <div className="w-16 h-1 w-24 bg-[#D4AF37] mx-auto opacity-70"></div>
-                          </div>
-
-                          <div className="text-center space-y-6 my-8">
-                            <p className="text-xs tracking-widest text-[#D4AF37] uppercase font-mono italic">
-                              {translateText("cert_greeting", language)}
-                            </p>
+                        ) : (
+                          <div id="issued_certificate_frame" className="relative p-8 md:p-12 bg-gradient-to-br from-black via-zinc-950 to-[#0e0e0e] border-[3px] border-double border-[#D4AF37]/60 rounded-3xl space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.9)] overflow-hidden">
                             
-                            <h3 className="text-3xl md:text-4xl font-serif text-white tracking-widest uppercase italic font-light drop-shadow-md">
-                              {currentUser.name}
-                            </h3>
+                            {/* Absolute seals */}
+                            <div className="absolute top-[8%] right-[8%] w-32 h-32 opacity-25 pointer-events-none flex items-center justify-center">
+                              <ImaliLogo size={110} className="animate-spin-slow" />
+                            </div>
+                            
+                            <div className="text-center space-y-4">
+                              <span className="text-[10px] text-[#D4AF37] font-mono tracking-[0.4em] uppercase block">
+                                {translateText("cert_title", language)}
+                              </span>
+                              <div className="w-16 h-1 w-24 bg-[#D4AF37] mx-auto opacity-70"></div>
+                            </div>
 
-                            <div className="max-w-xl mx-auto space-y-2">
-                              <p className="text-xs text-zinc-300 leading-relaxed font-sans">
-                                {translateText("cert_has_completed", language)}
+                            <div className="text-center space-y-6 my-8">
+                              <p className="text-xs tracking-widest text-[#D4AF37] uppercase font-mono italic">
+                                {translateText("cert_greeting", language)}
                               </p>
-                              <p className="text-base font-bold text-[#D4AF37] uppercase tracking-wide font-serif">
-                                {language === "en" ? selectedCourse.title_en : selectedCourse.title_zu}
+                              
+                              <h3 className="text-3xl md:text-4xl font-serif text-white tracking-widest uppercase italic font-light drop-shadow-md">
+                                {currentUser.name}
+                              </h3>
+
+                              <div className="max-w-xl mx-auto space-y-2">
+                                <p className="text-xs text-zinc-300 leading-relaxed font-sans">
+                                  {translateText("cert_has_completed", language)}
+                                </p>
+                                <p className="text-base font-bold text-[#D4AF37] uppercase tracking-wide font-serif">
+                                  {language === "en" ? selectedCourse.title_en : selectedCourse.title_zu}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row justify-between items-end gap-6 pt-6 border-t border-zinc-900 text-left">
+                              <div className="space-y-1">
+                                <p className="text-[8px] text-zinc-500 font-mono">AUTHORIZED ACCREDITATION SIGNATURE</p>
+                                <p className="text-xs font-serif text-[#D4AF37] italic uppercase">Imali Courses Board of Academics</p>
+                                <p className="text-[9px] text-[#D4AF37] font-mono">REGISTRY HASH KEY: ELITE-93820-ZC</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-[8px] text-zinc-500 font-mono">ISSUED DIGITALLY ON DATE</p>
+                                <p className="text-xs text-zinc-300 font-mono">LEDGER TIMESTAMP: 2026-05-26</p>
+                              </div>
+                            </div>
+
+                            <div className="text-center pt-4">
+                              <p className="text-[9px] text-zinc-500 font-mono tracking-widest uppercase">
+                                {translateText("cert_congrats", language)}
                               </p>
                             </div>
                           </div>
-
-                          <div className="flex flex-col sm:flex-row justify-between items-end gap-6 pt-6 border-t border-zinc-900 text-left">
-                            <div className="space-y-1">
-                              <p className="text-[8px] text-zinc-500 font-mono">AUTHORIZED ACCREDITATION SIGNATURE</p>
-                              <p className="text-xs font-serif text-[#D4AF37] italic uppercase">Imali Courses Board of Academics</p>
-                              <p className="text-[9px] text-[#D4AF37] font-mono">REGISTRY HASH KEY: ELITE-93820-ZC</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-[8px] text-zinc-500 font-mono">ISSUED DIGITALLY ON DATE</p>
-                              <p className="text-xs text-zinc-300 font-mono">LEDGER TIMESTAMP: 2026-05-26</p>
-                            </div>
-                          </div>
-
-                          <div className="text-center pt-4">
-                            <p className="text-[9px] text-zinc-500 font-mono tracking-widest uppercase">
-                              {translateText("cert_congrats", language)}
-                            </p>
-                          </div>
-                        </div>
+                        )
                       )}
                     </div>
 
