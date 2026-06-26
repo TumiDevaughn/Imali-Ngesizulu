@@ -49,6 +49,7 @@ import { coursesData } from "./data/courses";
 import { translateText } from "./data/translations";
 import ImaliLogo from "./components/ImaliLogo";
 import PatternScreener from "./components/PatternScreener";
+import { EliteMatrixRenderer } from "./components/EliteMatrixRenderer";
 
 
 export interface RadioStation {
@@ -886,6 +887,13 @@ function StepChartGraphic({ lessonId, stepIndex, language }: { lessonId: string;
         </div>
       );
     }
+  }
+
+  const match = lessonId.match(/elite_onedrive_lesson_(\d+)/);
+  const lessonNum = match ? parseInt(match[1]) : null;
+
+  if (lessonNum !== null && lessonNum !== 12 && lessonNum >= 1 && lessonNum <= 33) {
+    return <EliteMatrixRenderer lessonNum={lessonNum} stepIndex={stepIndex} isZulu={isZulu} />;
   }
 
   const isPa = lessonId.includes("pa_") || lessonId.includes("price_") || lessonId.includes("candlestick") || lessonId === "elite_l2" || lessonId === "elite_l3" || lessonId === "elite_l7" || lessonId === "elite_onedrive_lesson_1" || lessonId === "elite_onedrive_lesson_5" || lessonId === "elite_onedrive_lesson_6" || lessonId === "elite_onedrive_lesson_7" || lessonId === "elite_onedrive_lesson_8" || lessonId === "elite_onedrive_lesson_9" || lessonId === "elite_onedrive_lesson_10" || lessonId === "elite_onedrive_lesson_11" || lessonId === "elite_onedrive_lesson_12";
