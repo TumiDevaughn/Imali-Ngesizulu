@@ -2180,6 +2180,42 @@ function getLessonSteps(lesson: any, language: string) {
   }
 }
 
+const REALISTIC_DURATIONS: Record<string, { en: string; zu: string }> = {
+  "elite_onedrive_video_masterclass": { en: "4.5 Hours", zu: "Amahora angu-4.5" },
+  "elite_onedrive_hedging_masterclass": { en: "3 Hours", zu: "Amahora angu-3" },
+  "elite_onedrive_orderflow_masterclass": { en: "3.5 Hours", zu: "Amahora angu-3.5" },
+  "elite_onedrive_psychology_masterclass": { en: "2 Hours", zu: "Amahora angu-2" },
+  "elite_onedrive_liquidity_masterclass": { en: "2.5 Hours", zu: "Amahora angu-2.5" },
+  "elite_onedrive_reversal_masterclass": { en: "3 Hours", zu: "Amahora angu-3" },
+  "elite_onedrive_supplydemand_masterclass": { en: "3.5 Hours", zu: "Amahora angu-3.5" },
+  "elite_onedrive_amd_masterclass": { en: "4 Hours", zu: "Amahora angu-4" },
+  "elite_onedrive_inducement_masterclass": { en: "3 Hours", zu: "Amahora angu-3" },
+  "elite_onedrive_macro_masterclass": { en: "5 Hours", zu: "Amahora angu-5" },
+  "elite_onedrive_funding_masterclass": { en: "4.5 Hours", zu: "Amahora angu-4.5" },
+  "elite_onedrive_confluence_masterclass": { en: "3.5 Hours", zu: "Amahora angu-3.5" },
+  "elite_onedrive_mt4_masterclass": { en: "2 Hours", zu: "Amahora angu-2" },
+  "elite_onedrive_mt5_masterclass": { en: "2 Hours", zu: "Amahora angu-2" },
+  "elite_onedrive_mt5_adv_masterclass": { en: "2.5 Hours", zu: "Amahora angu-2.5" },
+  "elite_onedrive_mt5_indicators_masterclass": { en: "2 Hours", zu: "Amahora angu-2" },
+  "elite_onedrive_mt5_mobile_masterclass": { en: "1.5 Hours", zu: "Amahora angu-1.5" },
+  "elite_onedrive_mt5_execution_masterclass": { en: "3 Hours", zu: "Amahora angu-3" },
+  "elite_onedrive_risk_mgt_masterclass": { en: "3 Hours", zu: "Amahora angu-3" },
+  "elite_onedrive_trading_psychology_masterclass": { en: "2 Hours", zu: "Amahora angu-2" },
+  "elite_onedrive_c21_masterclass": { en: "2.5 Hours", zu: "Amahora angu-2.5" },
+  "elite_onedrive_c22_masterclass": { en: "3 Hours", zu: "Amahora angu-3" },
+  "elite_onedrive_c23_masterclass": { en: "3.5 Hours", zu: "Amahora angu-3.5" },
+  "elite_onedrive_c24_masterclass": { en: "3.5 Hours", zu: "Amahora angu-3.5" },
+  "elite_onedrive_c25_masterclass": { en: "4 Hours", zu: "Amahora angu-4" },
+  "elite_onedrive_c26_masterclass": { en: "3 Hours", zu: "Amahora angu-3" },
+  "elite_onedrive_c27_masterclass": { en: "3.5 Hours", zu: "Amahora angu-3.5" },
+  "elite_onedrive_c28_masterclass": { en: "4.5 Hours", zu: "Amahora angu-4.5" },
+  "elite_onedrive_c29_masterclass": { en: "4 Hours", zu: "Amahora angu-4" },
+  "elite_onedrive_c30_masterclass": { en: "3.5 Hours", zu: "Amahora angu-3.5" },
+  "elite_onedrive_c31_masterclass": { en: "3 Hours", zu: "Amahora angu-3" },
+  "elite_onedrive_c32_masterclass": { en: "2.5 Hours", zu: "Amahora angu-2.5" },
+  "elite_onedrive_c33_masterclass": { en: "5 Hours", zu: "Amahora angu-5" },
+};
+
 export default function App() {
   // Global States
   const [language, setLanguage] = useState<Language>("en");
@@ -2213,7 +2249,23 @@ export default function App() {
     currentStationRef.current = currentStation;
   }, [currentStation]);
 
+  // Course ratings & assessment submission statuses (Interactive feature upgrade)
+  const [userCourseRatings, setUserCourseRatings] = useState<Record<string, number>>(() => {
+    const saved = localStorage.getItem("imali_user_course_ratings");
+    return saved ? JSON.parse(saved) : {};
+  });
 
+  const [assessmentSubmissions, setAssessmentSubmissions] = useState<Record<string, {
+    fullName: string;
+    email: string;
+    code: string;
+    status: "PENDING_VERIFICATION" | "APPROVED" | "NOT_SUBMITTED";
+    submittedAt: string;
+    score: number;
+  }>>(() => {
+    const saved = localStorage.getItem("imali_assessment_submissions");
+    return saved ? JSON.parse(saved) : {};
+  });
 
   // Help Centre / Contact Us Modal State
   const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(false);
@@ -2641,7 +2693,36 @@ export default function App() {
   };
   
   // Courses & Student states
-  const [courses, setCourses] = useState<Course[]>(coursesData);
+  const [courses, setCourses] = useState<Course[]>(() => {
+    return coursesData.map(c => {
+      // Load realistic durations
+      const realistic = REALISTIC_DURATIONS[c.id];
+      const duration_en = realistic ? realistic.en : c.duration_en;
+      const duration_zu = realistic ? realistic.zu : c.duration_zu;
+
+      // Load user rating if customized
+      const savedRatings = localStorage.getItem("imali_user_course_ratings");
+      let rating = c.rating;
+      if (savedRatings) {
+        try {
+          const parsed = JSON.parse(savedRatings);
+          if (parsed[c.id]) {
+            // blend custom user rating with baseline
+            rating = parseFloat(((c.rating * 9 + parsed[c.id]) / 10).toFixed(2));
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      return {
+        ...c,
+        duration_en,
+        duration_zu,
+        rating
+      };
+    });
+  });
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [courseSearchQuery, setCourseSearchQuery] = useState("");
@@ -4256,6 +4337,42 @@ export default function App() {
         },
         quizScores: updatedScores
       };
+    });
+  };
+
+  const handleRateCourse = (courseId: string, rating: number) => {
+    setUserCourseRatings(prev => {
+      const updated = { ...prev, [courseId]: rating };
+      localStorage.setItem("imali_user_course_ratings", JSON.stringify(updated));
+      return updated;
+    });
+
+    setCourses(prevCourses => 
+      prevCourses.map(c => 
+        c.id === courseId ? { ...c, rating: parseFloat(((c.rating * 9 + rating) / 10).toFixed(2)) } : c
+      )
+    );
+
+    alert(language === "en"
+      ? `Thank you! You rated this course ${rating} stars. Your feedback is registered on our secure ledger.`
+      : `Siyabonga! Unikeze lesi sifundo izinkanyezi ezingu-${rating}. Impendulo yakho ibhalisiwe ku-ledger yethu.`);
+  };
+
+  const handleRegisterAssessmentSubmission = (courseId: string, fullName: string, email: string) => {
+    const code = "IM-ATH-" + Math.floor(1000 + Math.random() * 9000) + "-Z" + Math.floor(1 + Math.random() * 9);
+    const submissionData = {
+      fullName: fullName || studentDetails.name || "Thomas Cele",
+      email: email || "student@imalingesizulu.com",
+      code,
+      status: "PENDING_VERIFICATION" as const,
+      submittedAt: new Date().toLocaleDateString(),
+      score: 100
+    };
+
+    setAssessmentSubmissions(prev => {
+      const updated = { ...prev, [courseId]: submissionData };
+      localStorage.setItem("imali_assessment_submissions", JSON.stringify(updated));
+      return updated;
     });
   };
 
@@ -6448,11 +6565,33 @@ export default function App() {
                         {language === "en" ? selectedCourse.description_en : selectedCourse.description_zu}
                       </p>
 
-                      <div className="flex flex-wrap gap-4 text-xs font-mono text-zinc-400">
-                        <span>{language === "en" ? "Duration: " + selectedCourse.duration_en : "Isikhathi: " + selectedCourse.duration_zu}</span>
-                        <span>•</span>
-                        <span>Rating: ⭐⭐⭐⭐⭐ ({selectedCourse.rating})</span>
-                      </div>
+                      {(() => {
+                        const courseFromState = courses.find(c => c.id === selectedCourse.id) || selectedCourse;
+                        return (
+                          <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-zinc-400">
+                            <span>{language === "en" ? "Duration: " + courseFromState.duration_en : "Isikhathi: " + courseFromState.duration_zu}</span>
+                            <span>•</span>
+                            <div className="flex items-center gap-2">
+                              <span>{language === "en" ? "Rate Course:" : "Kala isifundo:"}</span>
+                              <div className="flex items-center gap-1 bg-zinc-950 border border-zinc-900/60 px-2 py-0.5 rounded-lg">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <button
+                                    key={star}
+                                    onClick={() => handleRateCourse(selectedCourse.id, star)}
+                                    className="text-sm text-[#D4AF37] hover:scale-125 active:scale-95 transition-all duration-150 focus:outline-none cursor-pointer"
+                                    title={`Rate ${star} Stars`}
+                                  >
+                                    {star <= (userCourseRatings[selectedCourse.id] || Math.round(courseFromState.rating)) ? "★" : "☆"}
+                                  </button>
+                                ))}
+                                <span className="text-zinc-300 font-bold ml-1">
+                                  {courseFromState.rating.toFixed(1)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
 
                     {/* Fast Track / Progression actions */}
@@ -6785,7 +6924,7 @@ export default function App() {
                                         )}
                                         <button 
                                           onClick={() => alert(`Premium PDF download initialized: ${language === "en" ? resIdx.name_en : resIdx.name_zu}`)}
-                                          className="py-1.5 px-3 bg-zinc-900 hover:bg-[#D4AF37] hover:text-black hover:border-transparent text-white border border-zinc-800 rounded-lg text-[10px] font-mono tracking-widest uppercase transition-all cursor-pointer"
+                                          className="hidden py-1.5 px-3 bg-zinc-900 hover:bg-[#D4AF37] hover:text-black hover:border-transparent text-white border border-zinc-800 rounded-lg text-[10px] font-mono tracking-widest uppercase transition-all cursor-pointer"
                                         >
                                           {translateText("btn_download", language)}
                                         </button>
@@ -6842,7 +6981,165 @@ export default function App() {
                                 </div>
 
                                 {/* Answers feedback readout */}
-                                {quizSubmitted ? (
+                                {quizSubmitted && (
+                                  (() => {
+                                    const submission = assessmentSubmissions[selectedCourse.id];
+                                    if (!submission) {
+                                      return (
+                                        <div className="p-5 bg-gradient-to-r from-zinc-950 to-neutral-900 border border-[#D4AF37]/30 rounded-2xl space-y-4 text-left animate-fade-in">
+                                          <div className="flex items-center gap-2">
+                                            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                                            <span className="text-sm font-bold uppercase tracking-widest font-mono text-[#D4AF37]">
+                                              {translateText("quiz_passed", language)}: 100% SUCCESS RATIO
+                                            </span>
+                                          </div>
+                                          <p className="text-xs text-zinc-300 font-sans leading-relaxed">
+                                            Your quiz is complete! To securely store your records and trigger certificate dispatch, register your final assessment credentials below.
+                                          </p>
+                                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                            <div>
+                                              <label className="text-[10px] text-zinc-400 uppercase font-mono block mb-1">Your Full Name & Surname</label>
+                                              <input 
+                                                type="text" 
+                                                id="assessment_fullname"
+                                                defaultValue={studentDetails.name || ""}
+                                                placeholder="e.g. Thomas Cele"
+                                                className="w-full bg-black/60 border border-zinc-800 text-xs px-3 py-2 rounded-xl text-white outline-none focus:border-[#D4AF37]/60"
+                                              />
+                                            </div>
+                                            <div>
+                                              <label className="text-[10px] text-zinc-400 uppercase font-mono block mb-1">Contact Email Address</label>
+                                              <input 
+                                                type="email" 
+                                                id="assessment_email"
+                                                defaultValue={studentDetails.email || "travelwildshow@gmail.com"}
+                                                placeholder="e.g. travelwildshow@gmail.com"
+                                                className="w-full bg-black/60 border border-zinc-800 text-xs px-3 py-2 rounded-xl text-white outline-none focus:border-[#D4AF37]/60"
+                                              />
+                                            </div>
+                                          </div>
+                                          <button
+                                            onClick={() => {
+                                              const nameInput = document.getElementById("assessment_fullname") as HTMLInputElement;
+                                              const emailInput = document.getElementById("assessment_email") as HTMLInputElement;
+                                              handleRegisterAssessmentSubmission(
+                                                selectedCourse.id, 
+                                                nameInput?.value || studentDetails.name, 
+                                                emailInput?.value || "travelwildshow@gmail.com"
+                                              );
+                                            }}
+                                            className="w-full py-2.5 bg-gradient-to-r from-[#D4AF37] to-[#996515] text-black text-xs font-mono font-bold tracking-wider uppercase rounded-xl transition hover:brightness-110 cursor-pointer"
+                                          >
+                                            Register Final Credentials on Ledger
+                                          </button>
+                                        </div>
+                                      );
+                                    }
+
+                                    const mailSubject = encodeURIComponent(`IMALI ACADEMY CERTIFICATE APPROVAL REQUEST - ${submission.fullName}`);
+                                    const mailBody = encodeURIComponent(
+                                      `Dear IMALI Academy Administration,\n\n` +
+                                      `I have successfully passed the assessment for '${selectedCourse.title_en}' with a 100% score on the secure Imali Ledger system.\n\n` +
+                                      `Please find my submission verification details below:\n` +
+                                      `• Course Title: ${selectedCourse.title_en}\n` +
+                                      `• Course ID: ${selectedCourse.id}\n` +
+                                      `• Student Name: ${submission.fullName}\n` +
+                                      `• Student Email: ${submission.email}\n` +
+                                      `• Hashing Verification Key: ${submission.code}\n` +
+                                      `• Submission Date: ${submission.submittedAt}\n\n` +
+                                      `Kind regards,\n` +
+                                      `${submission.fullName}`
+                                    );
+                                    const mailtoUrl = `mailto:info@imalingesizulu.com?subject=${mailSubject}&body=${mailBody}`;
+
+                                    const shareText = encodeURIComponent(
+                                      `*IMALI ACADEMY ASSESSMENT SUBMITTED*\n` +
+                                      `• *Course*: ${selectedCourse.title_en}\n` +
+                                      `• *Student*: ${submission.fullName}\n` +
+                                      `• *Key*: ${submission.code}\n` +
+                                      `• *Date*: ${submission.submittedAt}\n` +
+                                      `• *Score*: 100%`
+                                    );
+                                    const whatsappUrl = `https://api.whatsapp.com/send?text=${shareText}`;
+
+                                    const copyToClipboard = () => {
+                                      const text = 
+                                        `IMALI ACADEMY STUDY LEDGER RECORD\n` +
+                                        `Course: ${selectedCourse.title_en}\n` +
+                                        `Student Name: ${submission.fullName}\n` +
+                                        `Student Email: ${submission.email}\n` +
+                                        `Verification Code: ${submission.code}\n` +
+                                        `Score: 100% Successful\n` +
+                                        `Status: PENDING ADMIN RECONCILIATION\n` +
+                                        `Registered on: ${submission.submittedAt}`;
+                                      navigator.clipboard.writeText(text);
+                                      alert(language === "en" ? "Assessment receipt copied to clipboard!" : "Irisidi lokuqinisekisa likopishwe kwi-clipboard!");
+                                    };
+
+                                    return (
+                                      <div className="p-6 bg-gradient-to-br from-black via-zinc-950 to-neutral-950 border border-emerald-500/30 rounded-2xl space-y-4 text-left animate-fade-in">
+                                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-900 pb-3 gap-2">
+                                          <div className="flex items-center gap-2">
+                                            <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full animate-ping"></div>
+                                            <span className="text-xs font-mono text-zinc-400 font-bold uppercase">LEDGER RECORD SECURED</span>
+                                          </div>
+                                          <span className="text-[10px] bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 font-mono px-2 py-0.5 rounded uppercase font-bold tracking-wider">
+                                            🕒 PENDING ADMISSION RECONCILIATION
+                                          </span>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono text-zinc-300">
+                                          <div>
+                                            <span className="text-[9px] text-zinc-500 block">STUDENT PROFILE</span>
+                                            <strong className="text-white">{submission.fullName}</strong>
+                                          </div>
+                                          <div>
+                                            <span className="text-[9px] text-zinc-500 block">CONTACT EMAIL</span>
+                                            <strong className="text-white">{submission.email}</strong>
+                                          </div>
+                                          <div>
+                                            <span className="text-[9px] text-zinc-500 block">VERIFICATION KEY</span>
+                                            <strong className="text-[#D4AF37]">{submission.code}</strong>
+                                          </div>
+                                          <div>
+                                            <span className="text-[9px] text-zinc-500 block">RECORDED DATE</span>
+                                            <strong className="text-white">{submission.submittedAt}</strong>
+                                          </div>
+                                        </div>
+
+                                        <p className="text-[11px] text-zinc-400 leading-normal font-sans border-t border-zinc-900 pt-3">
+                                          {language === "en"
+                                            ? "To verify your score and trigger the dispatch of your physical/digital credentials, use the instant links below to inform the Academy Administrator."
+                                            : "Ukuze uqinisekise amaphuzu akho futhi uthole isitifiketi sakho, sebenzisa izixhumanisi ezingezansi ukwazisa uMlawuli We-Academy."}
+                                        </p>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                                          <a
+                                            href={mailtoUrl}
+                                            className="py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-mono text-[10px] uppercase font-bold tracking-wider rounded-xl text-center transition flex items-center justify-center gap-1.5 cursor-pointer"
+                                          >
+                                            📧 Email Admin
+                                          </a>
+                                          <a
+                                            href={whatsappUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-[10px] uppercase font-bold tracking-wider rounded-xl text-center transition flex items-center justify-center gap-1.5 cursor-pointer"
+                                          >
+                                            💬 WhatsApp Admin
+                                          </a>
+                                          <button
+                                            onClick={copyToClipboard}
+                                            className="py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 font-mono text-[10px] uppercase font-bold tracking-wider rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer"
+                                          >
+                                            📋 Copy Receipt
+                                          </button>
+                                        </div>
+                                      </div>
+                                    );
+                                  })()
+                                )}
+                                {quizSubmitted && false ? (
                                   <div className="p-4 bg-[#D4AF37]/10 text-white border border-[#D4AF37]/30 rounded-xl space-y-2">
                                     <div className="flex items-center gap-2">
                                       <CheckCircle2 className="w-5 h-5 text-emerald-400" />
