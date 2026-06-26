@@ -2219,6 +2219,7 @@ const REALISTIC_DURATIONS: Record<string, { en: string; zu: string }> = {
 export default function App() {
   // Global States
   const [language, setLanguage] = useState<Language>("en");
+  const [securityBlockAlert, setSecurityBlockAlert] = useState<{ show: boolean; msgEn: string; msgZu: string } | null>(null);
   const [activeRole, setActiveRole] = useState<Role>(Role.STUDENT);
   const [visibleProfileTab, setVisibleProfileTab] = useState<Role>(Role.STUDENT);
   const [activeTab, setActiveTab] = useState<string>("dashboard");
@@ -2248,6 +2249,88 @@ export default function App() {
   useEffect(() => {
     currentStationRef.current = currentStation;
   }, [currentStation]);
+
+  // Block copying, block right click, block inspect element
+  useEffect(() => {
+    const handleCopy = (e: ClipboardEvent) => {
+      e.preventDefault();
+      setSecurityBlockAlert({
+        show: true,
+        msgEn: "⚠️ Security restriction: Copying or cutting platform materials is disabled on IMALI Academy.",
+        msgZu: "⚠️ Isivimbelo sokuphepha: Ukukopisha noma ukusika izinto ze-platform kukhutshaziwe kwi-IMALI Academy."
+      });
+    };
+
+    const handleCut = (e: ClipboardEvent) => {
+      e.preventDefault();
+      setSecurityBlockAlert({
+        show: true,
+        msgEn: "⚠️ Security restriction: Copying or cutting platform materials is disabled on IMALI Academy.",
+        msgZu: "⚠️ Isivimbelo sokuphepha: Ukukopisha noma ukusika izinto ze-platform kukhutshaziwe kwi-IMALI Academy."
+      });
+    };
+
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      setSecurityBlockAlert({
+        show: true,
+        msgEn: "🔒 Security restriction: Inspector access (Right Click) is disabled on IMALI Academy.",
+        msgZu: "🔒 Isivimbelo sokuphepha: Ukuhlola (Right Click) kukhutshaziwe kwi-IMALI Academy."
+      });
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // F12
+      const isF12 = e.key === "F12";
+      
+      // Ctrl+Shift+I / Cmd+Opt+I (Chrome, Safari, Firefox DevTools)
+      const isDevToolsCombo = (e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "I" || e.key === "i" || e.keyCode === 73);
+      
+      // Ctrl+Shift+J / Cmd+Opt+J (Console)
+      const isConsoleCombo = (e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "J" || e.key === "j" || e.keyCode === 74);
+      
+      // Ctrl+Shift+C / Cmd+Opt+C (Inspect Element selection)
+      const isInspectCombo = (e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "C" || e.key === "c" || e.keyCode === 67);
+      
+      // Ctrl+U / Cmd+U (View Source)
+      const isViewSource = (e.ctrlKey || e.metaKey) && (e.key === "U" || e.key === "u" || e.keyCode === 85);
+
+      // Ctrl+S / Cmd+S (Save Page)
+      const isSavePage = (e.ctrlKey || e.metaKey) && (e.key === "S" || e.key === "s" || e.keyCode === 83);
+
+      if (isF12 || isDevToolsCombo || isConsoleCombo || isInspectCombo || isViewSource || isSavePage) {
+        e.preventDefault();
+        e.stopPropagation();
+        setSecurityBlockAlert({
+          show: true,
+          msgEn: "🛡️ Advanced Protection: Source inspect shortcuts are blocked on IMALI Academy.",
+          msgZu: "🛡️ Ukuvikelwa Okuthuthukile: Izinqamuleli zokuhlola ikhodi zivinjiwe kwi-IMALI Academy."
+        });
+      }
+    };
+
+    document.addEventListener("copy", handleCopy);
+    document.addEventListener("cut", handleCut);
+    document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("copy", handleCopy);
+      document.removeEventListener("cut", handleCut);
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  // Auto-hide security alert after some time
+  useEffect(() => {
+    if (securityBlockAlert?.show) {
+      const timer = setTimeout(() => {
+        setSecurityBlockAlert(null);
+      }, 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [securityBlockAlert]);
 
   // Course ratings & assessment submission statuses (Interactive feature upgrade)
   const [userCourseRatings, setUserCourseRatings] = useState<Record<string, number>>(() => {
@@ -4377,8 +4460,25 @@ export default function App() {
   };
 
   return (
-    <div id="luxe_root" className="min-h-screen bg-[#030303] text-zinc-100 flex flex-col font-sans relative overflow-x-hidden pb-16 md:pb-0 selection:bg-[#D4AF37] selection:text-black">
+    <div id="luxe_root" className="min-h-screen bg-[#030303] text-zinc-100 flex flex-col font-sans relative overflow-x-hidden pb-16 md:pb-0 selection:bg-[#D4AF37] selection:text-black select-none">
       
+      {/* Security Protection Animated Floating Toast */}
+      {securityBlockAlert?.show && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-md px-4 pointer-events-none transition-all duration-300">
+          <div className="bg-black/95 backdrop-blur-md border border-[#D4AF37] shadow-[0_10px_30px_rgba(212,175,55,0.25)] rounded-2xl p-4 flex items-center gap-3 text-left animate-pulse">
+            <div className="p-2 bg-[#D4AF37]/10 rounded-xl text-[#D4AF37]">
+              <Shield className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <h5 className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase">IMALI SECURITY ENGINE</h5>
+              <p className="text-[11px] text-zinc-200 mt-0.5 leading-relaxed font-sans">
+                {language === "en" ? securityBlockAlert.msgEn : securityBlockAlert.msgZu}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Dynamic Gold liquid background ambient canvas glows */}
       <div className="absolute top-[-250px] right-[-150px] w-[600px] h-[600px] bg-gradient-to-br from-[#D4AF37]/15 to-[#996515]/0 rounded-full blur-[140px] pointer-events-none"></div>
       <div className="absolute bottom-[-200px] left-[-200px] w-[700px] h-[700px] bg-gradient-to-tr from-[#996515]/10 to-[#AA771C]/0 rounded-full blur-[160px] pointer-events-none"></div>
