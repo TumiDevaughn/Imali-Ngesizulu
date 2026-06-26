@@ -10264,7 +10264,7 @@ export default function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="bg-zinc-900/60 p-3.5 rounded-xl border border-zinc-800/80">
                   <span className="text-[#D4AF37] font-serif font-bold text-xs uppercase block tracking-wider mb-1">
-                    🕯️ {language === "zu" ? "Izifundo eziphezulu" : "Elite Curricula"}
+                    🕯️ {language === "zu" ? "Izifundo ze-Imali" : "Imali Curricula"}
                   </span>
                   <p className="text-[11px] text-zinc-400">
                     {language === "zu" ? "Funda institutional orderblocks, Fair Value Gaps (FVG) kanye ne-physics yamakhandlela ye-OHLC." : "Study institutional order blocks, Fair Value Gaps (FVG), and OHLC candlestick physics in perfect detail."}
