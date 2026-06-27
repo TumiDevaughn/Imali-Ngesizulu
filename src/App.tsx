@@ -2220,6 +2220,7 @@ export default function App() {
   // Global States
   const [language, setLanguage] = useState<Language>("en");
   const [securityBlockAlert, setSecurityBlockAlert] = useState<{ show: boolean; msgEn: string; msgZu: string } | null>(null);
+  const [showCourseRestrictionPopup, setShowCourseRestrictionPopup] = useState<boolean>(false);
   const [activeRole, setActiveRole] = useState<Role>(Role.STUDENT);
   const [visibleProfileTab, setVisibleProfileTab] = useState<Role>(Role.STUDENT);
   const [activeTab, setActiveTab] = useState<string>("dashboard");
@@ -2464,8 +2465,8 @@ export default function App() {
     }
     // Roles / Switch / Admin / Instructor / Student / Credentials
     else if (query.includes("role") || query.includes("switch") || query.includes("admin") || query.includes("instructor") || query.includes("student") || query.includes("credentials") || query.includes("lock") || query.includes("unlock") || query.includes("syndicate") || query.includes("profile")) {
-      responseEn = "IMALI NgesiZulu supports 3 roles: (1) Executive Student (unlocked by default), (2) Lead Instructor (unlocked via identity verified email 'info@imalingesizulu.com' under Academic Profiles Manager in dashboard), and (3) Administrator (unlocked via 'admin@imalingesizulu.com'). Instructors and Admins receive exclusive access to the 'Syndicate Admin' panel to issue passcodes, register users, audit courses, and generate Gemini AI strategic diagnostic reports.";
-      responseZu = "I-IMALI NgesiZulu isekela izindima ezi-3: (1) Umfundi Ongumphathi, (2) Uthisha Omkhulu (uyaluqaqwa kwi-Academic Profiles Manager ngokubhala i-imeyili ethi 'info@imalingesizulu.com'), (3) Umlawuli we-Syndicate (uyaluqaqwa ngo-imeyili 'admin@imalingesizulu.com'). Labahwebi abaphezulu bayakwazi ukubona iphaneli lomlawuli bamise amaphasikhodi bafunde i-Gemini AI Operation diagnostics.";
+      responseEn = "IMALI NgesiZulu supports 3 roles: (1) Executive Student (unlocked by default), (2) Lead Instructor (unlocked via identity verified Instructor email under Academic Profiles Manager in dashboard), and (3) Administrator (unlocked via registered Administrator email and Master Access Key). Instructors and Admins receive exclusive access to the 'Syndicate Admin' panel to issue passcodes, register users, audit courses, and generate Gemini AI strategic diagnostic reports.";
+      responseZu = "I-IMALI NgesiZulu isekela izindima ezi-3: (1) Umfundi Ongumphathi, (2) Uthisha Omkhulu (uyaluqaqwa kwi-Academic Profiles Manager ngokubhala i-imeyili yothisha eqinisekisiwe), (3) Umlawuli we-Syndicate (uyaluqaqwa ngo-imeyili nangekhodi enkulu). Labahwebi abaphezulu bayakwazi ukubona iphaneli lomlawuli bamise amaphasikhodi bafunde i-Gemini AI Operation diagnostics.";
     }
     // Quizzes / Certificates / Award / Cert
     else if (query.includes("cert") || query.includes("assessment") || query.includes("quiz") || query.includes("award") || query.includes("pass") || query.includes("score")) {
@@ -5897,7 +5898,7 @@ export default function App() {
                   {/* Header of Profiles editor */}
                   <div className="border-b border-zinc-800 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                      <h3 className="text-base font-light tracking-wide uppercase font-serif">
+                      <h3 id="academic_profiles_manager_anchor" className="text-base font-light tracking-wide uppercase font-serif">
                         Academic <span className="text-[#D4AF37] italic">Profiles Manager</span>
                       </h3>
                       <p className="text-[10px] text-zinc-500 mt-0.5">
@@ -6290,8 +6291,8 @@ export default function App() {
                                       : "Ubunikazi Bomfundisi Buqinisekisiwe! Ukufinyelela kuvuliwe.");
                                   } else {
                                     alert(language === "en" 
-                                      ? "Access Denied: Public registration is protected. Enter BOTH the registered email and correct Syndicate Master Access Key (e.g. IMALI-SECURE-2026) to unlock." 
-                                      : "Ukufinyelela Kunqatshiwe: Ukuze kuvunyelwe uMfundisi kufanele unikeze zombili imininingwane: i-imeyili ebhalisiwe kanye neKhodi Enkulu (isb. IMALI-SECURE-2026).");
+                                      ? "Access Denied: Public registration is protected. Enter BOTH the registered email and correct Syndicate Master Access Key to unlock." 
+                                      : "Ukufinyelela Kunqatshiwe: Ukuze kuvunyelwe uMfundisi kufanele unikeze zombili imininingwane: i-imeyili ebhalisiwe kanye neKhodi Enkulu.");
                                   }
                                 }}
                                 className="w-full py-3 bg-[#D4AF37] hover:brightness-110 text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl transition cursor-pointer"
@@ -6722,7 +6723,7 @@ export default function App() {
                                   <input 
                                     type="email"
                                     id="admin_gate_email_input"
-                                    placeholder="e.g. admin@imalingesizulu.com"
+                                    placeholder="Enter Administrator Email"
                                     value={adminDetails.email}
                                     onChange={(e) => setAdminDetails({ ...adminDetails, email: e.target.value })}
                                     className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-emerald-400 font-mono outline-none focus:border-emerald-400"
@@ -6743,7 +6744,7 @@ export default function App() {
                               </div>
                               <button
                                 onClick={() => {
-                                  if (adminDetails.email.trim().toLowerCase() === "admin@imalingesizulu.com" && adminAccessKey.trim() === "IMALI-SECURE-2026") {
+                                  if (adminDetails.email.trim().toLowerCase() === "info@imalingesizulu.com" && adminAccessKey.trim() === "IMALI-SECURE-2026") {
                                     setIsAdminUnlocked(true);
                                     localStorage.setItem("imali_admin_unlocked", "true");
                                     alert(language === "en" 
@@ -6751,8 +6752,8 @@ export default function App() {
                                       : "Izinginga Lomlawuli Liphumelele! Ukufinyelela kuvunyelwe.");
                                   } else {
                                     alert(language === "en" 
-                                      ? "Access Denied: Public registration is protected. Enter BOTH the registered email and correct Syndicate Master Access Key (e.g. IMALI-SECURE-2026) to unlock." 
-                                      : "Ukufinyelela Kunqatshiwe: Ukuze kuvunyelwe uMlawuli kumele unikeze zombili imininingwane: i-imeyili ebhalisiwe kanye neKhodi Enkulu (isb. IMALI-SECURE-2026).");
+                                      ? "Access Denied: Public registration is protected. Enter BOTH the registered email and correct Syndicate Master Access Key to unlock." 
+                                      : "Ukufinyelela Kunqatshiwe: Ukuze kuvunyelwe uMlawuli kumele unikeze zombili imininingwane: i-imeyili ebhalisiwe kanye neKhodi Enkulu.");
                                   }
                                 }}
                                 className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl transition cursor-pointer"
@@ -7153,7 +7154,13 @@ export default function App() {
                             </div>
                             <div className="flex gap-2">
                               <button 
-                                onClick={() => { setSelectedCourse(course); setActiveTab("courses"); }}
+                                onClick={() => {
+                                  if (activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim() || !studentDetails.email || !studentDetails.email.trim() || !studentDetails.activationCode || !studentDetails.activationCode.trim())) {
+                                    setShowCourseRestrictionPopup(true);
+                                    return;
+                                  }
+                                  setSelectedCourse(course); setActiveTab("courses");
+                                }}
                                 className="flex-1 py-2 bg-white/5 hover:bg-[#D4AF37]/20 border border-zinc-800 hover:border-[#D4AF37]/45 text-white hover:text-[#D4AF37] text-[10px] uppercase font-bold tracking-widest rounded-xl transition-all"
                               >
                                 {translateText("btn_continue", language)}
@@ -7162,7 +7169,13 @@ export default function App() {
                               {/* Option to view certificate if progress is 100% */}
                               {userProg === 100 ? (
                                 <button
-                                  onClick={() => { setSelectedCourse(course); setActiveTab("courses"); }}
+                                  onClick={() => {
+                                    if (activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim() || !studentDetails.email || !studentDetails.email.trim() || !studentDetails.activationCode || !studentDetails.activationCode.trim())) {
+                                      setShowCourseRestrictionPopup(true);
+                                      return;
+                                    }
+                                    setSelectedCourse(course); setActiveTab("courses");
+                                  }}
                                   className="px-3 bg-[#D4AF37] hover:brightness-110 text-black rounded-xl text-xs flex items-center justify-center"
                                   title="View digital certificate status"
                                 >
@@ -7431,14 +7444,8 @@ export default function App() {
                                 </div>
                                 <button 
                                   onClick={() => {
-                                    if (activeRole === Role.STUDENT && !studentDetails.activationCode) {
-                                      setSecurityBlockAlert({
-                                        show: true,
-                                        msgEn: "🔒 Access Denied: Please activate your student account using your Imali Student Code to start studying.",
-                                        msgZu: "🔒 Ukufuneka Kokuvula: Sicela uvule i-akhawunti yakho yomfundi ngeKhodi yomfundi ukuze uqale ukufunda."
-                                      });
-                                      setActiveTab("dashboard");
-                                      setVisibleProfileTab(Role.STUDENT);
+                                    if (activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim() || !studentDetails.email || !studentDetails.email.trim() || !studentDetails.activationCode || !studentDetails.activationCode.trim())) {
+                                      setShowCourseRestrictionPopup(true);
                                       return;
                                     }
                                     setSelectedCourse(course);
@@ -10287,7 +10294,7 @@ export default function App() {
                           type="email" 
                           value={adminDetails.email || ""}
                           onChange={e => setAdminDetails({ ...adminDetails, email: e.target.value })}
-                          placeholder="e.g. admin@imalingesizulu.com"
+                          placeholder="e.g. administrator@imalingesizulu.com"
                           className="w-full bg-zinc-900 border border-zinc-805 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37]"
                         />
                       </div>
@@ -10584,13 +10591,114 @@ export default function App() {
         </div>
       )}
 
+      {/* Course Access Restriction Popup Modal */}
+      {showCourseRestrictionPopup && (
+        <div id="course_restriction_popup" className="fixed inset-0 bg-black/90 backdrop-blur-md z-[9999] overflow-y-auto flex items-start sm:items-center justify-center p-3 sm:p-5 py-6 sm:py-10 animate-in fade-in duration-200">
+          <div className="bg-[#0c0c0c] border-2 border-[#D4AF37] max-w-lg w-full rounded-xl sm:rounded-2xl p-5 sm:p-6 relative overflow-hidden text-left space-y-6 shadow-[0_20px_50px_rgba(212,175,55,0.15)] animate-in zoom-in-95 duration-200 my-auto">
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#D4AF37]/5 rounded-full blur-3xl text-left"></div>
+            
+            {/* Header */}
+            <div className="border-b border-zinc-850 pb-3 flex justify-between items-start">
+              <div className="space-y-1">
+                <span className="text-[10px] bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] px-3 py-0.5 rounded font-mono font-bold uppercase tracking-widest inline-block">
+                  🔒 {language === "en" ? "SECURITY ACCESS LOCK" : "UKUVALEKA KWEZOKUPHEPHA"}
+                </span>
+                <h4 className="text-lg font-serif text-white font-light tracking-wide uppercase mt-1">
+                  {language === "en" ? "Academy Enrollment Verification Required" : "Kudingeka Ukuqinisekiswa Kwemfundi"}
+                </h4>
+              </div>
+              <button 
+                onClick={() => setShowCourseRestrictionPopup(false)}
+                className="bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3.5 pt-1">
+              <p className="text-xs font-light text-zinc-200 leading-relaxed font-serif">
+                {language === "en" 
+                  ? "Dear Executive Student," 
+                  : "Mfundi Othandekayo,"}
+              </p>
+              <p className="text-xs text-zinc-300 leading-relaxed">
+                {language === "en"
+                  ? "To access the premium Imali Courses and interactive curriculum rooms, you are required to complete your academic registration profile. This ensures your learning progression, lesson completions, and digital certificates are registered correctly in the secure syndicate ledger."
+                  : "Ukuze ufinyelele kwi-Imali Courses kanye namagumbi okufunda athuthukisiwe, kudingeka ukuthi uqedele iphrofayili yakho yokubhalisa. Lokhu kuqinisekisa ukuthi inqubekelaphambili yakho, izifundo eziqediwe, nezitifiketi zakho djedjithali kubhaliswe ngendlela efanele kurejista yezokuphepha ye-syndicate."}
+              </p>
+
+              <div className="bg-[#111111] border border-zinc-850 p-4 rounded-xl space-y-2.5">
+                <p className="text-xs font-bold text-[#D4AF37] uppercase font-mono tracking-wider">
+                  📋 {language === "en" ? "Incomplete Registration Checklist:" : "Uhlu Lwezinto Ezingakaqedwa:"}
+                </p>
+                <ul className="text-xs space-y-2 text-zinc-300">
+                  <li className="flex items-center gap-2">
+                    <span className={studentDetails.name ? "text-emerald-400" : "text-amber-500"}>
+                      {studentDetails.name ? "✓" : "✗"}
+                    </span>
+                    <span>
+                      {language === "en" ? "Full Student Name" : "Igama Lomfundi Eliphelele"} 
+                      {!studentDetails.name && <span className="text-amber-500 font-mono text-[10px] ml-1.5 uppercase tracking-wider">{language === "en" ? "(Required)" : "(Kudingekile)"}</span>}
+                    </span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className={studentDetails.email ? "text-emerald-400" : "text-amber-500"}>
+                      {studentDetails.email ? "✓" : "✗"}
+                    </span>
+                    <span>
+                      {language === "en" ? "Registered Student Email Address" : "I-imeyili Yomfundi Ebhalisiwe"}
+                      {!studentDetails.email && <span className="text-amber-500 font-mono text-[10px] ml-1.5 uppercase tracking-wider">{language === "en" ? "(Required)" : "(Kudingekile)"}</span>}
+                    </span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className={studentDetails.activationCode ? "text-emerald-400" : "text-amber-500"}>
+                      {studentDetails.activationCode ? "✓" : "✗"}
+                    </span>
+                    <span>
+                      {language === "en" ? "Valid Imali Student Activation Code" : "Ikhodi Yokuvula Yomfundi ye-Imali"}
+                      {!studentDetails.activationCode && <span className="text-amber-500 font-mono text-[10px] ml-1.5 uppercase tracking-wider">{language === "en" ? "(Required)" : "(Kudingekile)"}</span>}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <button
+                onClick={() => {
+                  setShowCourseRestrictionPopup(false);
+                  setActiveTab("dashboard");
+                  setVisibleProfileTab(Role.STUDENT);
+                  setTimeout(() => {
+                    const el = document.getElementById("academic_profiles_manager_anchor");
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }, 300);
+                }}
+                className="py-3 px-4 bg-[#D4AF37] text-black hover:bg-[#b08e27] text-xs font-black uppercase tracking-widest rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+              >
+                👤 {language === "en" ? "Complete My Profile Now" : "Gcwalisa Iphrofayili Yami Manje"}
+              </button>
+              <button
+                onClick={() => setShowCourseRestrictionPopup(false)}
+                className="py-3 px-4 bg-zinc-900 border border-zinc-850 text-zinc-400 hover:text-white text-xs font-mono uppercase font-bold rounded-xl transition text-center hover:bg-zinc-800 cursor-pointer"
+              >
+                {language === "en" ? "Close View" : "Vala"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* FLOATING AUDIO RADIO PILL HUD (PERSISTENT SO STREAM CONTINUES IN BACKGROUND) */}
       {currentStation && (
         <div 
           id="radio_floating_hud" 
-          className="fixed bottom-3 right-3 left-3 sm:left-auto sm:bottom-6 sm:right-6 z-40 bg-zinc-950/95 backdrop-blur-md border border-[#D4AF37]/40 rounded-xl p-2 sm:p-2.5 flex items-center justify-between gap-3 shadow-[0_12px_40px_rgba(0,0,0,0.9)] max-w-xs sm:max-w-sm border-l-4 border-l-[#D4AF37] animate-in slide-in-from-bottom-5 duration-300"
+          className="fixed bottom-20 right-3 left-3 md:left-auto md:bottom-6 md:right-6 z-[45] bg-zinc-950/95 backdrop-blur-md border border-[#D4AF37]/45 rounded-xl p-2 md:p-2.5 flex items-center justify-between gap-2 md:gap-3 shadow-[0_16px_50px_rgba(0,0,0,0.95)] md:max-w-sm border-l-4 border-l-[#D4AF37] animate-in slide-in-from-bottom-5 duration-300"
         >
-          <div className="flex items-center gap-2 max-w-[55%]">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
             {/* Pulsing Visual Wave Disk Icon */}
             <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${currentStation.accent} flex items-center justify-center relative overflow-hidden shrink-0`}>
               <div className="absolute inset-0 bg-black/40" />
@@ -10600,7 +10708,7 @@ export default function App() {
               <div className={`absolute inset-0.5 border border-white/10 rounded-full ${isPlaying ? "animate-spin" : ""}`} style={{ animationDuration: "12s" }} />
             </div>
 
-            <div className="text-left w-full min-w-0">
+            <div className="text-left flex-1 min-w-0">
               <p className="text-[7px] sm:text-[8px] font-mono text-[#D4AF37] uppercase tracking-widest font-bold truncate">
                 {radioLoading ? (
                   <span className="text-amber-400 animate-pulse">🔄 Connecting...</span>
@@ -10608,7 +10716,7 @@ export default function App() {
                   <span className="text-red-400">⚠️ Offline</span>
                 ) : isPlaying ? (
                   radioUsingFallback ? (
-                    <span className="text-amber-400 animate-pulse">⚙️ Backup Carrier Active</span>
+                    <span className="text-amber-400 animate-pulse">⚙️ Backup</span>
                   ) : (
                     <span className="text-emerald-400 animate-pulse">📡 Streaming</span>
                   )
@@ -10616,8 +10724,8 @@ export default function App() {
                   <span className="text-zinc-500">⏸️ Standby</span>
                 )}
               </p>
-              <h5 className="text-[11px] sm:text-xs font-semibold text-white truncate">{currentStation.name}</h5>
-              <p className="text-[9px] text-zinc-500 capitalize truncate hidden sm:block">{radioUsingFallback ? "Auto-Recovery Backup Feed" : currentStation.subCategory}</p>
+              <h5 className="text-[10px] sm:text-xs font-semibold text-white truncate leading-tight">{currentStation.name}</h5>
+              <p className="text-[8px] text-zinc-500 capitalize truncate hidden sm:block">{radioUsingFallback ? "Auto-Recovery Backup Feed" : currentStation.subCategory}</p>
             </div>
           </div>
 
@@ -10634,7 +10742,7 @@ export default function App() {
                   }
                 }
               }}
-              className="p-1.5 bg-zinc-900 hover:bg-zinc-850 rounded-lg border border-zinc-800 hover:border-zinc-700 text-white transition-all cursor-pointer"
+              className="p-1.5 bg-zinc-900 hover:bg-zinc-850 rounded-lg border border-zinc-800 hover:border-zinc-700 text-white transition-all cursor-pointer shrink-0"
               title={isPlaying ? "Pause Stream" : "Resume Stream"}
             >
               {isPlaying ? (
@@ -10647,10 +10755,11 @@ export default function App() {
             {/* Open full control console */}
             <button
               onClick={() => setIsRadioModalOpen(true)}
-              className="p-1.5 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 rounded-lg border border-[#D4AF37]/30 text-[#D4AF37] transition-all text-[9.5px] font-mono font-bold uppercase cursor-pointer"
+              className="p-1.5 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 rounded-lg border border-[#D4AF37]/30 text-[#D4AF37] transition-all text-[9.5px] font-mono font-bold uppercase cursor-pointer shrink-0 flex items-center gap-1"
               title="Expand Radio Control Deck"
             >
-              🎛️ HUD
+              <span>🎛️</span>
+              <span className="hidden min-[380px]:inline">HUD</span>
             </button>
 
             {/* Shutdown Stream completely (Highly Visible Option) */}
@@ -10664,10 +10773,11 @@ export default function App() {
                 setRadioLoading(false);
                 setRadioError(false);
               }}
-              className="p-1.5 px-2 bg-red-950/30 hover:bg-red-900/80 border border-red-500/30 hover:border-red-500 rounded-lg text-red-400 hover:text-white text-[9.5px] font-mono transition-all font-bold cursor-pointer"
+              className="p-1.5 px-2 bg-red-950/30 hover:bg-red-900/80 border border-red-500/30 hover:border-red-500 rounded-lg text-red-400 hover:text-white text-[9.5px] font-mono transition-all font-bold cursor-pointer shrink-0 flex items-center gap-1"
               title="Stop Broadcast Feed"
             >
-              ✕ Stop
+              <span>✕</span>
+              <span className="hidden min-[380px]:inline">Stop</span>
             </button>
           </div>
         </div>
