@@ -2944,23 +2944,25 @@ export default function App() {
     lastName: string;
     email: string;
     code: string;
+    activeCourse?: string;
+    progressPercent?: number;
+    status?: string;
+    lastActiveLesson?: string;
   }
 
   const [registeredStudentRecords, setRegisteredStudentRecords] = useState<StudentRecord[]>(() => {
     const local = localStorage.getItem("imali_registered_student_records");
     if (local) {
       try {
-        return JSON.parse(local);
+        const parsed = JSON.parse(local);
+        // Exclude example codes from active ledger to satisfy "the example codes under students cant be used for now since is the examples"
+        const exampleCodes = ["IMALI-STU-782134", "IMALI-STU-100124", "IMALI-STU-202685", "IMALI-STU-999912", "IMALI-STU-7821", "IMALI-STU-2026"];
+        return parsed.filter((r: any) => !exampleCodes.includes(r.code.toUpperCase()));
       } catch (e) {
         // fallback
       }
     }
-    return [
-      { firstName: "Sibusiso", lastName: "Nkosi", email: "sibusiso.nkosi@gmail.com", code: "IMALI-STU-782134" },
-      { firstName: "Nomvula", lastName: "Dlamini", email: "nomvula.d@yahoo.com", code: "IMALI-STU-100124" },
-      { firstName: "Thabo", lastName: "Mokoena", email: "thabo.m@outlook.com", code: "IMALI-STU-202685" },
-      { firstName: "Zama", lastName: "Zuma", email: "zama.zuma@gmail.com", code: "IMALI-STU-999912" }
-    ];
+    return []; // Start 100% clean with empty ledger
   });
 
   const [newStudentFirstName, setNewStudentFirstName] = useState<string>("");
@@ -2994,6 +2996,332 @@ export default function App() {
     return (
       <div className="w-full h-full bg-gradient-to-br from-[#D4AF37] to-[#996515] flex items-center justify-center text-black font-extrabold text-lg select-none">
         ❔
+      </div>
+    );
+  };
+
+
+
+  const renderStudentRegistrySpreadsheet = (theme: "gold" | "emerald") => {
+    const primaryColor = theme === "gold" ? "#D4AF37" : "#10B981";
+    const primaryText = theme === "gold" ? "text-[#D4AF37]" : "text-emerald-400";
+    const primaryBorder = theme === "gold" ? "border-[#D4AF37]/40" : "border-emerald-500/35";
+    const primaryBg = theme === "gold" ? "bg-[#D4AF37]/10" : "bg-emerald-500/10";
+    const primaryBgHover = theme === "gold" ? "hover:bg-[#D4AF37]/20" : "hover:bg-emerald-500/20";
+    const primaryBtnBg = theme === "gold" ? "bg-[#D4AF37]" : "bg-emerald-500";
+    const primaryBtnBgHover = theme === "gold" ? "hover:bg-[#bfa032]" : "hover:bg-emerald-600";
+    const primaryShad = theme === "gold" ? "shadow-[0_4px_24px_rgba(212,175,55,0.05)]" : "shadow-[0_4px_24px_rgba(16,185,129,0.05)]";
+
+    return (
+      <div className={`bg-[#121212] border-2 ${primaryBorder} rounded-2xl p-5 space-y-4 ${primaryShad}`}>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-800 pb-3 gap-2">
+          <div>
+            <h5 className={`text-xs font-serif font-bold ${primaryText} uppercase tracking-wider flex items-center gap-1.5`}>
+              📋 {language === "en" ? "Official Student Syndicate Registry Spreadsheet" : "📋 Isipredshithi Serejista Sabafundi Se-Syndicate"}
+            </h5>
+            <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest mt-0.5">
+              {language === "en" ? "Secure Double-Factor Academic Directory" : "Uhla Lwemibhalo Lwemfundo Eluvikelekile"}
+            </p>
+          </div>
+          <span className="text-[8px] bg-red-500/10 text-red-400 px-2.5 py-1 rounded-md font-mono font-bold uppercase tracking-wider border border-red-500/20">
+            {language === "en" ? "No Duplicates / No Sharing" : "Akuvunyelwe Ukuphindaphinda"}
+          </span>
+        </div>
+
+        {/* PROMINENT MANDATE / INSTRUCTIONS */}
+        <div className="bg-red-950/20 border border-red-500/30 rounded-xl p-4 text-xs space-y-1.5 leading-relaxed text-zinc-300 text-left">
+          <strong className="text-red-400 block font-mono uppercase text-[10px] tracking-wider">
+            🚨 {language === "en" ? "INSTRUCTOR & ADMINISTRATOR MANDATE:" : "UMYALELO KAMLALULI NOMFUNDISI:"}
+          </strong>
+          <p>
+            {language === "en"
+              ? "Students are instructed to email you at info@imalingesizulu.com to request access codes. You must manually generate and register each unique student's details in this spreadsheet ledger. Every student code must strictly follow the format IMALI-STU- and exactly 6 digits (e.g., IMALI-STU-834927). No duplicate codes or sharing of numbers are allowed under any circumstances. The system strictly tracks and rejects duplicates."
+              : "Abafundi bayalelwa ukuthi bakuthumelele i-imeyili ku-info@imalingesizulu.com ukuze bacele izikhodi zokuvula. Kufanele ubhalise mathupha imininingwane yomfundi ngamunye kule rejista yesipredshithi. Ikhodi ngayinye yomfundi kufanele ilandele i-format IMALI-STU- kanye nezinombolo ezi-6 ncamashi (isb., IMALI-STU-834927). Akuvunyelwe nakancane ukuphindaphinda noma ukwabelana ngezikhodi."}
+          </p>
+        </div>
+
+        {/* ADD NEW STUDENT SPREADSHEET ROW FORM */}
+        <div className="bg-black/40 border border-zinc-900 rounded-xl p-4 space-y-3 text-left">
+          <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase block tracking-wider">
+            ➕ {language === "en" ? "Register & Issue New Student Code Row" : "Bhalisa & Ukhiphe Umugqa Omusha Wekhodi Yomfundi"}
+          </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* First Name */}
+            <div className="space-y-1">
+              <label className="text-[9px] text-zinc-500 font-mono uppercase block">{language === "en" ? "First Name" : "Igama"}</label>
+              <input 
+                type="text"
+                placeholder="e.g. Sibusiso"
+                value={newStudentFirstName}
+                onChange={(e) => setNewStudentFirstName(e.target.value)}
+                className="w-full bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            {/* Last Name */}
+            <div className="space-y-1">
+              <label className="text-[9px] text-zinc-500 font-mono uppercase block">{language === "en" ? "Surname" : "Isibongo"}</label>
+              <input 
+                type="text"
+                placeholder="e.g. Nkosi"
+                value={newStudentLastName}
+                onChange={(e) => setNewStudentLastName(e.target.value)}
+                className="w-full bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            {/* Email */}
+            <div className="space-y-1">
+              <label className="text-[9px] text-zinc-500 font-mono uppercase block">{language === "en" ? "Email Address" : "I-imeyili"}</label>
+              <input 
+                type="email"
+                placeholder="e.g. sibusiso@gmail.com"
+                value={newStudentEmail}
+                onChange={(e) => setNewStudentEmail(e.target.value)}
+                className="w-full bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            {/* Custom Code */}
+            <div className="space-y-1">
+              <label className="text-[9px] text-zinc-500 font-mono uppercase block">
+                {language === "en" ? "Student Code (IMALI-STU-xxxxxx)" : "Ikhodi (IMALI-STU-xxxxxx)"}
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="text"
+                  placeholder="e.g. IMALI-STU-834927"
+                  value={newStudentCode}
+                  onChange={(e) => setNewStudentCode(e.target.value.toUpperCase().replace(/\s/g, ""))}
+                  className={`flex-1 bg-zinc-900 border border-zinc-800 p-2.5 rounded-xl text-xs ${primaryText} font-mono outline-none focus:border-[#D4AF37]`}
+                />
+                <button
+                  onClick={() => {
+                    // Generate 6 random digits
+                    let generated = "";
+                    let isDuplicate = true;
+                    let safetyCounter = 0;
+                    while (isDuplicate && safetyCounter < 100) {
+                      const randomDigits = Math.floor(100000 + Math.random() * 900000).toString();
+                      generated = `IMALI-STU-${randomDigits}`;
+                      isDuplicate = registeredStudentRecords.some(r => r.code.toUpperCase() === generated);
+                      safetyCounter++;
+                    }
+                    setNewStudentCode(generated);
+                  }}
+                  type="button"
+                  className="px-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-[10px] font-mono tracking-wider border border-zinc-700 cursor-pointer"
+                  title="Auto-Generate Unique Code"
+                >
+                  🎲 {language === "en" ? "Gen" : "Khiqiza"}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Form Submit Row */}
+          <div className="flex justify-end pt-1">
+            <button
+              onClick={() => {
+                const cleanFirst = newStudentFirstName.trim();
+                const cleanLast = newStudentLastName.trim();
+                const cleanEmail = newStudentEmail.trim().toLowerCase();
+                const cleanCode = newStudentCode.trim().toUpperCase();
+
+                if (!cleanFirst || !cleanLast || !cleanEmail || !cleanCode) {
+                  alert(language === "en" 
+                    ? "All student registry fields (First Name, Surname, Email, and Code) are mandatory." 
+                    : "Yonke imikhakha yerejista (Igama, Isibongo, I-imeyili, neKhodi) iyadingeka."
+                  );
+                  return;
+                }
+
+                // Check format pattern strictly: IMALI-STU- followed by exactly 6 digits
+                const codePattern = /^IMALI-STU-\d{6}$/;
+                if (!codePattern.test(cleanCode)) {
+                  alert(language === "en"
+                    ? "Invalid Format: Code must strictly follow the format: IMALI-STU- followed by exactly six numbers (e.g. IMALI-STU-834927)."
+                    : "I-format Engalungile: Ikhodi kumele ilandele le format: IMALI-STU- kanye nezinombolo ezi-6 ncamashi (isb. IMALI-STU-834927)."
+                  );
+                  return;
+                }
+
+                // Check if example codes are being entered
+                const exampleCodes = ["IMALI-STU-782134", "IMALI-STU-100124", "IMALI-STU-202685", "IMALI-STU-999912", "IMALI-STU-7821", "IMALI-STU-2026"];
+                if (exampleCodes.includes(cleanCode)) {
+                  alert(language === "en"
+                    ? "Invalid Action: Example codes are deactivated and cannot be used. Please generate a new unique code."
+                    : "Izenzo Ezingalungile: Izikhodi zesibonelo zivaliwe. Sicela ukhiqize ikhodi entsha eyisipesheli."
+                  );
+                  return;
+                }
+
+                // Check duplicate code
+                if (registeredStudentRecords.some(r => r.code.toUpperCase() === cleanCode)) {
+                  alert(language === "en"
+                    ? `SECURITY ALERT: Duplicate code detected. The code [${cleanCode}] is already assigned to another student. Duplicates and sharing of student codes are strictly prohibited.`
+                    : `UKUPHINDAPHA: Ikhodi [${cleanCode}] isivele inikezwe omunye umfundi. Ukuphinda noma ukwabelana ngezikhodi akuvunyelwe nakancane.`
+                  );
+                  return;
+                }
+
+                // Check duplicate email
+                if (registeredStudentRecords.some(r => r.email.toLowerCase() === cleanEmail)) {
+                  const confirmOverwrite = confirm(language === "en"
+                    ? `Note: A student with email [${cleanEmail}] already exists in the ledger with another code. Do you want to issue a new/override code for this student?`
+                    : `Qaphela: Umfundi one-imeyili [${cleanEmail}] usevele ekhona kurejista nenye ikhodi. Ufuna ukumkhiphela ikhodi entsha?`
+                  );
+                  if (!confirmOverwrite) return;
+                }
+
+                // Register new student record
+                const newRecord: StudentRecord = { 
+                  firstName: cleanFirst, 
+                  lastName: cleanLast, 
+                  email: cleanEmail, 
+                  code: cleanCode,
+                  activeCourse: "Not Started",
+                  progressPercent: 0,
+                  status: "⚫ Offline",
+                  lastActiveLesson: "Lobby"
+                };
+                
+                const updated = [...registeredStudentRecords, newRecord];
+                setRegisteredStudentRecords(updated);
+                localStorage.setItem("imali_registered_student_records", JSON.stringify(updated));
+                
+                // Reset form fields
+                setNewStudentFirstName("");
+                setNewStudentLastName("");
+                setNewStudentEmail("");
+                setNewStudentCode("");
+
+                alert(language === "en"
+                  ? `Successfully registered ${cleanFirst} ${cleanLast} with Code: [${cleanCode}]. This record is now saved to the secure Syndicate ledger spreadsheet.`
+                  : `Uphumelele ukubhalisa u-${cleanFirst} ${cleanLast} neKhodi: [${cleanCode}].`
+                );
+              }}
+              className={`w-full sm:w-auto py-2.5 px-6 ${primaryBtnBg} ${primaryBtnBgHover} text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition cursor-pointer`}
+            >
+              💾 {language === "en" ? "Add & Register to Ledger Spreadsheet" : "Faka & Ubhalise kuSpredshithi"}
+            </button>
+          </div>
+        </div>
+
+        {/* SPREADSHEET GRID LIST */}
+        <div className="pt-2 text-left">
+          <div className="flex justify-between items-center text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-2">
+            <span>{language === "en" ? "Official Registered Students Ledger Spreadsheet" : "Isipredshithi Serejista Esisemthethweni"} ({registeredStudentRecords.length})</span>
+            <button
+              onClick={() => {
+                // Build rich CSV with full Student details and real-time study status!
+                const headers = ["First Name", "Surname/Last Name", "Email Address", "Student Code", "Active Course", "Progress Percentage", "Status", "Last Active Lesson"];
+                const rows = registeredStudentRecords.map(r => [
+                  r.firstName, 
+                  r.lastName, 
+                  r.email, 
+                  r.code, 
+                  r.activeCourse || "Not Started", 
+                  `${r.progressPercent || 0}%`, 
+                  r.status || "⚫ Offline", 
+                  r.lastActiveLesson || "N/A"
+                ]);
+                const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+                  + [headers, ...rows].map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "IMALINGESIZULU_REAL_STUDENTS_SPREADSHEET.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className={`${primaryText} hover:underline flex items-center gap-1 cursor-pointer font-bold`}
+            >
+              📥 {language === "en" ? "Export Spreadsheet (.CSV)" : "Landa iSpredshithi (.CSV)"}
+            </button>
+          </div>
+
+          {/* Scrollable table ledger view */}
+          <div className="overflow-x-auto bg-black/40 border border-zinc-900 rounded-xl max-h-[300px]">
+            <table className="w-full text-left border-collapse min-w-[900px]">
+              <thead>
+                <tr className="border-b border-zinc-800 bg-zinc-950/80 text-[10px] text-zinc-400 font-mono uppercase tracking-wider sticky top-0 z-10 font-bold">
+                  <th className="p-3 font-semibold">{language === "en" ? "Student Details" : "Imininingwane"}</th>
+                  <th className="p-3 font-semibold text-[#D4AF37]">{language === "en" ? "Student Code" : "Ikhodi Eyisipesheli"}</th>
+                  <th className="p-3 font-semibold">{language === "en" ? "Active Course (Real-time)" : "Isifundo Esidlalayo"}</th>
+                  <th className="p-3 font-semibold">{language === "en" ? "Progress" : "Inqubekela-phambili"}</th>
+                  <th className="p-3 font-semibold">{language === "en" ? "Last Active Lesson" : "Isifundo Sokugcina"}</th>
+                  <th className="p-3 font-semibold text-center">{language === "en" ? "Status" : "Isimo"}</th>
+                  <th className="p-3 font-semibold text-center">{language === "en" ? "Actions" : "Izenzo"}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-900 text-xs font-sans text-zinc-300">
+                {registeredStudentRecords.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="p-8 text-center text-zinc-500 font-mono">
+                      {language === "en" ? "No students currently registered in ledger." : "Abekho abafundi ababhaliswe kurejista njengamanje."}
+                    </td>
+                  </tr>
+                ) : (
+                  registeredStudentRecords.map((record, idx) => (
+                    <tr key={idx} className="hover:bg-zinc-900/40 transition-colors">
+                      <td className="p-3">
+                        <div className="font-medium text-white">{record.firstName} {record.lastName}</div>
+                        <div className="text-[10px] text-zinc-500 font-mono">{record.email}</div>
+                      </td>
+                      <td className="p-3 font-mono text-[11px] text-[#D4AF37] tracking-wider font-bold bg-[#D4AF37]/5">
+                        {record.code}
+                      </td>
+                      <td className="p-3">
+                        <span className="text-[11px] text-zinc-200 block font-mono">{record.activeCourse || "Not Started"}</span>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                            <div 
+                              className="bg-emerald-500 h-full rounded-full" 
+                              style={{ width: `${record.progressPercent || 0}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] font-mono font-bold text-emerald-400">{record.progressPercent || 0}%</span>
+                        </div>
+                      </td>
+                      <td className="p-3">
+                        <span className="text-[10px] text-zinc-400 font-mono italic block truncate max-w-[150px]" title={record.lastActiveLesson || "Lobby"}>
+                          {record.lastActiveLesson || "Lobby"}
+                        </span>
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-wider ${
+                          record.status?.includes("Active") || record.status?.includes("🟢")
+                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
+                            : "bg-zinc-800/50 text-zinc-500 border border-zinc-800"
+                        }`}>
+                          {record.status || "Offline"}
+                        </span>
+                      </td>
+                      <td className="p-3 text-center">
+                        <button
+                          onClick={() => {
+                            if (confirm(language === "en" 
+                              ? `Are you sure you want to completely revoke and delete the registration for ${record.firstName} ${record.lastName} (${record.code})?` 
+                              : `Uqinisekile ukuthi ufuna ukuhoxisa ukubhaliswa kuka-${record.firstName} ${record.lastName} (${record.code})?`)) {
+                              const updated = registeredStudentRecords.filter((_, i) => i !== idx);
+                              setRegisteredStudentRecords(updated);
+                              localStorage.setItem("imali_registered_student_records", JSON.stringify(updated));
+                            }
+                          }}
+                          className="text-red-500 hover:text-red-400 hover:bg-red-500/10 px-2.5 py-1 rounded-md text-[10px] font-mono uppercase tracking-wider font-bold transition cursor-pointer"
+                          title="Revoke and Delete Student Record"
+                        >
+                          ✕ {language === "en" ? "Revoke" : "Hoxisa"}
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     );
   };
@@ -3556,6 +3884,88 @@ export default function App() {
     localStorage.setItem("imali_instructor_profile", JSON.stringify(instructorDetails));
     localStorage.setItem("imali_admin_profile", JSON.stringify(adminDetails));
   }, [studentDetails, instructorDetails, adminDetails]);
+
+  // Real-time synchronization of logged-in student's progress and stats into the Admin & Instructor's shared Student Ledger
+  useEffect(() => {
+    const studentCode = studentDetails.activationCode || "";
+    if (activeRole === Role.STUDENT && studentCode) {
+      const activeCode = studentCode.trim().toUpperCase();
+      const localRecords = localStorage.getItem("imali_registered_student_records");
+      let records: StudentRecord[] = [];
+      if (localRecords) {
+        try {
+          records = JSON.parse(localRecords);
+        } catch(e) {}
+      } else {
+        records = registeredStudentRecords;
+      }
+
+      const matchIndex = records.findIndex(r => r.code.toUpperCase() === activeCode);
+      if (matchIndex !== -1) {
+        const record = records[matchIndex];
+        
+        // Extract names
+        const studentName = studentDetails.name || "";
+        const studentEmail = studentDetails.email || "";
+        const parts = studentName.trim().split(/\s+/);
+        const derivedFirst = parts[0] || record.firstName || "Student";
+        const derivedLast = parts.slice(1).join(" ") || record.lastName || "User";
+        const derivedEmail = studentEmail || record.email || "";
+
+        // Get active course and progress
+        const activeCourseId = selectedCourse?.id || "";
+        const activeLessonId = activeLesson?.id || "";
+        let activeCourseName = "Not Started";
+        let activeProgressVal = 0;
+        let lastLessonName = "Dashboard Lobby";
+
+        if (activeCourseId) {
+          const foundCourse = courses.find(c => c.id === activeCourseId);
+          if (foundCourse) {
+            activeCourseName = foundCourse.name_en || foundCourse.name_zu || "General Course";
+            activeProgressVal = studentProgress.progress[activeCourseId] || 0;
+            if (activeLessonId && activeLesson) {
+              lastLessonName = activeLesson.name_en || activeLesson.name_zu || "Introduction";
+            }
+          }
+        }
+
+        const statusStr = "🟢 Active Now";
+
+        if (
+          record.firstName !== derivedFirst ||
+          record.lastName !== derivedLast ||
+          record.email !== derivedEmail ||
+          record.activeCourse !== activeCourseName ||
+          record.progressPercent !== activeProgressVal ||
+          record.lastActiveLesson !== lastLessonName ||
+          record.status !== statusStr
+        ) {
+          const updatedRecords = [...records];
+          updatedRecords[matchIndex] = {
+            ...record,
+            firstName: derivedFirst,
+            lastName: derivedLast,
+            email: derivedEmail,
+            activeCourse: activeCourseName,
+            progressPercent: activeProgressVal,
+            lastActiveLesson: lastLessonName,
+            status: statusStr
+          };
+          setRegisteredStudentRecords(updatedRecords);
+          localStorage.setItem("imali_registered_student_records", JSON.stringify(updatedRecords));
+        }
+      }
+    }
+  }, [
+    activeRole,
+    studentDetails.activationCode,
+    studentDetails.name,
+    studentDetails.email,
+    selectedCourse,
+    activeLesson,
+    studentProgress
+  ]);
 
   // Synchronized completeness check for academic profiles
   const isProfileSuiteCompleted = 
@@ -5582,19 +5992,29 @@ export default function App() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="space-y-1">
-                            <label className="text-[10px] text-zinc-400 font-mono uppercase block">Student Name</label>
+                            <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">Student Name</label>
                             <input 
                               type="text" 
                               value={studentDetails.name}
                               onChange={(e) => setStudentDetails({ ...studentDetails, name: e.target.value })}
                               className="w-full bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37] transition-all"
-                              placeholder="e.g. Thomas Mthembu"
+                              placeholder="e.g. Sibusiso Nkosi"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[10px] text-zinc-400 font-mono uppercase block">Trading Specialty</label>
+                            <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">Student Email</label>
+                            <input 
+                              type="email" 
+                              value={studentDetails.email || ""}
+                              onChange={(e) => setStudentDetails({ ...studentDetails, email: e.target.value })}
+                              className="w-full bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-xs text-white outline-none focus:border-[#D4AF37] transition-all"
+                              placeholder="e.g. sibusiso@gmail.com"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">Trading Specialty</label>
                             <select 
                               value={studentDetails.specialty}
                               onChange={(e) => setStudentDetails({ ...studentDetails, specialty: e.target.value })}
@@ -5708,19 +6128,38 @@ export default function App() {
                                   const enteredCode = studentDetails.activationCode.trim().toUpperCase();
                                   if (!enteredCode || enteredCode.length < 6) {
                                     alert(language === "en" 
-                                      ? "Please enter a valid student activation code (at least 6 characters, e.g., IMALI-STU-2026)." 
-                                      : "Sicela ufake ikhodi yomfundi esebenzayo (okungenani izinhlamvu ezi-6, isb., IMALI-STU-2026)."
+                                      ? "Please enter a valid student activation code (at least 6 characters, e.g., IMALI-STU-834927)." 
+                                      : "Sicela ufake ikhodi yomfundi esebenzayo (okungenani izinhlamvu ezi-6, isb., IMALI-STU-834927)."
                                     );
                                     return;
                                   }
+                                  
+                                  // Block example codes
+                                  const exampleCodes = ["IMALI-STU-782134", "IMALI-STU-100124", "IMALI-STU-202685", "IMALI-STU-999912", "IMALI-STU-7821", "IMALI-STU-2026"];
+                                  if (exampleCodes.includes(enteredCode)) {
+                                    alert(language === "en"
+                                      ? "Notice: This code is a demo/example code and cannot be used for official academic activation. Please request a newly generated activation code from your Instructor or Administrator by emailing info@imalingesizulu.com."
+                                      : "Qaphela: Le khodi yikhodi yedemo/yesibonelo futhi ayikwazi ukusetshenziselwa ukuvula ngokusemthethweni. Sicela uthole ikhodi entsha eyisipesheli kuMfundisi noma uMlawuli ngokuthumela i-imeyili ku-info@imalingesizulu.com."
+                                    );
+                                    return;
+                                  }
+
                                   if (!validActivationCodes.includes(enteredCode)) {
                                     alert(language === "en"
-                                      ? "Access Key Mismatch: This student activation code is not registered in the Syndicate Security Ledger. Please obtain an authorized code from your Admin or Instructor."
-                                      : "Ikhodi Yomfundi Ayifani: Le khodi yomfundi ayibhalisiwe kurejista kaMlawuli. Sicela uthole ikhodi egunyaziwe kuMlawuli noma uMfundisi."
+                                      ? "Access Key Mismatch: This student activation code is not registered in the Syndicate Security Ledger. Please obtain an authorized code from your Admin or Instructor by emailing info@imalingesizulu.com."
+                                      : "Ikhodi Yomfundi Ayifani: Le khodi yomfundi ayibhalisiwe kurejista kaMlawuli. Sicela uthole ikhodi egunyaziwe ngokuthumela i-imeyili ku-info@imalingesizulu.com."
                                     );
                                     return;
                                   }
-                                  const updatedDetails = { ...studentDetails, activationCode: enteredCode };
+
+                                  // Auto-populate from registered ledger record
+                                  const matchingRec = registeredStudentRecords.find(r => r.code.toUpperCase() === enteredCode);
+                                  const updatedDetails = { 
+                                    ...studentDetails, 
+                                    activationCode: enteredCode,
+                                    name: studentDetails.name || (matchingRec ? `${matchingRec.firstName} ${matchingRec.lastName}` : ""),
+                                    email: studentDetails.email || (matchingRec ? matchingRec.email : "")
+                                  };
                                   setStudentDetails(updatedDetails);
                                   localStorage.setItem("imali_student_profile", JSON.stringify(updatedDetails));
                                   setSecurityBlockAlert({
@@ -5964,6 +6403,8 @@ export default function App() {
                             </div>
 
                             {/* OFFICIAL STUDENT CODE REGISTRY & SPREADSHEET LEDGER */}
+                            {renderStudentRegistrySpreadsheet("gold")}
+                            {false && (
                             <div className="bg-[#121212] border-2 border-[#D4AF37]/40 rounded-2xl p-5 space-y-4 shadow-[0_4px_24px_rgba(212,175,55,0.05)]">
                               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-800 pb-3 gap-2">
                                 <div>
@@ -6210,6 +6651,7 @@ export default function App() {
                                 </div>
                               </div>
                             </div>
+                            )}
 
                             {/* Direct action links to simulated role join */}
                             <div className="pt-4 border-t border-zinc-850 flex flex-col sm:flex-row justify-between items-center bg-zinc-950/40 p-4 rounded-xl gap-4">
@@ -6419,6 +6861,9 @@ export default function App() {
                                 </div>
                               </div>
                             </div>
+                            
+                            {/* OFFICIAL STUDENT CODE REGISTRY & SPREADSHEET LEDGER */}
+                            {renderStudentRegistrySpreadsheet("emerald")}
 
                             {/* Direct action links to admin */}
                             <div className="pt-4 border-t border-zinc-850 flex flex-col sm:flex-row justify-between items-center gap-4 bg-zinc-950/40 p-4 rounded-xl">
