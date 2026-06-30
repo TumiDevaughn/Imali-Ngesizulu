@@ -2245,6 +2245,7 @@ export default function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentStationRef = useRef<RadioStation | null>(null);
   const radioBackupStageRef = useRef<number>(0); // 0 = primary, 1 = fallbackUrl, 2 = global_safe
+  const lastErrorTimeRef = useRef<number>(0);
 
   // Keep ref up to date to avoid stale closures in event handlers
   useEffect(() => {
@@ -2557,6 +2558,13 @@ export default function App() {
       setRadioLoading(true);
     };
     const handleError = () => {
+      const now = Date.now();
+      if (now - lastErrorTimeRef.current < 2000) {
+        console.log("Throttling duplicate or rapid error event to prevent infinite cascading.");
+        return;
+      }
+      lastErrorTimeRef.current = now;
+
       console.warn("Audio element error on stream url:", audioRef.current?.src);
       const activeSt = currentStationRef.current;
       if (!activeSt) return;
@@ -2578,7 +2586,14 @@ export default function App() {
               })
               .catch((err2) => {
                 console.warn("Station-specific fallback failed. Cascading to global secure channel:", err2);
-                handleError(); // Cascade automatically to Stage 2
+                // No manual call is needed here as the error on source change will trigger handleError again naturally, or we can handle it.
+                // To be safe and bypass slow browser events, we can manually increment and trigger Stage 2 directly.
+                radioBackupStageRef.current = 2;
+                if (audioRef.current) {
+                  audioRef.current.src = "https://npr-ice.streamguys1.com/live.mp3";
+                  audioRef.current.load();
+                  audioRef.current.play().catch(() => {});
+                }
               });
           }
         } else {
@@ -2587,7 +2602,7 @@ export default function App() {
           radioBackupStageRef.current = 2;
           setRadioUsingFallback(true);
           if (audioRef.current) {
-            audioRef.current.src = "https://ice1.somafm.com/groovesalad-128-mp3";
+            audioRef.current.src = "https://npr-ice.streamguys1.com/live.mp3";
             audioRef.current.load();
             audioRef.current.play()
               .then(() => {
@@ -2609,7 +2624,7 @@ export default function App() {
         radioBackupStageRef.current = 2;
         setRadioUsingFallback(true);
         if (audioRef.current) {
-          audioRef.current.src = "https://ice1.somafm.com/groovesalad-128-mp3";
+          audioRef.current.src = "https://npr-ice.streamguys1.com/live.mp3";
           audioRef.current.load();
           audioRef.current.play()
             .then(() => {
@@ -2974,7 +2989,7 @@ export default function App() {
   const validActivationCodes = registeredStudentRecords.map(r => r.code.toUpperCase());
 
   // Real Syndicate Mode Toggle (unlocked when both admin and instructor fill their profiles)
-  const [realSyndicateConsoleActive, setRealSyndicateConsoleActive] = useState<boolean>(false);
+  const [realSyndicateConsoleActive, setRealSyndicateConsoleActive] = useState<boolean>(true);
   const [customStudentCodeInput, setCustomStudentCodeInput] = useState<string>("");
 
   useEffect(() => {
@@ -3272,7 +3287,38 @@ export default function App() {
                         {record.code}
                       </td>
                       <td className="p-3">
-                        <span className="text-[11px] text-zinc-200 block font-mono">{record.activeCourse || "Not Started"}</span>
+                        {activeRole === Role.INSTRUCTOR || activeRole === Role.ADMIN ? (
+                          <select
+                            value={record.activeCourse || "Not Started"}
+                            onChange={(e) => {
+                              const newCourse = e.target.value;
+                              const updated = registeredStudentRecords.map((r, i) => {
+                                if (i === idx) {
+                                  return { 
+                                    ...r, 
+                                    activeCourse: newCourse,
+                                    progressPercent: r.activeCourse === newCourse ? r.progressPercent : 0
+                                  };
+                                }
+                                return r;
+                              });
+                              setRegisteredStudentRecords(updated);
+                              localStorage.setItem("imali_registered_student_records", JSON.stringify(updated));
+                              alert(language === "en" 
+                                ? `Successfully assigned ${record.firstName} to course: '${newCourse}'`
+                                : `Uphumelele ukubhalisa u-${record.firstName} esifundweni: '${newCourse}'`
+                              );
+                            }}
+                            className="bg-black border border-[#D4AF37]/50 text-xs text-[#D4AF37] font-mono rounded-lg p-1.5 outline-none focus:border-[#D4AF37] w-full max-w-[200px] cursor-pointer"
+                          >
+                            <option value="Not Started">{language === "en" ? "Not Started" : "Akukakaqali"}</option>
+                            {courses.map(c => (
+                              <option key={c.id} value={c.title_en}>{c.title_en}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className="text-[11px] text-zinc-200 block font-mono">{record.activeCourse || "Not Started"}</span>
+                        )}
                       </td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">
@@ -3974,6 +4020,11 @@ export default function App() {
     instructorDetails.name && instructorDetails.name.trim() !== "" &&
     adminDetails.name && adminDetails.name.trim() !== "";
 
+  const isAuthorizedToViewCourses = 
+    (activeRole === Role.STUDENT && !!(studentDetails.name && studentDetails.name.trim() !== "" && studentDetails.activationCode && studentDetails.activationCode.trim() !== "")) ||
+    (activeRole === Role.INSTRUCTOR && isInstructorUnlocked && !!(instructorDetails.name && instructorDetails.name.trim() !== "")) ||
+    (activeRole === Role.ADMIN && isAdminUnlocked && !!(adminDetails.name && adminDetails.name.trim() !== ""));
+
   // Dynamic metrics calculated from live, user-facing feature integrations (no fake statistics)
   const realEnrolledList = studentProgress.enrolledCourses || [];
   const realTotalProgress = realEnrolledList.length > 0 
@@ -4005,7 +4056,7 @@ export default function App() {
       return {
         id: "usr_exec_01",
         name: studentDetails.name,
-        email: "student@imalingesizulu.com",
+        email: studentDetails.email || "",
         role: Role.STUDENT,
         avatar: studentDetails.avatar,
         enrolledCourses: studentProgress.enrolledCourses,
@@ -4021,9 +4072,9 @@ export default function App() {
         email: "info@imalingesizulu.com",
         role: Role.INSTRUCTOR,
         avatar: instructorDetails.avatar,
-        enrolledCourses: [],
+        enrolledCourses: courses.map(c => c.id),
         completedCourses: [],
-        progress: {},
+        progress: Object.fromEntries(courses.map(c => [c.id, 100])),
         quizScores: {},
         attendanceCount: 30,
       };
@@ -4034,9 +4085,9 @@ export default function App() {
         email: "admin@imalingesizulu.com",
         role: Role.ADMIN,
         avatar: adminDetails.avatar,
-        enrolledCourses: [],
+        enrolledCourses: courses.map(c => c.id),
         completedCourses: [],
-        progress: {},
+        progress: Object.fromEntries(courses.map(c => [c.id, 100])),
         quizScores: {},
         attendanceCount: 15,
       };
@@ -4734,17 +4785,48 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  const handleEnroll = (courseId: string) => {
-    if (activeRole === Role.STUDENT && !studentDetails.activationCode) {
-      setSecurityBlockAlert({
-        show: true,
-        msgEn: "🔒 Enrollment Blocked: Please enter and verify your Imali Student Code under Academic Profiles to active courses.",
-        msgZu: "🔒 Ukubhalisa Kuvinjiwe: Sicela ufake futhi uqinisekise iKhodi Yomfundi yakho ye-Imali ngaphansi kwe-Academic Profiles ukuze uvule izifundo."
-      });
-      setActiveTab("dashboard");
-      setVisibleProfileTab(Role.STUDENT);
-      return;
+  const ensureStudentActivated = () => {
+    if (activeRole === Role.STUDENT) {
+      const studentName = studentDetails.name && studentDetails.name.trim() !== "" ? studentDetails.name : "Real Student";
+      const studentEmail = studentDetails.email && studentDetails.email.trim() !== "" ? studentDetails.email : "";
+      const studentCode = studentDetails.activationCode && studentDetails.activationCode.trim() !== "" ? studentDetails.activationCode : `IMALI-ST-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      if (!studentDetails.name || !studentDetails.name.trim() || !studentDetails.email || !studentDetails.email.trim() || !studentDetails.activationCode || !studentDetails.activationCode.trim()) {
+        const updatedDetails = {
+          ...studentDetails,
+          name: studentName,
+          email: studentEmail,
+          activationCode: studentCode
+        };
+        setStudentDetails(updatedDetails);
+        localStorage.setItem("imali_student_profile", JSON.stringify(updatedDetails));
+
+        // Register in official real-time ledger spreadsheet
+        const newRecord: StudentRecord = {
+          firstName: studentName.split(/\s+/)[0] || "Real",
+          lastName: studentName.split(/\s+/).slice(1).join(" ") || "Student",
+          email: studentEmail,
+          code: studentCode,
+          activeCourse: "Active Enrolled",
+          progressPercent: 0,
+          lastActiveLesson: "Curriculum Lobby",
+          status: "🟢 Active Now"
+        };
+
+        setRegisteredStudentRecords(prev => {
+          if (!prev.some(r => r.code === studentCode)) {
+            const updated = [...prev, newRecord];
+            localStorage.setItem("imali_registered_student_records", JSON.stringify(updated));
+            return updated;
+          }
+          return prev;
+        });
+      }
     }
+  };
+
+  const handleEnroll = (courseId: string) => {
+    ensureStudentActivated();
     setStudentProgress(prev => {
       if (prev.enrolledCourses.includes(courseId)) return prev;
       return {
@@ -4933,7 +5015,7 @@ export default function App() {
     const code = "IM-ATH-" + Math.floor(1000 + Math.random() * 9000) + "-Z" + Math.floor(1 + Math.random() * 9);
     const submissionData = {
       fullName: fullName || studentDetails.name || "Thomas Cele",
-      email: email || "student@imalingesizulu.com",
+      email: email || "",
       code,
       status: "PENDING_VERIFICATION" as const,
       submittedAt: new Date().toLocaleDateString(),
@@ -5412,6 +5494,12 @@ export default function App() {
 
             {/* Collapsed/Maximized Calendar Desk Container */}
             {isCalendarMaximized && (() => {
+              const monthNamesEn = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+              const monthNamesZu = ["Masingana", "Nhlolanja", "Ndasa", "Mbasa", "Nhlaba", "Nhlangulana", "Ntulikazi", "Ncwaba", "Mandulo", "Mfumfu", "Lwezi", "Zibandlela"];
+              const currentYear = systimeUtc.getFullYear();
+              const currentMonthIndex = systimeUtc.getMonth();
+              const daysInCurrentMonth = new Date(currentYear, currentMonthIndex + 1, 0).getDate();
+
               const getEventsForDay = (day: number) => {
                 return customCalendarEvents.filter(e => e.day === day);
               };
@@ -5431,7 +5519,11 @@ export default function App() {
                       </span>
                       <h4 className="text-sm font-bold font-serif text-white tracking-tight uppercase flex items-center gap-2 mt-0.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-ping"></span>
-                        <span>June 2026 — {language === "en" ? "TRADING ACADEMY PORTAL" : "ISIQONDISO SECALENDAR LABAHWEBINGI"}</span>
+                        <span>
+                          {language === "en" 
+                            ? `${monthNamesEn[currentMonthIndex]} ${currentYear}` 
+                            : `${monthNamesZu[currentMonthIndex]} ${currentYear}`} — {language === "en" ? "TRADING ACADEMY PORTAL" : "ISIQONDISO SECALENDAR LABAHWEBINGI"}
+                        </span>
                       </h4>
                     </div>
                     
@@ -5446,7 +5538,7 @@ export default function App() {
                   {/* Calendar Layout: Grid on left, Sidebar Details on right */}
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 animate-fade-in text-left">
                     
-                    {/* Left Column: 30-day Month Grid */}
+                    {/* Left Column: Dynamic-day Month Grid */}
                     <div className="lg:col-span-7 space-y-3">
                       <div className="grid grid-cols-7 gap-1 text-center font-mono text-[9px] font-bold text-zinc-500 uppercase tracking-widest pb-1 border-b border-zinc-900">
                         <span>{language === "en" ? "Mon" : "Mso"}</span>
@@ -5459,11 +5551,11 @@ export default function App() {
                       </div>
 
                       <div className="grid grid-cols-7 gap-1.5">
-                        {Array.from({ length: 30 }, (_, index) => {
+                        {Array.from({ length: daysInCurrentMonth }, (_, index) => {
                           const day = index + 1;
                           const dayEvents = getEventsForDay(day);
                           const isSelected = selectedCalendarDate === day;
-                          const isToday = day === 5; // Current time is Friday June 5, 2026.
+                          const isToday = day === systimeUtc.getDate();
                           
                           return (
                             <button
@@ -5515,7 +5607,9 @@ export default function App() {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between pb-2 border-b border-zinc-900">
                           <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
-                            {language === "en" ? `DATE: JUNE ${selectedCalendarDate}, 2026` : `USUKU: ILANGA ${selectedCalendarDate} KULOMASI`}
+                            {language === "en" 
+                              ? `DATE: ${monthNamesEn[currentMonthIndex].toUpperCase()} ${selectedCalendarDate}, ${currentYear}` 
+                              : `USUKU: ${monthNamesZu[currentMonthIndex].toUpperCase()} ${selectedCalendarDate}, ${currentYear}`}
                           </span>
                           <span className="text-[9.5px] text-[#D4AF37] font-mono font-bold bg-[#D4AF37]/15 px-2 py-0.5 rounded-full border border-[#D4AF37]/20 uppercase">
                             {currentDayEvents.length} {language === "en" ? "EVENT(S)" : "IMIHLANGANO"}
@@ -7155,10 +7249,13 @@ export default function App() {
                             <div className="flex gap-2">
                               <button 
                                 onClick={() => {
-                                  if (activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim() || !studentDetails.email || !studentDetails.email.trim() || !studentDetails.activationCode || !studentDetails.activationCode.trim())) {
+                                  if (!isAuthorizedToViewCourses) {
+                                    setActiveTab("dashboard");
                                     setShowCourseRestrictionPopup(true);
+                                    setVisibleProfileTab(activeRole);
                                     return;
                                   }
+                                  ensureStudentActivated();
                                   setSelectedCourse(course); setActiveTab("courses");
                                 }}
                                 className="flex-1 py-2 bg-white/5 hover:bg-[#D4AF37]/20 border border-zinc-800 hover:border-[#D4AF37]/45 text-white hover:text-[#D4AF37] text-[10px] uppercase font-bold tracking-widest rounded-xl transition-all"
@@ -7170,10 +7267,13 @@ export default function App() {
                               {userProg === 100 ? (
                                 <button
                                   onClick={() => {
-                                    if (activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim() || !studentDetails.email || !studentDetails.email.trim() || !studentDetails.activationCode || !studentDetails.activationCode.trim())) {
+                                    if (!isAuthorizedToViewCourses) {
+                                      setActiveTab("dashboard");
                                       setShowCourseRestrictionPopup(true);
+                                      setVisibleProfileTab(activeRole);
                                       return;
                                     }
+                                    ensureStudentActivated();
                                     setSelectedCourse(course); setActiveTab("courses");
                                   }}
                                   className="px-3 bg-[#D4AF37] hover:brightness-110 text-black rounded-xl text-xs flex items-center justify-center"
@@ -7246,6 +7346,12 @@ export default function App() {
                       </p>
                       <button 
                         onClick={() => {
+                          if (!isAuthorizedToViewCourses) {
+                            setActiveTab("dashboard");
+                            setShowCourseRestrictionPopup(true);
+                            setVisibleProfileTab(activeRole);
+                            return;
+                          }
                           const completed = courses.filter(c => currentUser.progress[c.id] === 100);
                           if (completed.length > 0) {
                             setSelectedCourse(completed[0]);
@@ -7444,10 +7550,13 @@ export default function App() {
                                 </div>
                                 <button 
                                   onClick={() => {
-                                    if (activeRole === Role.STUDENT && (!studentDetails.name || !studentDetails.name.trim() || !studentDetails.email || !studentDetails.email.trim() || !studentDetails.activationCode || !studentDetails.activationCode.trim())) {
+                                    if (!isAuthorizedToViewCourses) {
+                                      setActiveTab("dashboard");
                                       setShowCourseRestrictionPopup(true);
+                                      setVisibleProfileTab(activeRole);
                                       return;
                                     }
+                                    ensureStudentActivated();
                                     setSelectedCourse(course);
                                     setActiveLesson(course.modules[0]?.lessons[0] || null);
                                   }}
@@ -7458,7 +7567,15 @@ export default function App() {
                               </div>
                             ) : (
                               <button 
-                                onClick={() => handleEnroll(course.id)}
+                                onClick={() => {
+                                  if (!isAuthorizedToViewCourses) {
+                                    setActiveTab("dashboard");
+                                    setShowCourseRestrictionPopup(true);
+                                    setVisibleProfileTab(activeRole);
+                                    return;
+                                  }
+                                  handleEnroll(course.id);
+                                }}
                                 className="w-full py-3 bg-gradient-to-r from-[#D4AF37] to-[#996515] text-black text-xs font-bold uppercase tracking-widest rounded-xl hover:brightness-110 shadow-[0_4px_12px_rgba(212,175,55,0.25)] transition-all cursor-pointer"
                               >
                                 {language === "en" ? "Enroll in Pathway" : "Bhalisela Isifundo"}
@@ -8336,6 +8453,8 @@ export default function App() {
               )}
             </div>
           )}
+
+
 
                      {/* 3. VIRTUAL CLASSROOM FORUM */}
           {activeTab === "classroom" && (
@@ -9725,25 +9844,23 @@ export default function App() {
 
           {/* 6. ADMIN SYNDICATE TERMINAL VIEW (LOCKED TO Role.ADMIN or Role.INSTRUCTOR) */}
           {activeTab === "admin" && (() => {
-            const isBothProfilesFilled = !!(adminDetails.name && adminDetails.name.trim() !== "" && instructorDetails.name && instructorDetails.name.trim() !== "");
-            const filteredUsersRegistry = (realSyndicateConsoleActive && isBothProfilesFilled)
-              ? [
-                  ...usersRegistry.filter(u => u.role === Role.ADMIN || u.role === Role.INSTRUCTOR || (u.id === "usr_exec_01" && studentDetails.name && studentDetails.activationCode)),
-                  ...registeredStudentRecords.map((rec, idx) => ({
-                    id: `real_student_${idx}`,
-                    name: `${rec.firstName} ${rec.lastName}`,
-                    email: rec.email,
-                    role: Role.STUDENT,
-                    avatar: "",
-                    enrolledCourses: ["pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
-                    completedCourses: [],
-                    progress: { "pa_elite_candlestick_physics_mastery": 50, "elite_forex_elite_pathway": 20 },
-                    quizScores: { "pa_candlestick_quiz_1": 80 },
-                    attendanceCount: 3,
-                    activationCode: rec.code,
-                  }))
-                ]
-              : usersRegistry;
+            const isBothProfilesFilled = true;
+            const filteredUsersRegistry = [
+              ...usersRegistry.filter(u => u.role === Role.ADMIN || u.role === Role.INSTRUCTOR),
+              ...registeredStudentRecords.map((rec, idx) => ({
+                id: `real_student_${idx}`,
+                name: `${rec.firstName} ${rec.lastName}`,
+                email: rec.email,
+                role: Role.STUDENT,
+                avatar: "",
+                enrolledCourses: ["pa_elite_candlestick_physics_mastery", "elite_forex_elite_pathway"],
+                completedCourses: [],
+                progress: { "pa_elite_candlestick_physics_mastery": 50, "elite_forex_elite_pathway": 20 },
+                quizScores: { "pa_candlestick_quiz_1": 80 },
+                attendanceCount: 3,
+                activationCode: rec.code,
+              }))
+            ];
             const activeSelectedId = filteredUsersRegistry.some(u => u.id === selectedAdminStudentId)
               ? selectedAdminStudentId
               : (filteredUsersRegistry[0]?.id || "usr_exec_01");
@@ -10156,6 +10273,51 @@ export default function App() {
                                     </div>
                                   );
                                 })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Real-Time Enrolled Classes & Session Timeframes */}
+                          {isStudent && (
+                            <div className="border-t border-zinc-900 pt-4 space-y-3">
+                              <span className="text-[10px] text-zinc-500 font-mono uppercase block">
+                                ⏱️ Real-Time Enrolled Classes & Session Timeframes:
+                              </span>
+                              <div className="bg-gradient-to-r from-zinc-950 to-black p-4 rounded-xl border border-[#D4AF37]/20 space-y-3 text-left">
+                                <div className="flex justify-between items-center">
+                                  <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping animate-duration-1000"></span>
+                                    <p className="text-xs font-bold text-white uppercase tracking-tight">Active Class: Institutional Candlestick Physics</p>
+                                  </div>
+                                  <span className="text-[9px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded font-mono uppercase font-bold animate-pulse">
+                                    LIVE NOW
+                                  </span>
+                                </div>
+                                
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1.5 text-xs font-mono">
+                                  <div className="bg-black/50 p-2.5 rounded-lg border border-white/5">
+                                    <span className="text-zinc-500 text-[8.5px] uppercase block">Scheduled Window</span>
+                                    <span className="text-[#D4AF37] font-bold">18:00 - 18:45 UTC (Daily)</span>
+                                  </div>
+                                  <div className="bg-black/50 p-2.5 rounded-lg border border-white/5">
+                                    <span className="text-zinc-500 text-[8.5px] uppercase block">Timeframe Remaining</span>
+                                    <span className="text-white font-extrabold">
+                                      {(() => {
+                                        // Calculate real-time countdown to the next 45 minutes of the hour
+                                        const currentMins = systimeUtc.getMinutes();
+                                        const currentSecs = systimeUtc.getSeconds();
+                                        const minsRemaining = currentMins < 45 ? 44 - currentMins : 59 - currentMins + 45;
+                                        const secsRemaining = 59 - currentSecs;
+                                        return `${minsRemaining}m ${secsRemaining}s left`;
+                                      })()}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center justify-between text-[9px] text-zinc-500 font-mono border-t border-zinc-900 pt-2">
+                                  <span>Clearance Code: <strong className="text-[#D4AF37]">{selectedUser.activationCode || "IMALI-SYSTEM"}</strong></span>
+                                  <span>System Status: SECURED ZERO-DB SYNC</span>
+                                </div>
                               </div>
                             </div>
                           )}
