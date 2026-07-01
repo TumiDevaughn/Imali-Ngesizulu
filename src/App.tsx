@@ -2494,7 +2494,7 @@ export default function App() {
     };
   };
 
-  const handleSendSupportMessage = (userQueryText: string) => {
+  const handleSendSupportMessage = async (userQueryText: string) => {
     if (!userQueryText.trim()) return;
 
     const newUserMsg = {
@@ -2509,25 +2509,78 @@ export default function App() {
     setSupportInput("");
     setSupportTyping(true);
 
-    setTimeout(() => {
-      const responseData = handleSupportBotQuery(userQueryText);
+    try {
+      // Build brief local history of the last 4 messages to pass to Gemini for context
+      const chatHistory = supportMessages.slice(-4).map(msg => ({
+        role: msg.sender === "user" ? "user" : "model",
+        text: language === "en" ? msg.textEn : msg.textZu
+      }));
+
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          history: chatHistory,
+          userMessage: userQueryText,
+          language: language,
+          mode: "support"
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to communicate with support backend.");
+      }
+
+      const data = await res.json();
+      const replyText = data.reply || "";
+
+      // Check if response contains CONTACT_GATE or if we should open contact modal
+      const hasContactGate = replyText.includes("[CONTACT_GATE]");
+      
+      // Filter out [CONTACT_GATE] tag from the reply text
+      const cleanReply = replyText.replace("[CONTACT_GATE]", "").trim();
+
       const newBotMsg = {
         id: `msg-${Date.now()}-bot`,
         sender: "bot" as const,
-        textEn: responseData.responseEn,
-        textZu: responseData.responseZu,
+        textEn: cleanReply,
+        textZu: cleanReply,
         timestamp: new Date()
       };
 
       setSupportMessages(prev => [...prev, newBotMsg]);
       setSupportTyping(false);
 
-      if (responseData.shouldOpenContact) {
+      if (hasContactGate || cleanReply.toLowerCase().includes("contact us") || cleanReply.toLowerCase().includes("customer help")) {
         setTimeout(() => {
           setIsContactModalOpen(true);
-        }, 1800);
+          setIsSupportBotOpen(false);
+        }, 2200);
       }
-    }, 1000);
+    } catch (err) {
+      console.warn("Support API failed, falling back to local heuristic response.", err);
+      // Fallback to pre-loaded client-side responses
+      setTimeout(() => {
+        const responseData = handleSupportBotQuery(userQueryText);
+        const newBotMsg = {
+          id: `msg-${Date.now()}-bot`,
+          sender: "bot" as const,
+          textEn: responseData.responseEn,
+          textZu: responseData.responseZu,
+          timestamp: new Date()
+        };
+
+        setSupportMessages(prev => [...prev, newBotMsg]);
+        setSupportTyping(false);
+
+        if (responseData.shouldOpenContact) {
+          setTimeout(() => {
+            setIsContactModalOpen(true);
+            setIsSupportBotOpen(false);
+          }, 2200);
+        }
+      }, 1000);
+    }
   };
 
   // Initialize and synchronize HTMLAudioElement

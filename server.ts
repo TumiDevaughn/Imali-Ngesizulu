@@ -79,11 +79,19 @@ ${text}`;
 
 // 2. AI Tutor & Academic Support chat
 app.post("/api/chat", async (req, res) => {
-  const { history, userMessage, language } = req.body;
+  const { history, userMessage, language, mode } = req.body;
   
-  const systemPrompt = `You are the Aurelia Academy AI Academic Tutor. You speak with premium executive eloquence, matching the luxury dark-and-gold black-tie brand of the Academy. 
+  let systemPrompt = "";
+  if (mode === "support") {
+    systemPrompt = `You are the Imali NgesiZulu Academy AI Support Assistant. You converse with warm, empathetic, highly professional, and natural human-like communication.
+The user is speaking to you in ${language === "zu" ? "Zulu" : "English"}. You MUST respond exclusively in ${language === "zu" ? "Zulu (with natural warmth)" : "English (with professional warmth)"}.
+Your goal is to assist users with questions about the Imali NgesiZulu Academy (including our Imali Courses, Candlestick Physics, Audio Forum Lounge, Financial Clocks, News Room Radio, and administrative roles).
+If the question is completely unrelated to the Academy, or if you cannot answer the query with certainty, or if they ask to contact a human, explain politely that you are forwarding them to our Customer Help & Contacts Portal, and you MUST include the exact text token "[CONTACT_GATE]" in your response so the system can open the contact form for them.`;
+  } else {
+    systemPrompt = `You are the Imali NgesiZulu Academy AI Academic Tutor. You speak with premium executive eloquence, matching the luxury dark-and-gold black-tie brand of the Academy. 
 The student is speaking to you in ${language === "zu" ? "Zulu" : "English"}. You MUST respond exclusively in ${language === "zu" ? "Zulu (with luxurious clarity)" : "English (with premium distinction)"}.
 Explain key professional, financial, strategic, and tech concepts with pristine clarity, encouraging active learning and leadership. Keep answers precise, direct, and elite.`;
+  }
 
   if (ai) {
     try {
@@ -127,13 +135,13 @@ Explain key professional, financial, strategic, and tech concepts with pristine 
     // Elegant simulated reply
     const simulatedZuluReplies = [
       `Impela! Lona umbuzo obaluleke kakhulu mayelana nezifundo zakho zabaPhathi. I-blockchain kanye nokuhlela isu lezezimali kudalwe ukukhulisa ingcebo yakho. Ngingakuphakamisa ukuthi uqale isifundo se-Wealth Tech?`,
-      `Ngijabule kakhulu ukukuphendula kulesi sithangami sase-Aurelia. Isu lethu lokufunda likubeka ezingeni eliphakeme njengomholi ozayo. Ingabe unombuzo mayelana nezitifiketi?`,
-      `I-Aurelia AI Advisor ikuqinisekisa ukuthi ngezifundo zethu ezikhethekile, uzothola ulwazi olunzulu ngomklamo nocwaningo lwedijithali.`
+      `Ngijabule kakhulu ukukuphendula kulesi sithangami sase-Imali NgesiZulu. Isu lethu lokufunda likubeka ezingeni eliphakeme njengomholi ozayo. Ingabe unombuzo mayelana nezitifiketi?`,
+      `I-Imali NgesiZulu AI Advisor ikuqinisekisa ukuthi ngezifundo zethu ezikhethekile, uzothola ulwazi olunzulu ngomklamo nocwaningo lwedijithali.`
     ];
     
     const simulatedEnglishReplies = [
       `Indeed, that is a profound inquiry. Elite frameworks of wealth creation require this level of intellectual rigor. Master the curriculum modules to unlock full empirical leverage.`,
-      `Our cognitive systems at Aurelia highlight these critical dimensions. I highly recommend conducting the verified assessment quiz in Section 1 to ground your core metrics.`,
+      `Our cognitive systems at Imali NgesiZulu highlight these critical dimensions. I highly recommend conducting the verified assessment quiz in Section 1 to ground your core metrics.`,
       `As your luxury academic advisor, I invite you to transition to the Virtual Classroom where our lead distinguished professors lecture on quantitative trading systems.`
     ];
 
@@ -149,7 +157,7 @@ app.post("/api/insights", async (req, res) => {
   if (ai) {
     try {
       const statsSummary = JSON.stringify(metrics, null, 2);
-      const prompt = `You are a Chief AI Business Auditor for Aurelia Premium Executive Academy. 
+      const prompt = `You are a Chief AI Business Auditor for Imali NgesiZulu Premium Executive Academy. 
 Generate a comprehensive, luxurious Strategic Operations Intelligence Report based on this global database checklist:
 ${statsSummary}
 
@@ -178,7 +186,7 @@ Maintain a highly corporate, formal, elite, and premium tone with gold-standard 
     const defaultEnReport = `### 🌟 Executive Operations & Intelligence Report (Local Audit Mode)
 
 #### 1. Executive System Summary
-The Aurelia Academy global parameters demonstrate **exceptional operational efficacy**, with a stable pipeline of elite scholars navigating advanced technological fields. All digital ledgers remain synchronized.
+The Imali NgesiZulu Academy global parameters demonstrate **exceptional operational efficacy**, with a stable pipeline of elite scholars navigating advanced technological fields. All digital ledgers remain synchronized.
 
 #### 2. Student Engagement & Pathway Milestones
 - **Global Scholars Registry**: Active engagement is calculated at **94.2%**.
@@ -193,10 +201,10 @@ The Aurelia Academy global parameters demonstrate **exceptional operational effi
 - **Scale Live Cohorts**: Increase virtual interactive lectures to twice weekly to maintain prestige indicators.
 - **Implement Cryptographic Hedges**: Synchronize certificate ledger entries with decentralized verified hashes.`;
 
-    const defaultZuReport = `### 🌟 Umbiko Wezobunhloli Wezinhlelo we-Aurelia Academy (Local Mode)
+    const defaultZuReport = `### 🌟 Umbiko Wezobunhloli Wezinhlelo we-Imali NgesiZulu Academy (Local Mode)
 
 #### 1. Isifingqo Somsebenzi Wabaphathi
-Ingqalasizinda yomsebenzi wase-Aurelia ikhombisa **ukusebenza kahle okumangalisayo**, enezazi eziphakeme ezikhethekile ezizulazula ezifundweni zobuchwepheshe obuthuthukile.
+Ingqalasizinda yomsebenzi wase-Imali NgesiZulu khombisa **ukusebenza kahle okumangalisayo**, enezazi eziphakeme ezikhethekile ezizulazula ezifundweni zobuchwepheshe obuthuthukile.
 
 #### 2. Ukubamba Iqhaza Kwezazi Nemigomo Yomgudu
 - **Ukuzinza Emakilasini**: Amazinga okuba khona emakilasini emelwe ngu-**89.5%**.
@@ -448,7 +456,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Aurelia Premium LMS running on port ${PORT}`);
+    console.log(`Imali NgesiZulu Premium LMS running on port ${PORT}`);
   });
 }
 
