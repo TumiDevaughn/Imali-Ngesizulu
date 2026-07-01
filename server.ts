@@ -9,6 +9,7 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import { AccessToken } from "livekit-server-sdk";
 
 dotenv.config();
 
@@ -383,6 +384,48 @@ function getFallbackOneDriveDirectUrl(url: string) {
     return url;
   }
 }
+
+// LiveKit Access Token Endpoint
+app.post("/api/livekit/token", async (req, res) => {
+  const { roomName, participantName, participantId, isHost } = req.body;
+  
+  const apiKey = process.env.LIVEKIT_API_KEY;
+  const apiSecret = process.env.LIVEKIT_API_SECRET;
+  const livekitUrl = process.env.LIVEKIT_URL;
+  
+  if (!apiKey || !apiSecret || !livekitUrl) {
+    return res.json({ 
+      error: "LiveKit environment variables are not configured on this server.",
+      isConfigured: false 
+    });
+  }
+
+  try {
+    const identity = participantId || `user_${Math.random().toString(36).substring(2, 9)}`;
+    const at = new AccessToken(apiKey, apiSecret, {
+      identity,
+      name: participantName || "Anonymous Scholar",
+    });
+
+    at.addGrant({
+      roomJoin: true,
+      room: roomName,
+      canPublish: !!isHost,
+      canPublishData: true,
+      canSubscribe: true,
+    });
+
+    const token = await at.toJwt();
+    return res.json({ 
+      token, 
+      livekitUrl,
+      isConfigured: true
+    });
+  } catch (err: any) {
+    console.error("LiveKit token generation failed:", err);
+    return res.status(500).json({ error: "Failed to generate token: " + err.message });
+  }
+});
 
 // Serve assets
 async function startServer() {

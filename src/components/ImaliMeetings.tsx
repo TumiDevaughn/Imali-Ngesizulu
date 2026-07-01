@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Room, RoomEvent } from "livekit-client";
 import { 
   Users, 
   Lock, 
@@ -121,6 +122,38 @@ export default function ImaliMeetings({
   const [joinedParticipantId, setJoinedParticipantId] = useState<string>("");
   const [disconnectionMessage, setDisconnectionMessage] = useState("");
 
+  // LiveKit states
+  const [liveRoom, setLiveRoom] = useState<Room | null>(null);
+  const [livekitError, setLivekitError] = useState<string>("");
+  const [livekitConfigured, setLivekitConfigured] = useState<boolean | null>(null);
+  const [livekitUrl, setLivekitUrl] = useState<string>("");
+  const [activeSpeakers, setActiveSpeakers] = useState<string[]>([]);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordedChunksRef = useRef<Blob[]>([]);
+
+  // Verify LiveKit credentials on backend
+  useEffect(() => {
+    fetch("/api/livekit/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ roomName: "connectivity-check", participantName: "check" })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.isConfigured !== undefined) {
+        setLivekitConfigured(data.isConfigured);
+        if (data.livekitUrl) {
+          setLivekitUrl(data.livekitUrl);
+        }
+      } else {
+        setLivekitConfigured(false);
+      }
+    })
+    .catch(() => {
+      setLivekitConfigured(false);
+    });
+  }, []);
+
   // Load active meeting on mount & keep in sync
   useEffect(() => {
     loadMeetingState();
@@ -145,6 +178,7 @@ export default function ImaliMeetings({
   }, [joinedParticipantId]);
 
   const loadMeetingState = () => {
+    if (liveRoom) return; // LiveKit manages state in real-time
     const data = localStorage.getItem("imali_active_meeting_v1");
     if (data) {
       try {
@@ -179,6 +213,441 @@ export default function ImaliMeetings({
     }
   };
 
+  // Helper to format seconds into MM:SS
+  const formatTime = (totalSecs: number) => {
+    const mins = Math.floor(totalSecs / 60);
+    const secs = totalSecs % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const connectToLiveKit = async (roomName: string, participantName: string, isHost: boolean) => {
+    try {
+      setLivekitError("");
+      const res = await fetch("/api/livekit/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          roomName,
+          participantName,
+          participantId: isHost ? `host_${meetingAuth.role}_${Math.random().toString(36).substring(2,7)}` : `student_${Math.random().toString(36).substring(2,7)}`,
+          isHost
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setLivekitError(data.error || "Failed to fetch LiveKit token.");
+        return null;
+      }
+      
+      if (data.isConfigured === false) {
+        setLivekitConfigured(false);
+        return null;
+      }
+
+      setLivekitConfigured(true);
+      setLivekitUrl(data.livekitUrl);
+
+      const room = new Room();
+
+      room.on(RoomEvent.Connected, () => {
+        console.log("Connected to LiveKit room:", room.name);
+      });
+
+      const updateParticipantsList = () => {
+        const list: MeetingParticipant[] = [];
+        
+        // Local participant
+        const lp = room.localParticipant;
+        list.push({
+          id: lp.identity,
+          name: lp.name || (isHost ? "Lead Host" : "Student"),
+          role: isHost ? (meetingAuth.role || Role.INSTRUCTOR) : Role.STUDENT,
+          isMuted: !lp.isMicrophoneEnabled,
+          hasHandRaised: false,
+          canSpeak: isHost || lp.isMicrophoneEnabled,
+          joinedAt: new Date().toISOString()
+        });
+
+        // Remote participants
+        room.remoteParticipants.forEach((p) => {
+          const pRole = p.identity.startsWith("host_") ? Role.INSTRUCTOR : Role.STUDENT;
+          list.push({
+            id: p.identity,
+            name: p.name || "Anonymous Scholar",
+            role: pRole,
+            isMuted: !p.isMicrophoneEnabled,
+            hasHandRaised: false,
+            canSpeak: pRole !== Role.STUDENT || p.isMicrophoneEnabled,
+            joinedAt: new Date().toISOString()
+          });
+        });
+
+        setMeeting(prev => {
+          if (!prev) return null;
+          const updatedParticipants = list.map(p => {
+            const existing = prev.participants.find(ex => ex.id === p.id);
+            if (existing) {
+              return { ...p, hasHandRaised: existing.hasHandRaised, canSpeak: existing.canSpeak };
+            }
+            return p;
+          });
+          return {
+            ...prev,
+            participants: updatedParticipants
+          };
+        });
+      };
+
+      room.on(RoomEvent.ParticipantConnected, updateParticipantsList);
+      room.on(RoomEvent.ParticipantDisconnected, updateParticipantsList);
+      room.on(RoomEvent.LocalTrackPublished, updateParticipantsList);
+      room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
+        if (track.kind === "audio") {
+          const element = track.attach();
+          document.body.appendChild(element);
+        }
+        updateParticipantsList();
+      });
+      room.on(RoomEvent.TrackUnsubscribed, (track, publication, participant) => {
+        if (track.kind === "audio") {
+          track.detach();
+        }
+        updateParticipantsList();
+      });
+      room.on(RoomEvent.TrackMuted, updateParticipantsList);
+      room.on(RoomEvent.TrackUnmuted, updateParticipantsList);
+
+      room.on(RoomEvent.ActiveSpeakersChanged, (speakers) => {
+        setActiveSpeakers(speakers.map(s => s.identity));
+      });
+
+      await room.connect(data.livekitUrl, data.token);
+
+      if (isHost) {
+        await room.localParticipant.setMicrophoneEnabled(true);
+      } else {
+        await room.localParticipant.setMicrophoneEnabled(false);
+      }
+
+      setLiveRoom(room);
+      return room;
+
+    } catch (err: any) {
+      console.error("LiveKit connection failed:", err);
+      setLivekitError(err.message || "Failed to connect to LiveKit server.");
+      return null;
+    }
+  };
+
+  const raiseHandLiveKit = async (isRaised: boolean) => {
+    if (!liveRoom) return;
+    const encoder = new TextEncoder();
+    const payload = encoder.encode(JSON.stringify({
+      type: isRaised ? "HAND_RAISE" : "HAND_LOWER",
+      participantId: liveRoom.localParticipant.identity
+    }));
+    await liveRoom.localParticipant.publishData(payload, { reliable: true });
+    
+    setMeeting(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        participants: prev.participants.map(p => {
+          if (p.id === liveRoom.localParticipant.identity) {
+            return { ...p, hasHandRaised: isRaised };
+          }
+          return p;
+        })
+      };
+    });
+  };
+
+  const approveSpeakingLiveKit = async (studentId: string) => {
+    if (!liveRoom) return;
+    const encoder = new TextEncoder();
+    const payload = encoder.encode(JSON.stringify({
+      type: "SPEAKING_APPROVED",
+      targetId: studentId
+    }));
+    await liveRoom.localParticipant.publishData(payload, { reliable: true });
+
+    setMeeting(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        participants: prev.participants.map(p => {
+          if (p.id === studentId) {
+            return { ...p, canSpeak: true, isMuted: false, hasHandRaised: false };
+          }
+          return p;
+        })
+      };
+    });
+  };
+
+  const startLiveKitRecording = async () => {
+    if (!liveRoom) return;
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const dest = audioContext.createMediaStreamDestination();
+
+      const localAudioPub = Array.from(liveRoom.localParticipant.audioTrackPublications.values())[0] as any;
+      if (localAudioPub && localAudioPub.track && localAudioPub.track.mediaStream) {
+        const source = audioContext.createMediaStreamSource(localAudioPub.track.mediaStream);
+        source.connect(dest);
+      } else {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const source = audioContext.createMediaStreamSource(stream);
+          source.connect(dest);
+        } catch (e) {
+          console.warn("Could not record local microphone track", e);
+        }
+      }
+
+      liveRoom.remoteParticipants.forEach(participant => {
+        participant.audioTrackPublications.forEach(pub => {
+          const p = pub as any;
+          if (p && p.track && p.track.mediaStream) {
+            try {
+              const source = audioContext.createMediaStreamSource(p.track.mediaStream);
+              source.connect(dest);
+            } catch (err) {
+              console.error("Error connecting participant track to audio recorder", err);
+            }
+          }
+        });
+      });
+
+      const mediaRecorder = new MediaRecorder(dest.stream);
+      recordedChunksRef.current = [];
+      
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          recordedChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start(1000);
+      setIsRecording(true);
+      setRecordingSeconds(0);
+      
+      const encoder = new TextEncoder();
+      const payload = encoder.encode(JSON.stringify({ type: "RECORDING_STARTED" }));
+      await liveRoom.localParticipant.publishData(payload, { reliable: true });
+
+    } catch (err) {
+      console.error("Failed to start MediaRecorder:", err);
+    }
+  };
+
+  const stopLiveKitRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+    
+    if (liveRoom) {
+      const encoder = new TextEncoder();
+      const payload = encoder.encode(JSON.stringify({ type: "RECORDING_STOPPED" }));
+      liveRoom.localParticipant.publishData(payload, { reliable: true }).catch(() => {});
+    }
+  };
+
+  const downloadLiveKitRecording = (filename: string) => {
+    if (recordedChunksRef.current.length === 0) {
+      alert("No recorded audio available.");
+      return;
+    }
+    const blob = new Blob(recordedChunksRef.current, { type: "audio/webm" });
+    const url = URL.createObjectURL(blob);
+    const element = document.createElement("a");
+    element.href = url;
+    element.download = filename.endsWith(".wav") ? filename.replace(".wav", ".webm") : filename;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  useEffect(() => {
+    if (!liveRoom) return;
+
+    const handleData = (payload: Uint8Array, participant: any) => {
+      const decoder = new TextDecoder();
+      const text = decoder.decode(payload);
+      try {
+        const msg = JSON.parse(text);
+        console.log("LiveKit Data received:", msg);
+
+        switch (msg.type) {
+          case "HAND_RAISE":
+            setMeeting(prev => {
+              if (!prev) return null;
+              return {
+                ...prev,
+                participants: prev.participants.map(p => {
+                  if (p.id === msg.participantId) {
+                    return { ...p, hasHandRaised: true };
+                  }
+                  return p;
+                })
+              };
+            });
+            break;
+
+          case "HAND_LOWER":
+            setMeeting(prev => {
+              if (!prev) return null;
+              return {
+                ...prev,
+                participants: prev.participants.map(p => {
+                  if (p.id === msg.participantId) {
+                    return { ...p, hasHandRaised: false };
+                  }
+                  return p;
+                })
+              };
+            });
+            break;
+
+          case "SPEAKING_APPROVED":
+            if (liveRoom.localParticipant.identity === msg.targetId) {
+              liveRoom.localParticipant.setMicrophoneEnabled(true).then(() => {
+                setMeeting(prev => {
+                  if (!prev) return null;
+                  return {
+                    ...prev,
+                    participants: prev.participants.map(p => {
+                      if (p.id === msg.targetId) {
+                        return { ...p, canSpeak: true, isMuted: false, hasHandRaised: false };
+                      }
+                      return p;
+                    })
+                  };
+                });
+              });
+            } else {
+              setMeeting(prev => {
+                if (!prev) return null;
+                return {
+                  ...prev,
+                  participants: prev.participants.map(p => {
+                    if (p.id === msg.targetId) {
+                      return { ...p, canSpeak: true, isMuted: false, hasHandRaised: false };
+                    }
+                    return p;
+                  })
+                };
+              });
+            }
+            break;
+
+          case "SPEAKING_REJECTED":
+            setMeeting(prev => {
+              if (!prev) return null;
+              return {
+                ...prev,
+                participants: prev.participants.map(p => {
+                  if (p.id === msg.targetId) {
+                    return { ...p, hasHandRaised: false };
+                  }
+                  return p;
+                })
+              };
+            });
+            break;
+
+          case "FORCE_MUTE":
+            if (liveRoom.localParticipant.identity === msg.targetId) {
+              liveRoom.localParticipant.setMicrophoneEnabled(false);
+            }
+            setMeeting(prev => {
+              if (!prev) return null;
+              return {
+                ...prev,
+                participants: prev.participants.map(p => {
+                  if (p.id === msg.targetId) {
+                    return { ...p, isMuted: true, canSpeak: false };
+                  }
+                  return p;
+                })
+              };
+            });
+            break;
+
+          case "UNMUTE_PARTICIPANT":
+            if (liveRoom.localParticipant.identity === msg.targetId) {
+              liveRoom.localParticipant.setMicrophoneEnabled(true);
+            }
+            setMeeting(prev => {
+              if (!prev) return null;
+              return {
+                ...prev,
+                participants: prev.participants.map(p => {
+                  if (p.id === msg.targetId) {
+                    return { ...p, isMuted: false, canSpeak: true };
+                  }
+                  return p;
+                })
+              };
+            });
+            break;
+
+          case "KICK_PARTICIPANT":
+            if (liveRoom.localParticipant.identity === msg.targetId) {
+              setDisconnectionMessage(
+                language === "en"
+                  ? "You have been disconnected from the meeting room by the host."
+                  : "Ukhishiwe ekamelweni lomhlangano ngumfundisi."
+              );
+              liveRoom.disconnect();
+              setLiveRoom(null);
+              setMeeting(null);
+              setJoinedParticipantId("");
+            } else {
+              setMeeting(prev => {
+                if (!prev) return null;
+                return {
+                  ...prev,
+                  participants: prev.participants.filter(p => p.id !== msg.targetId)
+                };
+              });
+            }
+            break;
+
+          case "MEETING_ENDED":
+            setDisconnectionMessage(
+              language === "en"
+                ? "The host has ended this meeting room."
+                : "Umfundisi usuqedile lo mhlangano."
+            );
+            liveRoom.disconnect();
+            setLiveRoom(null);
+            setMeeting(null);
+            setJoinedParticipantId("");
+            break;
+
+          case "RECORDING_STARTED":
+            setIsRecording(true);
+            break;
+
+          case "RECORDING_STOPPED":
+            setIsRecording(false);
+            break;
+        }
+      } catch (e) {
+        console.error("Error parsing real-time message:", e);
+      }
+    };
+
+    liveRoom.on(RoomEvent.DataReceived, handleData);
+
+    return () => {
+      liveRoom.off(RoomEvent.DataReceived, handleData);
+    };
+  }, [liveRoom]);
+
   // Keep elapsed timer ticking
   useEffect(() => {
     if (!meeting || !meeting.isLive || !meeting.startedAt) {
@@ -187,33 +656,31 @@ export default function ImaliMeetings({
     }
 
     const interval = setInterval(() => {
-      const start = new Date(meeting.startedAt!).getTime();
-      const now = new Date().getTime();
-      let diffSeconds = Math.floor((now - start) / 1000);
-
       if (isAccelerated) {
-        // Acceleration mode: tick 60 times faster
-        // We use a custom stored state or multiply seconds elapsed
+        // Acceleration mode: tick 60 times faster (1 virtual minute per real second)
         setSecondsElapsed(prev => {
-          const next = prev + 1; // Ticks 1 virtual minute per real second
+          const next = prev + 60; // Adds 60 virtual seconds (1 minute) per real second
           
-          // Trigger the 5-minute warning at 55 virtual minutes
-          if (next === 55) {
+          // Trigger the 5-minute warning at 55 virtual minutes (3300 seconds)
+          if (next === 3300) {
             setShowWarningPopup(true);
           }
           
-          // Auto end meeting at 60 virtual minutes
-          if (next >= 60) {
+          // Auto end meeting at 60 virtual minutes (3600 seconds)
+          if (next >= 3600) {
             clearInterval(interval);
             autoEndMeeting();
-            return 60;
+            return 3600;
           }
           return next;
         });
       } else {
-        const actualMins = Math.floor(diffSeconds / 60);
-        setSecondsElapsed(actualMins);
+        const start = new Date(meeting.startedAt!).getTime();
+        const now = new Date().getTime();
+        const diffSeconds = Math.floor((now - start) / 1000);
+        setSecondsElapsed(diffSeconds);
 
+        const actualMins = Math.floor(diffSeconds / 60);
         // Warning at 55 minutes
         if (actualMins === 55 && !showWarningPopup) {
           setShowWarningPopup(true);
@@ -277,11 +744,12 @@ export default function ImaliMeetings({
   };
 
   // Create meeting room
-  const handleCreateMeeting = (e: React.FormEvent) => {
+  const handleCreateMeeting = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!roomName.trim()) return;
 
     const code = "IMALI-MEET-" + Math.floor(1000 + Math.random() * 9000);
+    const hostName = meetingAuth.role === Role.ADMIN ? "Dean Admin" : "Lead Instructor";
     const newMeeting: MeetingState = {
       roomId: code,
       roomName: roomName.trim(),
@@ -292,7 +760,7 @@ export default function ImaliMeetings({
       participants: [
         {
           id: "moderator_" + Math.random().toString(36).substr(2, 9),
-          name: meetingAuth.role === Role.ADMIN ? "Dean Admin" : "Lead Instructor",
+          name: hostName,
           role: meetingAuth.role || Role.INSTRUCTOR,
           isMuted: false,
           hasHandRaised: false,
@@ -301,6 +769,23 @@ export default function ImaliMeetings({
         }
       ]
     };
+
+    if (startType === "immediate" && livekitConfigured) {
+      const room = await connectToLiveKit(code, hostName, true);
+      if (room) {
+        newMeeting.participants = [
+          {
+            id: room.localParticipant.identity,
+            name: room.localParticipant.name || hostName,
+            role: meetingAuth.role || Role.INSTRUCTOR,
+            isMuted: false,
+            hasHandRaised: false,
+            canSpeak: true,
+            joinedAt: new Date().toISOString()
+          }
+        ];
+      }
+    }
 
     localStorage.setItem("imali_active_meeting_v1", JSON.stringify(newMeeting));
     setMeeting(newMeeting);
@@ -313,7 +798,7 @@ export default function ImaliMeetings({
   };
 
   // Student Join Meeting
-  const handleStudentJoin = (e: React.FormEvent) => {
+  const handleStudentJoin = async (e: React.FormEvent) => {
     e.preventDefault();
     setStudentJoinError("");
     setDisconnectionMessage("");
@@ -354,15 +839,29 @@ export default function ImaliMeetings({
         return;
       }
 
-      // Check if student is already joined
-      const participantId = "student_" + Math.random().toString(36).substr(2, 9);
+      let participantId = "student_" + Math.random().toString(36).substr(2, 9);
+      
+      if (livekitConfigured) {
+        const room = await connectToLiveKit(activeMeeting.roomId, studentDisplayName.trim(), false);
+        if (room) {
+          participantId = room.localParticipant.identity;
+        } else {
+          setStudentJoinError(
+            language === "en"
+              ? "LiveKit connection failed. Ensure credentials are correct."
+              : "Ukuxhumeka kwe-LiveKit kuhlulekile."
+          );
+          return;
+        }
+      }
+
       const updatedParticipants = [
         ...activeMeeting.participants,
         {
           id: participantId,
           name: studentDisplayName.trim(),
           role: Role.STUDENT,
-          isMuted: true, // students join muted by default
+          isMuted: true,
           hasHandRaised: false,
           canSpeak: false,
           joinedAt: new Date().toISOString()
@@ -380,8 +879,15 @@ export default function ImaliMeetings({
   };
 
   // Student Raise Hand
-  const toggleRaiseHand = () => {
+  const toggleRaiseHand = async () => {
     if (!meeting || !joinedParticipantId) return;
+
+    if (liveRoom) {
+      const me = meeting.participants.find(p => p.id === joinedParticipantId);
+      const nextRaised = !me?.hasHandRaised;
+      await raiseHandLiveKit(nextRaised);
+      return;
+    }
 
     const updatedParticipants = meeting.participants.map(p => {
       if (p.id === joinedParticipantId) {
@@ -396,8 +902,37 @@ export default function ImaliMeetings({
   };
 
   // Student Mute/Unmute self (only if speaking is enabled)
-  const toggleStudentMuteSelf = () => {
+  const toggleStudentMuteSelf = async () => {
     if (!meeting || !joinedParticipantId) return;
+
+    if (liveRoom) {
+      const me = meeting.participants.find(p => p.id === joinedParticipantId);
+      if (me && me.canSpeak) {
+        const nextMuted = !me.isMuted;
+        await liveRoom.localParticipant.setMicrophoneEnabled(!nextMuted);
+        
+        const encoder = new TextEncoder();
+        const payload = encoder.encode(JSON.stringify({
+          type: nextMuted ? "FORCE_MUTE" : "UNMUTE_PARTICIPANT",
+          targetId: joinedParticipantId
+        }));
+        await liveRoom.localParticipant.publishData(payload, { reliable: true });
+
+        setMeeting(prev => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            participants: prev.participants.map(p => {
+              if (p.id === joinedParticipantId) {
+                return { ...p, isMuted: nextMuted };
+              }
+              return p;
+            })
+          };
+        });
+      }
+      return;
+    }
 
     const updatedParticipants = meeting.participants.map(p => {
       if (p.id === joinedParticipantId && p.canSpeak) {
@@ -412,8 +947,13 @@ export default function ImaliMeetings({
   };
 
   // Instructor/Admin permissions
-  const acceptSpeakingRequest = (studentId: string) => {
+  const acceptSpeakingRequest = async (studentId: string) => {
     if (!meeting) return;
+
+    if (liveRoom) {
+      await approveSpeakingLiveKit(studentId);
+      return;
+    }
 
     const updatedParticipants = meeting.participants.map(p => {
       if (p.id === studentId) {
@@ -427,8 +967,31 @@ export default function ImaliMeetings({
     setMeeting(updatedMeeting);
   };
 
-  const rejectSpeakingRequest = (studentId: string) => {
+  const rejectSpeakingRequest = async (studentId: string) => {
     if (!meeting) return;
+
+    if (liveRoom) {
+      const encoder = new TextEncoder();
+      const payload = encoder.encode(JSON.stringify({
+        type: "SPEAKING_REJECTED",
+        targetId: studentId
+      }));
+      await liveRoom.localParticipant.publishData(payload, { reliable: true });
+
+      setMeeting(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          participants: prev.participants.map(p => {
+            if (p.id === studentId) {
+              return { ...p, hasHandRaised: false };
+            }
+            return p;
+          })
+        };
+      });
+      return;
+    }
 
     const updatedParticipants = meeting.participants.map(p => {
       if (p.id === studentId) {
@@ -442,8 +1005,31 @@ export default function ImaliMeetings({
     setMeeting(updatedMeeting);
   };
 
-  const muteParticipant = (participantId: string) => {
+  const muteParticipant = async (participantId: string) => {
     if (!meeting) return;
+
+    if (liveRoom) {
+      const encoder = new TextEncoder();
+      const payload = encoder.encode(JSON.stringify({
+        type: "FORCE_MUTE",
+        targetId: participantId
+      }));
+      await liveRoom.localParticipant.publishData(payload, { reliable: true });
+
+      setMeeting(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          participants: prev.participants.map(p => {
+            if (p.id === participantId) {
+              return { ...p, isMuted: true, canSpeak: false };
+            }
+            return p;
+          })
+        };
+      });
+      return;
+    }
 
     const updatedParticipants = meeting.participants.map(p => {
       if (p.id === participantId) {
@@ -457,8 +1043,31 @@ export default function ImaliMeetings({
     setMeeting(updatedMeeting);
   };
 
-  const unmuteParticipant = (participantId: string) => {
+  const unmuteParticipant = async (participantId: string) => {
     if (!meeting) return;
+
+    if (liveRoom) {
+      const encoder = new TextEncoder();
+      const payload = encoder.encode(JSON.stringify({
+        type: "UNMUTE_PARTICIPANT",
+        targetId: participantId
+      }));
+      await liveRoom.localParticipant.publishData(payload, { reliable: true });
+
+      setMeeting(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          participants: prev.participants.map(p => {
+            if (p.id === participantId) {
+              return { ...p, isMuted: false, canSpeak: true };
+            }
+            return p;
+          })
+        };
+      });
+      return;
+    }
 
     const updatedParticipants = meeting.participants.map(p => {
       if (p.id === participantId) {
@@ -472,8 +1081,26 @@ export default function ImaliMeetings({
     setMeeting(updatedMeeting);
   };
 
-  const removeParticipant = (participantId: string) => {
+  const removeParticipant = async (participantId: string) => {
     if (!meeting) return;
+
+    if (liveRoom) {
+      const encoder = new TextEncoder();
+      const payload = encoder.encode(JSON.stringify({
+        type: "KICK_PARTICIPANT",
+        targetId: participantId
+      }));
+      await liveRoom.localParticipant.publishData(payload, { reliable: true });
+
+      setMeeting(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          participants: prev.participants.filter(p => p.id !== participantId)
+        };
+      });
+      return;
+    }
 
     const updatedParticipants = meeting.participants.filter(p => p.id !== participantId);
     const updatedMeeting = { ...meeting, participants: updatedParticipants };
@@ -482,9 +1109,28 @@ export default function ImaliMeetings({
   };
 
   // Start a scheduled meeting
-  const startScheduledMeeting = () => {
+  const startScheduledMeeting = async () => {
     if (!meeting) return;
     const updated = { ...meeting, isLive: true, startedAt: new Date().toISOString() };
+    const hostName = meetingAuth.role === Role.ADMIN ? "Dean Admin" : "Lead Instructor";
+    
+    if (livekitConfigured) {
+      const room = await connectToLiveKit(meeting.roomId, hostName, true);
+      if (room) {
+        updated.participants = [
+          {
+            id: room.localParticipant.identity,
+            name: room.localParticipant.name || hostName,
+            role: meetingAuth.role || Role.INSTRUCTOR,
+            isMuted: false,
+            hasHandRaised: false,
+            canSpeak: true,
+            joinedAt: new Date().toISOString()
+          }
+        ];
+      }
+    }
+
     localStorage.setItem("imali_active_meeting_v1", JSON.stringify(updated));
     setMeeting(updated);
     setSecondsElapsed(0);
@@ -492,11 +1138,24 @@ export default function ImaliMeetings({
 
   // Auto/Manual End Meeting
   const autoEndMeeting = () => {
-    // Clear recording & warn state
-    setIsRecording(false);
+    if (isRecording) {
+      if (liveRoom) {
+        stopLiveKitRecording();
+      } else {
+        setIsRecording(false);
+      }
+    }
     setShowWarningPopup(false);
+
+    if (liveRoom) {
+      const encoder = new TextEncoder();
+      const payload = encoder.encode(JSON.stringify({ type: "MEETING_ENDED" }));
+      liveRoom.localParticipant.publishData(payload, { reliable: true })
+        .then(() => liveRoom.disconnect())
+        .catch(() => {});
+      setLiveRoom(null);
+    }
     
-    // Clear state
     localStorage.removeItem("imali_active_meeting_v1");
     setMeeting(null);
   };
@@ -510,6 +1169,11 @@ export default function ImaliMeetings({
   // Student disconnect voluntarily
   const leaveAsStudent = () => {
     if (!meeting || !joinedParticipantId) return;
+
+    if (liveRoom) {
+      liveRoom.disconnect();
+      setLiveRoom(null);
+    }
 
     const updatedParticipants = meeting.participants.filter(p => p.id !== joinedParticipantId);
     const updatedMeeting = { ...meeting, participants: updatedParticipants };
@@ -532,7 +1196,10 @@ export default function ImaliMeetings({
 
   // Simulated WAV file generator for premium compliance
   const triggerAudioDownload = (filename: string) => {
-    // Generate simple metadata saying 'IMALI Audio Recording' inside binary stream
+    if (liveRoom) {
+      downloadLiveKitRecording(filename);
+      return;
+    }
     const header = new TextEncoder().encode("RIFF....WAVEfmt ");
     const file = new Blob([header], { type: "audio/wav" });
     const element = document.createElement("a");
@@ -552,6 +1219,17 @@ export default function ImaliMeetings({
             <span className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/25">
               👑 {language === "en" ? "IMALI AUDIO MEETINGS" : "IMIHANGANO YE-IMALI"}
             </span>
+            {livekitConfigured ? (
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                LiveKit Live
+              </span>
+            ) : (
+              <span className="text-[10px] font-mono text-amber-500 bg-amber-500/10 border border-amber-500/25 px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                Simulator
+              </span>
+            )}
             {meeting?.isLive && (
               <span className="flex h-2.5 w-2.5 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -678,7 +1356,7 @@ export default function ImaliMeetings({
                   </span>
                   <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5 rounded font-mono flex items-center gap-1">
                     <Clock className="w-3 h-3 text-[#D4AF37]" /> 
-                    Elapsed: <strong className="text-amber-400">{secondsElapsed} / 60 Mins</strong>
+                    Elapsed: <strong className="text-amber-400">{formatTime(secondsElapsed)} / 60:00</strong>
                   </span>
                 </div>
               </div>
@@ -911,7 +1589,7 @@ export default function ImaliMeetings({
                       <div className="bg-zinc-900 border border-zinc-850 rounded-lg p-2.5 text-center shrink-0 min-w-[150px]">
                         <p className="text-[9px] text-zinc-500 font-mono uppercase">Ticking Active Timer</p>
                         <p className="text-sm font-bold font-mono text-amber-500 mt-1 flex items-center justify-center gap-1">
-                          <Clock className="w-4 h-4 text-[#D4AF37]" /> {secondsElapsed} / 60 Mins
+                          <Clock className="w-4 h-4 text-[#D4AF37]" /> {formatTime(secondsElapsed)} / 60:00
                         </p>
                       </div>
 
@@ -1248,6 +1926,27 @@ export default function ImaliMeetings({
               </form>
             </div>
           )}
+        </div>
+      )}
+
+      {/* LiveKit Configuration Guide Alert */}
+      {!meetingAuth.isAuthenticated && !joinedParticipantId && livekitConfigured === false && (
+        <div className="bg-zinc-950 border border-amber-500/20 rounded-3xl p-6 max-w-5xl mx-auto mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="text-[9px] font-mono text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded font-black uppercase">
+              ℹ️ LiveKit Integration Status
+            </span>
+            <h4 className="text-sm font-bold text-white uppercase mt-1">
+              Active in Local Simulation Mode
+            </h4>
+            <p className="text-xs text-zinc-400 font-sans leading-relaxed max-w-3xl">
+              To fully activate LiveKit Cloud real-time audio rooms, configure your credentials on the backend.
+              Add <code className="text-amber-500 bg-zinc-900 px-1 py-0.5 rounded font-mono">LIVEKIT_URL</code>, <code className="text-amber-500 bg-zinc-900 px-1 py-0.5 rounded font-mono">LIVEKIT_API_KEY</code>, and <code className="text-amber-500 bg-zinc-900 px-1 py-0.5 rounded font-mono">LIVEKIT_API_SECRET</code> in the environment variables configuration or your <code className="text-[#D4AF37] bg-zinc-900 px-1 py-0.5 rounded font-mono">.env</code> file.
+            </p>
+          </div>
+          <div className="text-[10px] text-amber-500 bg-amber-500/5 border border-amber-500/20 px-3.5 py-2 rounded-xl font-mono shrink-0 max-w-xs">
+            ⚡ Fully compatible with Netlify functions & secrets manager.
+          </div>
         </div>
       )}
 
