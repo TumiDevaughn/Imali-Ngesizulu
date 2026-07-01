@@ -50,6 +50,7 @@ import { translateText } from "./data/translations";
 import ImaliLogo from "./components/ImaliLogo";
 import PatternScreener from "./components/PatternScreener";
 import { EliteMatrixRenderer } from "./components/EliteMatrixRenderer";
+import ImaliMeetings from "./components/ImaliMeetings";
 
 
 export interface RadioStation {
@@ -5267,6 +5268,23 @@ export default function App() {
               </button>
 
               <button
+                id="nav_meetings"
+                onClick={() => { setActiveTab("meetings"); }}
+                className={`w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "meetings" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 group-hover:bg-[#D4AF37]/20 group-hover:border-[#D4AF37]/50 transition-all duration-300">
+                    <Radio className="w-4 h-4 animate-pulse" />
+                    <div className="absolute inset-0 rounded-lg border border-[#D4AF37]/30 scale-100 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  </div>
+                  <span className="text-xs font-semibold tracking-wider uppercase font-serif">
+                    {language === "en" ? "Imali Meetings" : "Imihangano ye-Imali"}
+                  </span>
+                </div>
+                <span className="text-[9px] bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/25 px-1.5 py-0.5 rounded font-mono font-bold animate-pulse">AUDIO</span>
+              </button>
+
+              <button
                 id="nav_classroom"
                 onClick={() => { setActiveTab("classroom"); }}
                 className={`hidden w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "classroom" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
@@ -5388,6 +5406,7 @@ export default function App() {
                 {activeTab === "chat" && (language === "en" ? "Academic Discussion Forum" : "Inkundla Yezoxhumano Nezemfundo")}
                 {activeTab === "blueprints" && (language === "en" ? "Curriculum Roadmap & Framework" : "Umgudu Nomhlahlandlela Wezifundo")}
                 {activeTab === "admin" && (language === "en" ? "Academy Management Console" : "Iphaneli Yokuphathwa Kwezemfundo")}
+                {activeTab === "meetings" && (language === "en" ? "Imali Meetings Suite" : "Isayithi Lemihangano ye-Imali")}
               </h1>
               <p className="text-xs text-zinc-400 mt-1">
                 {language === "en" 
@@ -10622,6 +10641,17 @@ export default function App() {
             </div>
           );
         })()}
+
+        {activeTab === "meetings" && (
+          <ImaliMeetings
+            language={language}
+            activeRole={activeRole}
+            studentDetails={studentDetails}
+            instructorDetails={instructorDetails}
+            adminDetails={adminDetails}
+            setActiveTab={setActiveTab}
+          />
+        )}
 
         </main>
 
