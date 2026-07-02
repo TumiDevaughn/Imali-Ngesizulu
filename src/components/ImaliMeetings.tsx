@@ -464,10 +464,50 @@ export default function ImaliMeetings({
     const url = URL.createObjectURL(blob);
     const element = document.createElement("a");
     element.href = url;
-    element.download = filename.endsWith(".wav") ? filename.replace(".wav", ".webm") : filename;
+    element.download = filename.endsWith(".wav") ? filename.replace(".wav", ".mp3") : filename;
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+  };
+
+  const toggleRecording = async () => {
+    if (!isRecording) {
+      if (liveRoom) {
+        await startLiveKitRecording();
+      } else {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const mediaRecorder = new MediaRecorder(stream);
+          recordedChunksRef.current = [];
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) {
+              recordedChunksRef.current.push(event.data);
+            }
+          };
+          mediaRecorderRef.current = mediaRecorder;
+          mediaRecorder.start(1000);
+          setIsRecording(true);
+          setRecordingSeconds(0);
+        } catch (err: any) {
+          console.error("Local microphone recording failed:", err);
+          alert(language === "en" 
+            ? "Could not access microphone for local testing. Please grant microphone permissions and try again."
+            : "Yehlulekile ukufinyelela umakrofoni we-test. Sicela unikeze imvume kamakrofoni.");
+        }
+      }
+    } else {
+      if (liveRoom) {
+        stopLiveKitRecording();
+      } else {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+          mediaRecorderRef.current.stop();
+          if (mediaRecorderRef.current.stream) {
+            mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+          }
+        }
+        setIsRecording(false);
+      }
+    }
   };
 
   useEffect(() => {
@@ -1643,7 +1683,7 @@ export default function ImaliMeetings({
                       {/* Audio Recording Toggle */}
                       {meeting.isLive && (
                         <button
-                          onClick={() => setIsRecording(!isRecording)}
+                          onClick={toggleRecording}
                           className={`flex items-center gap-2 py-2.5 px-5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition ${
                             isRecording 
                               ? "bg-red-500 text-white animate-pulse" 
@@ -1660,10 +1700,22 @@ export default function ImaliMeetings({
                       {/* Download Simulated Recording */}
                       {isRecording === false && recordingSeconds > 0 && (
                         <button
-                          onClick={() => triggerAudioDownload(`${meeting.roomName}_audio_recording.wav`)}
-                          className="flex items-center gap-1.5 py-2.5 px-4 bg-zinc-900 border border-zinc-800 text-[#D4AF37] hover:border-[#D4AF37] hover:bg-zinc-850 rounded-xl text-xs font-mono uppercase transition"
+                          onClick={() => {
+                            // Download audio as MP3
+                            triggerAudioDownload(`${meeting.roomName}_audio_recording.mp3`);
+                            // Automatically download meeting notes text file as well
+                            if (meetingAuth.isAuthenticated && hostNotes.trim()) {
+                              triggerTextDownload(`${meeting.roomName}_host_notes_official.txt`, hostNotes);
+                            } else if (joinedParticipantId && studentNotes.trim()) {
+                              triggerTextDownload(`${meeting.roomName}_student_notes_personal.txt`, studentNotes);
+                            } else {
+                              const placeholderNotes = `IMALI NGESIZULU ACADEMY - MEETING BRIEF\n======================================\nRoom: ${meeting.roomName}\nTopic: ${meeting.roomTopic || "FX & Candlestick Physics"}\nDate: ${new Date().toLocaleDateString()}\nStatus: COMPLETED RECORDING SESSION\n\nNotes: Thank you for attending the live session. Keep practicing strict risk management and study the Candlestick Physics modules!`;
+                              triggerTextDownload(`${meeting.roomName}_meeting_notes_summary.txt`, placeholderNotes);
+                            }
+                          }}
+                          className="flex items-center gap-1.5 py-2.5 px-4 bg-gradient-to-r from-zinc-900 to-black border border-[#D4AF37] hover:bg-[#D4AF37]/10 text-[#D4AF37] rounded-xl text-xs font-mono uppercase transition cursor-pointer font-bold shadow-[0_0_15px_rgba(212,175,55,0.1)]"
                         >
-                          <Download className="w-4 h-4" /> Download Recording
+                          <Download className="w-4 h-4 text-[#D4AF37]" /> Download MP3 & Notes
                         </button>
                       )}
                     </div>

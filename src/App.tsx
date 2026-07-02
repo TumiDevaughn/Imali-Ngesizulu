@@ -2494,6 +2494,26 @@ export default function App() {
     };
   };
 
+  const generateDailySecurePasscode = (): string => {
+    if (activeRole !== Role.ADMIN && activeRole !== Role.INSTRUCTOR) {
+      alert(language === "en" 
+        ? "Access Denied: Only verified Academy Administrators or Instructors can generate or authorize lounge invitation codes." 
+        : "Imvume Inqatshiwe: Umlawuli noma uMfundisi kuphela ovunyelwe ukusungula iphasikhodi entsha.");
+      return "";
+    }
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    // High-clarity chars to prevent human confusion & make codes distinct
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let randomSuffix = "";
+    for (let i = 0; i < 4; i++) {
+      randomSuffix += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const secureCode = `IMALI-${month}${day}-${randomSuffix}`;
+    return secureCode;
+  };
+
   const handleSendSupportMessage = async (userQueryText: string) => {
     if (!userQueryText.trim()) return;
 
@@ -6488,12 +6508,13 @@ export default function App() {
                               
                               <button
                                 onClick={() => {
-                                  const randomCodes = ["GOLD777", "BTC360", "FOREX101", "SCALP05", "ZULU99", "IMALI888"];
-                                  const randomSel = randomCodes[Math.floor(Math.random() * randomCodes.length)];
-                                  setInstructorDetails({ ...instructorDetails, classCode: randomSel });
-                                  alert(language === "en"
-                                    ? `Successfully issued new classroom passcode: '${randomSel}'! Give this code to students.`
-                                    : `Iphasikhodi entsha yekilasi ikhishiwe ngempumelelo: '${randomSel}'! Nikeza abafundi le khodi.`);
+                                  const secureCode = generateDailySecurePasscode();
+                                  if (secureCode) {
+                                    setInstructorDetails({ ...instructorDetails, classCode: secureCode });
+                                    alert(language === "en"
+                                      ? `Successfully issued secure daily-coded passcode: '${secureCode}'! Show students this code.`
+                                      : `Iphasikhodi entsha ephephile yekilasi yosuku ikhishiwe ngempumelelo: '${secureCode}'! Nikeza abafundi le khodi.`);
+                                  }
                                 }}
                                 className="py-1.5 px-3 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/45 text-[#D4AF37] text-[10px] font-mono tracking-wider font-bold uppercase rounded-lg shrink-0 cursor-pointer"
                               >
@@ -6948,14 +6969,15 @@ export default function App() {
                               </div>
                               <button
                                 onClick={() => {
-                                  const randomCodes = ["GOLD777", "BTC360", "FOREX101", "SCALP05", "ZULU99", "IMALI888"];
-                                  const randomSel = randomCodes[Math.floor(Math.random() * randomCodes.length)];
-                                  setInstructorDetails({ ...instructorDetails, classCode: randomSel });
-                                  alert(language === "en"
-                                    ? `As Admin, successfully issued new classroom passcode: '${randomSel}'!`
-                                    : `Njengomlawuli, kukhishwe iphasikhodi entsha yekilasi ngempumelelo: '${randomSel}'!`);
+                                  const secureCode = generateDailySecurePasscode();
+                                  if (secureCode) {
+                                    setInstructorDetails({ ...instructorDetails, classCode: secureCode });
+                                    alert(language === "en"
+                                      ? `As Admin, successfully issued secure daily-coded passcode: '${secureCode}'!`
+                                      : `Njengomlawuli, kukhishwe iphasikhodi entsha ephephile yekilasi yosuku: '${secureCode}'!`);
+                                  }
                                 }}
-                                className="py-1.5 px-3 bg-emerald-500/10 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono tracking-wider font-bold uppercase rounded-lg shrink-0 cursor-pointer"
+                                className="py-1.5 px-3 bg-emerald-500/10 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono tracking-wider font-bold uppercase rounded-lg shrink-0 cursor-pointer whitespace-nowrap"
                               >
                                 {language === "en" ? "🎲 Override Passcode" : "🎲 Bhala Ngaphezulu Iphasikhodi"}
                               </button>
