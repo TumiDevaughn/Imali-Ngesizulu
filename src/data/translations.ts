@@ -26,7 +26,7 @@ export const translations = {
     nav_classroom: "Virtual Classroom",
     nav_chat: "Academic Lounge",
     nav_analytics: "Executive Analytics",
-    nav_admin: "Syndicate Admin",
+    nav_admin: "Academy Admin",
     nav_blueprints: "Imali News Room",
     nav_drive: "Google Drive Sync",
 
@@ -165,7 +165,7 @@ export const translations = {
     nav_classroom: "Ikilasi Elibonakalayo",
     nav_chat: "Igumbi Lezemfundo",
     nav_analytics: "Izibalo Zababusi",
-    nav_admin: "Umlawuli we-Syndicate",
+    nav_admin: "Umlawuli We-Academy",
     nav_blueprints: "Igumbi Ledaba Lomsakazo",
     nav_drive: "Ezokugcina ku-Drive",
 
@@ -234,7 +234,7 @@ export const translations = {
     cert_view_your: "Buka Isitifiketi Sedijithali",
 
     // Admin & Analytics Layout
-    admin_title: "Isikhumulo sokuphatha se-Syndicate",
+    admin_title: "Isikhumulo sokuphatha se-Academy",
     admin_users_tab: "Phatha Izazi Zekhambali",
     admin_courses_tab: "Izinto Zemfundo ezikhona",
     admin_certs_tab: "Ukuqinisekiswa Kwesitifiketi Ledjini",

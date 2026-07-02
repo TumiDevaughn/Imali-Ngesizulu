@@ -6501,8 +6501,8 @@ export default function App() {
                                 </p>
                                 <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
                                   {language === "en"
-                                    ? "Configure core session credentials and access codes. This code locks/unlocks the audio suite lobby for your students."
-                                    : "Misa amapharamitha eseshini nezikhodi zokungena datha. Le khodi ivala/ivula igumbi lomsindo labafundi bakho."}
+                                    ? "Configure core session credentials and access codes. This code locks/unlocks the learning lounge for your students."
+                                    : "Misa amapharamitha eseshini nezikhodi zokungena datha. Le khodi ivala/ivula igumbi lomhlangano labafundi bakho."}
                                 </p>
                               </div>
                               

@@ -29,6 +29,7 @@ import {
   Compass
 } from "lucide-react";
 import { Role } from "../types";
+import { ChalkboardSketchpad } from "./ChalkboardSketchpad";
 
 // Types for Imali Meetings
 export interface MeetingParticipant {
@@ -113,6 +114,18 @@ export default function ImaliMeetings({
   const [showWarningPopup, setShowWarningPopup] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [showAudioDownloadPopup, setShowAudioDownloadPopup] = useState(false);
+  const [customRoomCode, setCustomRoomCode] = useState("");
+  const [lastMeetingRoomName, setLastMeetingRoomName] = useState("");
+  const [codeToast, setCodeToast] = useState<string>("");
+
+  const showCodeGeneratedToast = (code: string) => {
+    setCodeToast(code);
+    const timer = setTimeout(() => {
+      setCodeToast("");
+    }, 4000);
+    return () => clearTimeout(timer);
+  };
 
   // Textarea notes
   const [hostNotes, setHostNotes] = useState("");
@@ -152,6 +165,26 @@ export default function ImaliMeetings({
     .catch(() => {
       setLivekitConfigured(false);
     });
+  }, []);
+
+  const generateInviteCode = () => {
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let randomSuffix = "";
+    for (let i = 0; i < 4; i++) {
+      randomSuffix += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const secureCode = `IMALI-LOUNGE-${month}${day}-${randomSuffix}`;
+    setCustomRoomCode(secureCode);
+    return secureCode;
+  };
+
+  useEffect(() => {
+    if (!customRoomCode) {
+      generateInviteCode();
+    }
   }, []);
 
   // Load active meeting on mount & keep in sync
@@ -507,6 +540,7 @@ export default function ImaliMeetings({
         }
         setIsRecording(false);
       }
+      setShowAudioDownloadPopup(true);
     }
   };
 
@@ -744,8 +778,6 @@ export default function ImaliMeetings({
       recInterval = setInterval(() => {
         setRecordingSeconds(prev => prev + 1);
       }, 1000);
-    } else {
-      setRecordingSeconds(0);
     }
     return () => clearInterval(recInterval);
   }, [isRecording]);
@@ -772,7 +804,7 @@ export default function ImaliMeetings({
     } else {
       setLoginError(
         language === "en"
-          ? "Invalid professional email or Syndicate Access Key."
+          ? "Invalid professional email or Academy Access Key."
           : "I-imeyili engavumelekile noma iKhodi Enkulu engalungile."
       );
     }
@@ -788,12 +820,12 @@ export default function ImaliMeetings({
     e.preventDefault();
     if (!roomName.trim()) return;
 
-    const code = "IMALI-MEET-" + Math.floor(1000 + Math.random() * 9000);
+    const code = customRoomCode.trim() || ("IMALI-MEET-" + Math.floor(1000 + Math.random() * 9000));
     const hostName = meetingAuth.role === Role.ADMIN ? "Dean Admin" : "Lead Instructor";
     const newMeeting: MeetingState = {
       roomId: code,
       roomName: roomName.trim(),
-      topic: roomTopic.trim() || "Financial Syndicate Open Forum",
+      topic: roomTopic.trim() || "Financial Academy Open Forum",
       startedAt: startType === "immediate" ? new Date().toISOString() : null,
       isLive: startType === "immediate",
       scheduledTime: startType === "scheduled" ? scheduledDateTime : undefined,
@@ -835,6 +867,7 @@ export default function ImaliMeetings({
     setShowWarningPopup(false);
     setIsRecording(false);
     setHostNotes("");
+    generateInviteCode();
   };
 
   // Student Join Meeting
@@ -1182,8 +1215,17 @@ export default function ImaliMeetings({
       if (liveRoom) {
         stopLiveKitRecording();
       } else {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+          mediaRecorderRef.current.stop();
+          if (mediaRecorderRef.current.stream) {
+            mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+          }
+        }
         setIsRecording(false);
       }
+      setShowAudioDownloadPopup(true);
+    } else if (recordingSeconds > 0) {
+      setShowAudioDownloadPopup(true);
     }
     setShowWarningPopup(false);
 
@@ -1196,8 +1238,12 @@ export default function ImaliMeetings({
       setLiveRoom(null);
     }
     
+    if (meeting) {
+      setLastMeetingRoomName(meeting.roomName);
+    }
     localStorage.removeItem("imali_active_meeting_v1");
     setMeeting(null);
+    generateInviteCode();
   };
 
   const handleEndMeetingManually = () => {
@@ -1234,10 +1280,18 @@ export default function ImaliMeetings({
     document.body.removeChild(element);
   };
 
-  // Simulated WAV file generator for premium compliance
+  // Simulated or real WAV/MP3 file generator for premium compliance
   const triggerAudioDownload = (filename: string) => {
-    if (liveRoom) {
-      downloadLiveKitRecording(filename);
+    if (recordedChunksRef.current.length > 0) {
+      const mimeType = mediaRecorderRef.current?.mimeType || "audio/webm";
+      const blob = new Blob(recordedChunksRef.current, { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const element = document.createElement("a");
+      element.href = url;
+      element.download = filename.endsWith(".wav") ? filename.replace(".wav", ".mp3") : filename;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
       return;
     }
     const header = new TextEncoder().encode("RIFF....WAVEfmt ");
@@ -1252,6 +1306,81 @@ export default function ImaliMeetings({
 
   return (
     <div className="space-y-6 w-full animate-fade-in text-white">
+      {/* DOWNLOAD RECORDING POPUP MODAL */}
+      {showAudioDownloadPopup && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[9999] flex items-center justify-center p-4">
+          <div className="bg-[#050505] border-2 border-[#D4AF37] p-8 rounded-3xl max-w-md w-full shadow-[0_0_50px_rgba(212,175,55,0.25)] text-center space-y-6 relative overflow-hidden animate-fade-in">
+            <div className="absolute top-[-50px] right-[-50px] w-36 h-36 bg-[#D4AF37]/5 rounded-full blur-2xl"></div>
+            
+            <div className="w-16 h-16 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center mx-auto text-3xl">
+              🚀
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="text-xl font-serif font-bold text-[#D4AF37] uppercase tracking-wider">
+                {language === "en" ? "Session Completed" : "Isikhathi Siphelile"}
+              </h3>
+              <p className="text-xs text-zinc-400 font-sans leading-relaxed">
+                {language === "en"
+                  ? "Your session has ended successfully. You can download your MP3 audio recording and your lecture notes separately below."
+                  : "Isikhathi sakho siphele kahle. Ungalanda ukurekhoda kwakho kwe-MP3 namanothi akho omhlangano ngokuhlukile ngezansi."}
+              </p>
+            </div>
+
+            {/* Preview files to download */}
+            <div className="bg-zinc-950 border border-zinc-900 p-4 rounded-2xl text-left space-y-2.5 font-mono text-[11px] text-zinc-300">
+              <div className="flex justify-between items-center pb-2 border-b border-zinc-900">
+                <span className="text-zinc-500">Audio Recording:</span>
+                <span className="text-emerald-400 font-bold">{lastMeetingRoomName || meeting?.roomName || "meeting"}_audio_recording.mp3</span>
+              </div>
+              {(hostNotes.trim() || studentNotes.trim()) && (
+                <div className="flex justify-between items-center pt-1">
+                  <span className="text-zinc-500">Lecture Notes:</span>
+                  <span className="text-[#D4AF37] font-bold">
+                    {meetingAuth.isAuthenticated && hostNotes.trim() ? "host_notes_official.txt" : "student_notes_personal.txt"}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-2.5">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowAudioDownloadPopup(false)}
+                  className="flex-1 py-3 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-400 hover:text-white text-xs font-mono font-bold uppercase rounded-xl transition cursor-pointer animate-fade-in"
+                >
+                  {language === "en" ? "Close" : "Vala"}
+                </button>
+                
+                {(hostNotes.trim() || studentNotes.trim()) && (
+                  <button
+                    onClick={() => {
+                      if (meetingAuth.isAuthenticated && hostNotes.trim()) {
+                        triggerTextDownload(`${lastMeetingRoomName || meeting?.roomName || "meeting"}_host_notes_official.txt`, hostNotes);
+                      } else {
+                        triggerTextDownload(`${lastMeetingRoomName || meeting?.roomName || "meeting"}_student_notes_personal.txt`, studentNotes);
+                      }
+                    }}
+                    className="flex-1 py-3 bg-zinc-950 hover:bg-zinc-900 border border-[#D4AF37] text-[#D4AF37] text-xs font-mono font-bold uppercase rounded-xl transition cursor-pointer animate-fade-in"
+                  >
+                    {language === "en" ? "Download Notes" : "Landa Amanothi"}
+                  </button>
+                )}
+              </div>
+
+              <button
+                onClick={() => {
+                  triggerAudioDownload(`${lastMeetingRoomName || meeting?.roomName || "meeting"}_audio_recording.mp3`);
+                }}
+                className="w-full py-3 bg-gradient-to-r from-[#D4AF37] to-[#aa7c11] text-black text-xs font-mono font-black uppercase tracking-wider rounded-xl hover:brightness-110 transition shadow-[0_0_20px_rgba(212,175,55,0.25)] cursor-pointer"
+              >
+                {language === "en" ? "Download MP3 Recording" : "Landa i-MP3 Umsindo"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-900 pb-5">
         <div>
@@ -1262,7 +1391,7 @@ export default function ImaliMeetings({
             {livekitConfigured ? (
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold uppercase">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                LiveKit Live
+                Active Voice Stream
               </span>
             ) : (
               <span className="text-[10px] font-mono text-amber-500 bg-amber-500/10 border border-amber-500/25 px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold uppercase">
@@ -1278,8 +1407,8 @@ export default function ImaliMeetings({
             )}
           </div>
           <h2 className="text-3xl font-serif font-light text-white tracking-wide uppercase mt-2">
-            {language === "en" ? "Syndicate" : "Ibandla"}{" "}
-            <span className="text-[#D4AF37] italic font-normal">Audio Suite</span>
+            {language === "en" ? "Academy" : "Ibandla"}{" "}
+            <span className="text-[#D4AF37] italic font-normal">Lecture Lounge</span>
           </h2>
           <p className="text-xs text-zinc-400 mt-1 max-w-2xl font-sans">
             {language === "en" 
@@ -1497,30 +1626,14 @@ export default function ImaliMeetings({
               </div>
             </div>
 
-            {/* Private Notes Section */}
-            <div className="bg-zinc-950 border border-zinc-900 rounded-3xl p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-zinc-900 pb-3">
-                <h4 className="text-sm font-bold font-mono text-[#D4AF37] uppercase flex items-center gap-2">
-                  <FileText className="w-4 h-4" /> Personal Notes Scratchpad
-                </h4>
-                <button
-                  onClick={() => triggerTextDownload(`${meeting.roomName}_personal_notes.txt`, studentNotes)}
-                  disabled={!studentNotes.trim()}
-                  className="py-1.5 px-3 bg-[#D4AF37] hover:brightness-110 disabled:opacity-35 disabled:cursor-not-allowed text-black text-[10px] font-mono font-bold rounded-lg uppercase tracking-wider transition flex items-center gap-1"
-                >
-                  <Download className="w-3 h-3" /> Download Notes
-                </button>
-              </div>
-              <p className="text-[11px] text-zinc-500 leading-relaxed font-sans">
-                Write down your personal key findings, calculations, and strategies here. These notes are fully confidential, never stored on our servers, and can only be downloaded by you.
-              </p>
-              <textarea
-                value={studentNotes}
-                onChange={(e) => setStudentNotes(e.target.value)}
-                placeholder="Type your personal insights, currency targets, or questions to ask the host..."
-                className="w-full h-40 bg-zinc-900/60 border border-zinc-805 p-3 rounded-xl text-xs text-zinc-200 outline-none focus:border-[#D4AF37] resize-none font-sans"
-              />
-            </div>
+            {/* Private Notes & Interactive Sketchboard Section */}
+            <ChalkboardSketchpad
+              language={language}
+              roomId={meeting.roomId}
+              roomName={meeting.roomName}
+              initialTextNotes={studentNotes}
+              onSaveNotes={(text) => setStudentNotes(text)}
+            />
           </div>
 
           {/* Participant Presence Sidebar (Right Column) */}
@@ -1701,21 +1814,12 @@ export default function ImaliMeetings({
                       {isRecording === false && recordingSeconds > 0 && (
                         <button
                           onClick={() => {
-                            // Download audio as MP3
+                            // Download audio as MP3 only
                             triggerAudioDownload(`${meeting.roomName}_audio_recording.mp3`);
-                            // Automatically download meeting notes text file as well
-                            if (meetingAuth.isAuthenticated && hostNotes.trim()) {
-                              triggerTextDownload(`${meeting.roomName}_host_notes_official.txt`, hostNotes);
-                            } else if (joinedParticipantId && studentNotes.trim()) {
-                              triggerTextDownload(`${meeting.roomName}_student_notes_personal.txt`, studentNotes);
-                            } else {
-                              const placeholderNotes = `IMALI NGESIZULU ACADEMY - MEETING BRIEF\n======================================\nRoom: ${meeting.roomName}\nTopic: ${meeting.roomTopic || "FX & Candlestick Physics"}\nDate: ${new Date().toLocaleDateString()}\nStatus: COMPLETED RECORDING SESSION\n\nNotes: Thank you for attending the live session. Keep practicing strict risk management and study the Candlestick Physics modules!`;
-                              triggerTextDownload(`${meeting.roomName}_meeting_notes_summary.txt`, placeholderNotes);
-                            }
                           }}
                           className="flex items-center gap-1.5 py-2.5 px-4 bg-gradient-to-r from-zinc-900 to-black border border-[#D4AF37] hover:bg-[#D4AF37]/10 text-[#D4AF37] rounded-xl text-xs font-mono uppercase transition cursor-pointer font-bold shadow-[0_0_15px_rgba(212,175,55,0.1)]"
                         >
-                          <Download className="w-4 h-4 text-[#D4AF37]" /> Download MP3 & Notes
+                          <Download className="w-4 h-4 text-[#D4AF37]" /> Download MP3 Recording
                         </button>
                       )}
                     </div>
@@ -1729,30 +1833,14 @@ export default function ImaliMeetings({
                   </div>
                 </div>
 
-                {/* Instructor Notes Panel */}
-                <div className="bg-zinc-950 border border-zinc-900 rounded-3xl p-6 space-y-4">
-                  <div className="flex items-center justify-between border-b border-zinc-900 pb-3">
-                    <h4 className="text-sm font-bold font-mono text-[#D4AF37] uppercase flex items-center gap-2">
-                      <FileText className="w-4 h-4" /> Syndicate Meeting Notes
-                    </h4>
-                    <button
-                      onClick={() => triggerTextDownload(`${meeting.roomName}_notes_official.txt`, hostNotes)}
-                      disabled={!hostNotes.trim()}
-                      className="py-1.5 px-3 bg-[#D4AF37] hover:brightness-110 disabled:opacity-35 disabled:cursor-not-allowed text-black text-[10px] font-mono font-bold rounded-lg uppercase tracking-wider transition flex items-center gap-1"
-                    >
-                      <Download className="w-3 h-3" /> Download Notes
-                    </button>
-                  </div>
-                  <textarea
-                    value={hostNotes}
-                    onChange={(e) => setHostNotes(e.target.value)}
-                    placeholder="Write official meeting records, strategy notes, financial definitions, and homework for the student cohort..."
-                    className="w-full h-44 bg-zinc-900/60 border border-zinc-805 p-3 rounded-xl text-xs text-zinc-200 outline-none focus:border-[#D4AF37] resize-none font-sans"
-                  />
-                  <p className="text-[10px] text-zinc-500 font-mono">
-                    ⚠️ Note: meeting notes are temporarily cached in current browser window memory. Download them before ending the session.
-                  </p>
-                </div>
+                {/* Interactive Blackboard Sketchpad & Cohort Notes */}
+                <ChalkboardSketchpad
+                  language={language}
+                  roomId={meeting.roomId}
+                  roomName={meeting.roomName}
+                  initialTextNotes={hostNotes}
+                  onSaveNotes={(text) => setHostNotes(text)}
+                />
               </div>
 
               {/* Attendee Management & Speaking Requests (Right Column) */}
@@ -1860,13 +1948,26 @@ export default function ImaliMeetings({
 
                   {/* Quick invite section */}
                   <div className="pt-3 border-t border-zinc-900 space-y-2 font-mono text-[10px]">
-                    <div className="flex justify-between text-zinc-500 uppercase font-bold">
+                    <div className="flex justify-between text-zinc-500 uppercase font-bold items-center">
                       <span>🔗 Invite Code:</span>
-                      <span className="text-white bg-zinc-900 px-1.5 py-0.5 rounded">{meeting.roomId}</span>
+                      <span className="text-white bg-zinc-900 px-1.5 py-0.5 rounded text-xs">{meeting.roomId}</span>
                     </div>
                     <p className="text-zinc-500 leading-normal font-sans">
                       Share the Invitation Room Code above with students. They will enter this code on their dashboard to join this voice seminar.
                     </p>
+                    <div className="mt-2 pt-2 border-t border-zinc-900/40">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(meeting.roomId);
+                          alert(language === "en"
+                            ? `Copied Active Classroom Invite Code to Clipboard:\n\n${meeting.roomId}\n\nSend this code to students so they can join right now!`
+                            : `Ikhodi Yedijithali Ikopishiwe:\n\n${meeting.roomId}\n\nThumela le khodi kubafundi ukuze bajoyine manje!`);
+                        }}
+                        className="w-full py-2 bg-gradient-to-r from-[#D4AF37]/10 to-transparent hover:bg-[#D4AF37]/20 border border-[#D4AF37]/30 text-[#D4AF37] rounded-lg text-[9px] font-mono uppercase tracking-wider font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        📋 Copy Student Invite Code
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -1878,20 +1979,75 @@ export default function ImaliMeetings({
               <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-[#D4AF37]/5 rounded-full blur-3xl animate-pulse"></div>
 
               <div className="space-y-2 border-b border-zinc-900 pb-5">
-                <span className="text-[10px] bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 px-3 py-1 rounded-full font-mono font-bold uppercase tracking-widest block w-fit">
-                  👑 ADMIN & INSTRUCTOR SCHEDULING UNIT
-                </span>
-                <h3 className="text-2xl font-serif font-light text-white uppercase tracking-wide">
-                  Create Private <span className="text-[#D4AF37] italic font-normal">Audio Meeting Room</span>
-                </h3>
-                <p className="text-xs text-zinc-400 font-sans">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <span className="text-[10px] bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 px-3 py-1 rounded-full font-mono font-bold uppercase tracking-widest block w-fit">
+                      👑 ADMIN & INSTRUCTOR SCHEDULING UNIT
+                    </span>
+                    <h3 className="text-2xl font-serif font-light text-white uppercase tracking-wide mt-2">
+                      Create Private <span className="text-[#D4AF37] italic font-normal">Audio Meeting Room</span>
+                    </h3>
+                  </div>
+                  
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const secureCode = generateInviteCode();
+                      showCodeGeneratedToast(secureCode);
+                    }}
+                    className="py-2 px-4 bg-emerald-500/10 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono tracking-wider font-bold uppercase rounded-lg shrink-0 cursor-pointer self-start sm:self-center transition"
+                  >
+                    🎲 Generate Secure Student Invite Code
+                  </button>
+                </div>
+                <p className="text-xs text-zinc-400 font-sans mt-1">
                   Configure real-time voice networks, assign topic descriptions, and schedule live seminar classrooms for the student body.
                 </p>
               </div>
 
+              {codeToast && (
+                <div className="bg-emerald-950/45 border border-emerald-500/30 p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 text-xs text-emerald-400 font-mono animate-fade-in">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-base animate-pulse">✨</span>
+                    <div>
+                      <span className="font-bold">{language === "en" ? "Fresh Code Pre-filled" : "Ikhodi Entsha Igcwalisiwe"}:</span>{" "}
+                      <span className="text-white bg-emerald-900/50 border border-emerald-500/30 px-2 py-0.5 rounded uppercase font-bold tracking-wider">{codeToast}</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] text-emerald-500/80">{language === "en" ? "Ready for student distribution" : "Ilungile ukwabiwa nabafundi"}</span>
+                </div>
+              )}
+
               <form onSubmit={handleCreateMeeting} className="space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="space-y-1.5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  <div className="space-y-1.5 md:col-span-1">
+                    <label className="text-xs text-zinc-400 font-mono uppercase block font-semibold">
+                      Invite Room Code *
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. IMALI-LOUNGE-0702-8XF9"
+                        value={customRoomCode}
+                        onChange={(e) => setCustomRoomCode(e.target.value.toUpperCase())}
+                        className="flex-1 bg-zinc-950 border border-zinc-850 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37] uppercase"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const secureCode = generateInviteCode();
+                          showCodeGeneratedToast(secureCode);
+                        }}
+                        title="Regenerate secure code"
+                        className="p-3 bg-emerald-500/10 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold uppercase rounded-xl transition cursor-pointer flex items-center gap-1.5 shrink-0 animate-fade-in"
+                      >
+                        🎲 <span className="hidden lg:inline text-[10px]">Regen</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5 md:col-span-1">
                     <label className="text-xs text-zinc-400 font-mono uppercase block font-semibold">
                       Room Name *
                     </label>
@@ -1905,13 +2061,13 @@ export default function ImaliMeetings({
                     />
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 md:col-span-1">
                     <label className="text-xs text-zinc-400 font-mono uppercase block font-semibold">
                       Topic & Description
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Masterclass on RSI Overbought, Pivot Points & Hedging"
+                      placeholder="e.g. Masterclass on RSI Overbought"
                       value={roomTopic}
                       onChange={(e) => setRoomTopic(e.target.value)}
                       className="w-full bg-zinc-950 border border-zinc-850 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37]"
@@ -1965,7 +2121,7 @@ export default function ImaliMeetings({
                   <ul className="list-disc pl-4 space-y-1">
                     <li>Seminars have a strict maximum timeframe of 60 minutes.</li>
                     <li>Students can join only if they are invited and possess the room code.</li>
-                    <li>To protect intellectual syndicate asset channels, all notes and recordings will be automatically wiped from the server upon room dissolution.</li>
+                    <li>To protect intellectual academy asset channels, all notes and recordings will be automatically wiped from the server upon room dissolution.</li>
                   </ul>
                 </div>
 
@@ -1981,26 +2137,7 @@ export default function ImaliMeetings({
         </div>
       )}
 
-      {/* LiveKit Configuration Guide Alert */}
-      {!meetingAuth.isAuthenticated && !joinedParticipantId && livekitConfigured === false && (
-        <div className="bg-zinc-950 border border-amber-500/20 rounded-3xl p-6 max-w-5xl mx-auto mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <span className="text-[9px] font-mono text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded font-black uppercase">
-              ℹ️ LiveKit Integration Status
-            </span>
-            <h4 className="text-sm font-bold text-white uppercase mt-1">
-              Active in Local Simulation Mode
-            </h4>
-            <p className="text-xs text-zinc-400 font-sans leading-relaxed max-w-3xl">
-              To fully activate LiveKit Cloud real-time audio rooms, configure your credentials on the backend.
-              Add <code className="text-amber-500 bg-zinc-900 px-1 py-0.5 rounded font-mono">LIVEKIT_URL</code>, <code className="text-amber-500 bg-zinc-900 px-1 py-0.5 rounded font-mono">LIVEKIT_API_KEY</code>, and <code className="text-amber-500 bg-zinc-900 px-1 py-0.5 rounded font-mono">LIVEKIT_API_SECRET</code> in the environment variables configuration or your <code className="text-[#D4AF37] bg-zinc-900 px-1 py-0.5 rounded font-mono">.env</code> file.
-            </p>
-          </div>
-          <div className="text-[10px] text-amber-500 bg-amber-500/5 border border-amber-500/20 px-3.5 py-2 rounded-xl font-mono shrink-0 max-w-xs">
-            ⚡ Fully compatible with Netlify functions & secrets manager.
-          </div>
-        </div>
-      )}
+
 
       {/* 3. NOT LOGGED IN / GUEST / STUDENT HOME (JOIN GATE) */}
       {!meetingAuth.isAuthenticated && !joinedParticipantId && (
@@ -2040,6 +2177,11 @@ export default function ImaliMeetings({
                     onChange={(e) => setStudentJoinCode(e.target.value)}
                     className="w-full bg-zinc-950 border border-zinc-850 p-3 rounded-xl text-xs text-[#D4AF37] font-mono outline-none focus:border-[#D4AF37] uppercase placeholder:lowercase"
                   />
+                  <p className="text-[10px] text-zinc-500 font-sans leading-relaxed pt-1.5">
+                    {language === "en"
+                      ? "✉️ Students: If you do not have an active invitation room code, please email the Academy Administrator or your Instructor at info@imalingesizulu.com to request access."
+                      : "✉️ Abafundi: Uma ungenayo ikhodi esebenzayo, sicela uthumele i-imeyili ku-Administrator noma uMfundisi wakho ku-info@imalingesizulu.com."}
+                  </p>
                 </div>
 
                 <div className="space-y-1">
@@ -2137,7 +2279,7 @@ export default function ImaliMeetings({
 
                 <div className="space-y-1">
                   <label className="text-[10px] text-zinc-400 font-mono uppercase block font-semibold">
-                    Syndicate Access Key *
+                    Academy Access Key *
                   </label>
                   <input
                     type="password"
