@@ -4662,7 +4662,7 @@ export default function App() {
     const activePasscodeRequired = instructorDetails.classCode || "IMALI-7294018365";
     if (activeRole === Role.STUDENT) {
       if (!newGroupPasscode.trim()) {
-        setCreateGroupError("Security Credentials required: Please enter the Instructor Passcode (e.g. IMALI-7294018365).");
+        setCreateGroupError("Security Credentials required: Please enter your Instructor Passcode.");
         return;
       }
       if (newGroupPasscode.trim().toUpperCase() !== activePasscodeRequired.toUpperCase()) {
@@ -10027,7 +10027,7 @@ export default function App() {
 
                     <p className="text-xs text-zinc-400 leading-relaxed">
                       {activeRole === Role.STUDENT ? (
-                        <>Enter the group details and your <strong className="text-[#25d366]">Instructor Passcode</strong> (e.g. <code className="text-[#25d366] bg-[#202c33] px-1 py-0.5 rounded">IMALI-7294018365</code>) to authorize creating a new group room.</>
+                        <>Enter the group details and your <strong className="text-[#25d366]">Instructor Passcode</strong> to authorize creating a new group room.</>
                       ) : (
                         <>Create a new WhatsApp community group for students and traders on the network.</>
                       )}
@@ -10095,7 +10095,7 @@ export default function App() {
                           type="text"
                           value={newGroupPasscode}
                           onChange={e => setNewGroupPasscode(e.target.value)}
-                          placeholder={activeRole === Role.STUDENT ? "Enter Instructor Passcode (e.g. IMALI-7294018365)..." : "Authorization pre-validated"}
+                          placeholder={activeRole === Role.STUDENT ? "Enter Instructor Passcode..." : "Authorization pre-validated"}
                           className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
                         />
                         <span className="text-[9px] text-zinc-500 block mt-1 font-mono">
