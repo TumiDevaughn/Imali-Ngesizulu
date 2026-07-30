@@ -50,6 +50,7 @@ import {
   Image as ImageIcon,
   CheckCheck,
   Info,
+  ChevronLeft,
   X
 } from "lucide-react";
 import { Role, User, Course, Lesson, Language, ChatMessage } from "./types";
@@ -4637,14 +4638,33 @@ export default function App() {
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
 
   // Community Group creation states
-  const [communityGroups, setCommunityGroups] = useState<Array<{ id: string; name: string; desc: string; members: string; tag: string }>>([
-    { id: "southafrica", name: "🇿🇦 USD/ZAR & SA Community", desc: "Rand carries, local news & setups", members: "112 members", tag: "POPULAR" },
-    { id: "asian", name: "🟢 IMALI Global Community", desc: "Main WhatsApp discussion lounge", members: "186 members", tag: "ACTIVE" },
-    { id: "newyork", name: "📈 Gold & XAU/USD Syndicate", desc: "High liquidity gold scalping", members: "94 members", tag: "XAU" },
-    { id: "london", name: "🇬🇧 London Breakout Squad", desc: "GBP/USD & EUR volatility setups", members: "142 members", tag: "GBP" },
-    { id: "germany", name: "🇩🇪 Frankfurt & DAX Lounge", desc: "European indices & DAX trading", members: "88 members", tag: "DAX" },
-    { id: "china", name: "🎓 Imali Academy Student Forum", desc: "Homework help, Q&A & study guides", members: "210 members", tag: "STUDY" }
-  ]);
+  const [communityGroups, setCommunityGroups] = useState<Array<{ id: string; name: string; desc: string; members: string; tag: string }>>(() => {
+    try {
+      const saved = localStorage.getItem("imali_community_groups_v2");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return [
+      { id: "southafrica", name: "🇿🇦 USD/ZAR & SA Community", desc: "Rand carries, local news & setups", members: "112 members", tag: "POPULAR" },
+      { id: "asian", name: "🟢 IMALI Global Community", desc: "Main WhatsApp discussion lounge", members: "186 members", tag: "ACTIVE" },
+      { id: "newyork", name: "📈 Gold & XAU/USD Syndicate", desc: "High liquidity gold scalping", members: "94 members", tag: "XAU" },
+      { id: "london", name: "🇬🇧 London Breakout Squad", desc: "GBP/USD & EUR volatility setups", members: "142 members", tag: "GBP" },
+      { id: "germany", name: "🇩🇪 Frankfurt & DAX Lounge", desc: "European indices & DAX trading", members: "88 members", tag: "DAX" },
+      { id: "china", name: "🎓 Imali Academy Student Forum", desc: "Homework help, Q&A & study guides", members: "210 members", tag: "STUDY" }
+    ];
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("imali_community_groups_v2", JSON.stringify(communityGroups));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [communityGroups]);
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDesc, setNewGroupDesc] = useState("");
@@ -4709,6 +4729,13 @@ export default function App() {
     setNewGroupPasscode("");
     setNewGroupTag("COMMUNITY");
     setCreateGroupError("");
+
+    setTimeout(() => {
+      const chatPanel = document.getElementById("whatsapp_chat_panel");
+      if (chatPanel) {
+        chatPanel.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
   };
 
   // Voice recording timer
@@ -9398,7 +9425,7 @@ export default function App() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-[600px] lg:h-[650px]">
                 
                 {/* 1. WhatsApp Groups Sidebar (3 cols) */}
-                <div className="lg:col-span-4 bg-[#111b21] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl ring-1 ring-white/10 h-[380px] lg:h-full">
+                <div id="whatsapp_groups_sidebar" className="lg:col-span-4 bg-[#111b21] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl ring-1 ring-white/10 h-[380px] lg:h-full">
                   
                   {/* WhatsApp Sidebar Header */}
                   <div className="p-3.5 bg-[#202c33] border-b border-[#2a3942] flex justify-between items-center">
@@ -9531,6 +9558,12 @@ export default function App() {
                             setActiveChatRoom(group.id);
                             setShowEmojiPicker(false);
                             setShowAttachMenu(false);
+                            setTimeout(() => {
+                              const chatPanel = document.getElementById("whatsapp_chat_panel");
+                              if (chatPanel) {
+                                chatPanel.scrollIntoView({ behavior: "smooth" });
+                              }
+                            }, 100);
                           }}
                           className={`w-full p-3 text-left transition-all flex items-start gap-3 hover:bg-[#202c33]/70 ${isSelected ? "bg-[#202c33] border-l-4 border-[#25d366]" : ""}`}
                         >
@@ -9571,25 +9604,33 @@ export default function App() {
                 </div>
 
                 {/* 2. WhatsApp Main Chat Container (8 or 12 cols depending on Info Drawer) */}
-                <div className={`${showGroupInfoModal ? "lg:col-span-5" : "lg:col-span-8"} bg-[#0b141a] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300 ring-1 ring-white/10 min-h-[500px] lg:min-h-0`}>
+                <div id="whatsapp_chat_panel" className={`${showGroupInfoModal ? "lg:col-span-5" : "lg:col-span-8"} bg-[#0b141a] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300 ring-1 ring-white/10 min-h-[500px] lg:min-h-0`}>
                   
                   {/* WhatsApp Chat Header */}
                   <div className="p-3.5 bg-[#202c33] border-b border-[#2a3942] flex justify-between items-center z-10 shadow-md">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-[#25d366]/20 border border-[#25d366]/50 flex items-center justify-center text-[#25d366] font-bold text-sm">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <button
+                        onClick={() => {
+                          const groupsList = document.getElementById("whatsapp_groups_sidebar");
+                          if (groupsList) {
+                            groupsList.scrollIntoView({ behavior: "smooth" });
+                          }
+                        }}
+                        className="lg:hidden p-1.5 text-zinc-300 hover:text-white bg-[#111b21] hover:bg-[#2a3942] rounded-lg border border-[#2a3942] transition cursor-pointer shrink-0"
+                        title="Back to Groups List"
+                      >
+                        <ChevronLeft className="w-4 h-4 text-[#25d366]" />
+                      </button>
+
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#25d366]/20 border border-[#25d366]/50 flex items-center justify-center text-[#25d366] font-bold text-xs sm:text-sm shrink-0">
                         💬
                       </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                          {activeChatRoom === "southafrica" && "🇿🇦 USD/ZAR & SA Community Group"}
-                          {activeChatRoom === "asian" && "🟢 IMALI Global WhatsApp Group"}
-                          {activeChatRoom === "newyork" && "📈 Gold & XAU/USD Syndicate"}
-                          {activeChatRoom === "london" && "🇬🇧 London Breakout Squad"}
-                          {activeChatRoom === "germany" && "🇩🇪 Frankfurt & DAX Lounge"}
-                          {activeChatRoom === "china" && "🎓 Imali Academy Student Forum"}
+                      <div className="min-w-0 flex-1">
+                        <h4 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5 truncate">
+                          {communityGroups.find(g => g.id === activeChatRoom)?.name || "💬 WhatsApp Community Group"}
                         </h4>
-                        <p className="text-[10px] text-[#25d366] font-mono flex items-center gap-1">
-                          <span>Sipho, Audrey, Nomalanga, Thabo, Thabiso Khumalo, +182 others...</span>
+                        <p className="text-[10px] text-[#25d366] font-mono flex items-center gap-1 truncate">
+                          <span>{communityGroups.find(g => g.id === activeChatRoom)?.desc || "Active WhatsApp Community"} • {communityGroups.find(g => g.id === activeChatRoom)?.members || "Online"}</span>
                         </p>
                       </div>
                     </div>
