@@ -4704,9 +4704,9 @@ export default function App() {
 
     const welcomeMsg: ChatMessage = {
       id: "msg_welcome_" + Date.now(),
-      senderName: currentUser.name || (activeRole === Role.ADMIN ? "Admin" : activeRole === Role.INSTRUCTOR ? "Instructor" : "Scholar"),
-      senderRole: activeRole,
-      content: `🎉 Group "${newGroup.name}" created by ${currentUser.name || activeRole}. Welcome everyone to the group!`,
+      senderName: "Admin",
+      senderRole: Role.ADMIN,
+      content: `🎉 Group "${newGroup.name}" was created by the Admin. Welcome everyone to the group!`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       language: language,
       readStatus: true
