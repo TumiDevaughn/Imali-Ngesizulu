@@ -21,13 +21,13 @@ export const translations = {
     user_status: "Global Access Active",
     
     // Navigation
-    nav_dashboard: "Academy Dashboard",
-    nav_courses: "Imali Courses",
+    nav_dashboard: "Dashboard",
+    nav_courses: "Courses",
     nav_classroom: "Virtual Classroom",
     nav_chat: "Academic Lounge",
     nav_analytics: "Executive Analytics",
     nav_admin: "Academy Admin",
-    nav_blueprints: "Imali News Room",
+    nav_blueprints: "News Room",
     nav_drive: "Google Drive Sync",
 
     // General Actions
@@ -160,13 +160,13 @@ export const translations = {
     user_status: "Ukufinyelela Emhlabeni Wonke Kuyasebenza",
     
     // Navigation
-    nav_dashboard: "Ideshibhodi Yekhambali",
-    nav_courses: "Izifundo Ezivelele",
+    nav_dashboard: "Ideshibhodi",
+    nav_courses: "Izifundo",
     nav_classroom: "Ikilasi Elibonakalayo",
     nav_chat: "Igumbi Lezemfundo",
     nav_analytics: "Izibalo Zababusi",
     nav_admin: "Umlawuli We-Academy",
-    nav_blueprints: "Igumbi Ledaba Lomsakazo",
+    nav_blueprints: "Igumbi Ledaba",
     nav_drive: "Ezokugcina ku-Drive",
 
     // General Actions

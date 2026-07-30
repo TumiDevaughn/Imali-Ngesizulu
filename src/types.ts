@@ -95,6 +95,11 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
   language: Language;
+  mediaType?: "text" | "image" | "voice" | "document";
+  mediaUrl?: string;
+  voiceDuration?: string;
+  reactions?: { [emoji: string]: number };
+  readStatus?: boolean;
 }
 
 export interface Notification {

@@ -41,7 +41,16 @@ import {
   VolumeX,
   Cloud,
   Youtube,
-  ExternalLink
+  ExternalLink,
+  Mic,
+  Paperclip,
+  Smile,
+  MoreVertical,
+  Phone,
+  Image as ImageIcon,
+  CheckCheck,
+  Info,
+  X
 } from "lucide-react";
 import { Role, User, Course, Lesson, Language, ChatMessage } from "./types";
 import type { Notification as AppNotification } from "./types";
@@ -4618,6 +4627,105 @@ export default function App() {
   const [inputMessage, setInputMessage] = useState("");
   const [isAiThinking, setIsAiThinking] = useState(false);
 
+  // WhatsApp Community Chat states
+  const [isRecordingVoice, setIsRecordingVoice] = useState(false);
+  const [voiceRecordTime, setVoiceRecordTime] = useState(0);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showAttachMenu, setShowAttachMenu] = useState(false);
+  const [showGroupInfoModal, setShowGroupInfoModal] = useState(false);
+  const [chatSearchQuery, setChatSearchQuery] = useState("");
+  const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
+
+  // Community Group creation states
+  const [communityGroups, setCommunityGroups] = useState<Array<{ id: string; name: string; desc: string; members: string; tag: string }>>([
+    { id: "southafrica", name: "🇿🇦 USD/ZAR & SA Community", desc: "Rand carries, local news & setups", members: "112 members", tag: "POPULAR" },
+    { id: "asian", name: "🟢 IMALI Global Community", desc: "Main WhatsApp discussion lounge", members: "186 members", tag: "ACTIVE" },
+    { id: "newyork", name: "📈 Gold & XAU/USD Syndicate", desc: "High liquidity gold scalping", members: "94 members", tag: "XAU" },
+    { id: "london", name: "🇬🇧 London Breakout Squad", desc: "GBP/USD & EUR volatility setups", members: "142 members", tag: "GBP" },
+    { id: "germany", name: "🇩🇪 Frankfurt & DAX Lounge", desc: "European indices & DAX trading", members: "88 members", tag: "DAX" },
+    { id: "china", name: "🎓 Imali Academy Student Forum", desc: "Homework help, Q&A & study guides", members: "210 members", tag: "STUDY" }
+  ]);
+  const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
+  const [newGroupName, setNewGroupName] = useState("");
+  const [newGroupDesc, setNewGroupDesc] = useState("");
+  const [newGroupTag, setNewGroupTag] = useState("COMMUNITY");
+  const [newGroupPasscode, setNewGroupPasscode] = useState("");
+  const [showGroupOptionsMenu, setShowGroupOptionsMenu] = useState(false);
+  const [createGroupError, setCreateGroupError] = useState("");
+
+  const handleCreateCommunityGroup = () => {
+    if (!newGroupName.trim()) {
+      setCreateGroupError("Please specify a group name.");
+      return;
+    }
+
+    const activePasscodeRequired = instructorDetails.classCode || "FOREX101";
+    if (activeRole === Role.STUDENT) {
+      if (!newGroupPasscode.trim()) {
+        setCreateGroupError("Security Credentials required: Please enter the Instructor Passcode (e.g. FOREX101).");
+        return;
+      }
+      if (newGroupPasscode.trim().toUpperCase() !== activePasscodeRequired.toUpperCase()) {
+        setCreateGroupError(`Invalid Passcode! Contact Instructor (${instructorDetails.name || 'Admin'}) for the active passcode.`);
+        return;
+      }
+    }
+
+    const newGroupId = "group_" + Date.now();
+    const newGroup = {
+      id: newGroupId,
+      name: newGroupName.trim(),
+      desc: newGroupDesc.trim() || `Created by ${currentUser.name || activeRole}`,
+      members: "1 member",
+      tag: newGroupTag.trim().toUpperCase() || "NEW"
+    };
+
+    setCommunityGroups(prev => [newGroup, ...prev]);
+
+    const welcomeMsg: ChatMessage = {
+      id: "msg_welcome_" + Date.now(),
+      senderName: currentUser.name || (activeRole === Role.ADMIN ? "Admin" : activeRole === Role.INSTRUCTOR ? "Instructor" : "Scholar"),
+      senderRole: activeRole,
+      content: `🎉 Group "${newGroup.name}" created by ${currentUser.name || activeRole}. Welcome everyone to the group!`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      language: language,
+      readStatus: true
+    };
+
+    setChatSessions(prev => ({
+      ...prev,
+      [newGroupId]: [welcomeMsg]
+    }));
+
+    setUnlockedChats(prev => ({
+      ...prev,
+      [newGroupId]: true
+    }));
+
+    setActiveChatRoom(newGroupId);
+    setShowCreateGroupModal(false);
+    setNewGroupName("");
+    setNewGroupDesc("");
+    setNewGroupPasscode("");
+    setNewGroupTag("COMMUNITY");
+    setCreateGroupError("");
+  };
+
+  // Voice recording timer
+  useEffect(() => {
+    let timer: any = null;
+    if (isRecordingVoice) {
+      timer = setInterval(() => {
+        setVoiceRecordTime(prev => prev + 1);
+      }, 1000);
+    } else {
+      setVoiceRecordTime(0);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isRecordingVoice]);
+
   // Virtual Classroom Simulation state
   const [isClassroomStreaming, setIsClassroomStreaming] = useState(false);
   const [whiteboardDrawings, setWhiteboardDrawings] = useState<string[]>([
@@ -4714,6 +4822,78 @@ export default function App() {
     });
 
     setInputMessage("");
+  };
+
+  const handleSendVoiceNote = () => {
+    const secs = voiceRecordTime || 4;
+    const minsStr = Math.floor(secs / 60);
+    const secsStr = (secs % 60).toString().padStart(2, "0");
+    const formattedDuration = `${minsStr}:${secsStr}`;
+
+    const voiceMsg: ChatMessage = {
+      id: "msg_voice_" + Date.now(),
+      senderName: currentUser.name || "Student",
+      senderRole: currentUser.role,
+      content: `🎤 Voice Message (${formattedDuration})`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      language: language,
+      mediaType: "voice",
+      voiceDuration: formattedDuration,
+      readStatus: true
+    };
+
+    setChatSessions(prev => ({
+      ...prev,
+      [activeChatRoom]: [...(prev[activeChatRoom] || []), voiceMsg]
+    }));
+
+    setIsRecordingVoice(false);
+    setVoiceRecordTime(0);
+  };
+
+  const handleSendMediaMessage = (type: "image" | "document", url: string, caption?: string) => {
+    const mediaMsg: ChatMessage = {
+      id: "msg_media_" + Date.now(),
+      senderName: currentUser.name || "Student",
+      senderRole: currentUser.role,
+      content: caption || (type === "image" ? "📷 Shared Trade Setup Chart" : "📄 Shared Document Notes"),
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      language: language,
+      mediaType: type,
+      mediaUrl: url,
+      readStatus: true
+    };
+
+    setChatSessions(prev => ({
+      ...prev,
+      [activeChatRoom]: [...(prev[activeChatRoom] || []), mediaMsg]
+    }));
+
+    setShowAttachMenu(false);
+  };
+
+  const handleMessageReaction = (msgId: string, emoji: string) => {
+    setChatSessions(prev => {
+      const roomMsgs = prev[activeChatRoom] || [];
+      const updated = roomMsgs.map(m => {
+        if (m.id === msgId) {
+          const currentReactions = m.reactions || {};
+          const currentCount = currentReactions[emoji] || 0;
+          return {
+            ...m,
+            reactions: {
+              ...currentReactions,
+              [emoji]: currentCount + 1
+            }
+          };
+        }
+        return m;
+      });
+      return {
+        ...prev,
+        [activeChatRoom]: updated
+      };
+    });
   };
 
   // Run AI Arbitrary Translation Box
@@ -5324,6 +5504,23 @@ export default function App() {
               </button>
 
               <button
+                id="nav_community"
+                onClick={() => { setActiveTab("chat"); }}
+                className={`w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "chat" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 group-hover:bg-[#D4AF37]/20 group-hover:border-[#D4AF37]/50 transition-all duration-300">
+                    <Users className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                    <div className="absolute inset-0 rounded-lg border border-[#D4AF37]/30 scale-100 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  </div>
+                  <span className="text-xs font-semibold tracking-wider uppercase font-serif">
+                    {language === "en" ? "Community" : "Inkundla"}
+                  </span>
+                </div>
+                <span className="text-[9px] bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/25 px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-tight">FORUM</span>
+              </button>
+
+              <button
                 id="nav_courses"
                 onClick={() => { setActiveTab("courses"); }}
                 className={`w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "courses" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
@@ -5351,7 +5548,7 @@ export default function App() {
                     <div className="absolute inset-0 rounded-lg border border-[#D4AF37]/30 scale-100 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                   </div>
                   <span className="text-xs font-semibold tracking-wider uppercase font-serif">
-                    {language === "en" ? "Imali Meetings" : "Imihangano ye-Imali"}
+                    {language === "en" ? "Meetings" : "Imihangano"}
                   </span>
                 </div>
                 <span className="text-[9px] bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/25 px-1.5 py-0.5 rounded font-mono font-bold animate-pulse">AUDIO</span>
@@ -5383,23 +5580,6 @@ export default function App() {
               </button>
 
               <button
-                id="nav_chat"
-                onClick={() => { setActiveTab("chat"); }}
-                className={`hidden w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "chat" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 group-hover:bg-[#D4AF37]/20 group-hover:border-[#D4AF37]/50 transition-all duration-300">
-                    <MessageSquare className="w-4 h-4 group-hover:scale-110 group-hover:translate-y-[-1px] transition-all" />
-                    <div className="absolute inset-0 rounded-lg border border-[#D4AF37]/30 scale-100 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                  </div>
-                  <span className="text-xs font-semibold tracking-wider uppercase font-serif">
-                    {translateText("nav_chat", language)}
-                  </span>
-                </div>
-                <span className="text-[9px] bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/25 px-1.5 py-0.5 rounded uppercase font-bold tracking-tight">ROOMS</span>
-              </button>
-
-              <button
                 id="nav_blueprints"
                 onClick={() => { setActiveTab("blueprints"); }}
                 className={`w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "blueprints" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
@@ -5417,8 +5597,6 @@ export default function App() {
                 <span className="text-[9px] text-[#D4AF37] bg-[#D4AF37]/10 border border-[#D4AF37]/20 px-1 py-0.2 rounded font-mono font-bold animate-pulse">FM</span>
               </button>
 
-
-
               <button
                 id="nav_contact_us"
                 onClick={() => { setIsContactModalOpen(true); }}
@@ -5430,7 +5608,7 @@ export default function App() {
                     <div className="absolute inset-0 rounded-lg border border-[#D4AF37]/30 scale-100 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                   </div>
                   <span className="text-xs font-semibold tracking-wider uppercase font-serif">
-                    {language === "zu" ? "Xhumana Nathi / SoSizo" : "Help Centre • Contact"}
+                    {language === "en" ? "Help Centre" : "SoSizo"}
                   </span>
                 </div>
               </button>
@@ -5524,8 +5702,12 @@ export default function App() {
             </div>
           </section>
 
-          {/* ================= ROYAL TRADING SESSIONS DESK (ANALOG & DIGITAL CODES) ================= */}
-          <section id="sessions_trading_desk_clocks" className="space-y-4">
+          {/* 1. ACADEMY DASHBOARD VIEW */}
+          {activeTab === "dashboard" && (
+            <div id="tab_dashboard" className="space-y-6">
+
+              {/* ================= ROYAL TRADING SESSIONS DESK (ANALOG & DIGITAL CODES) ================= */}
+              <section id="sessions_trading_desk_clocks" className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-zinc-950/40 p-4 px-5 rounded-2xl border border-zinc-900">
               <div className="flex items-center gap-3 shrink-0">
                 <div className="flex items-center gap-2">
@@ -6046,10 +6228,6 @@ export default function App() {
               })}
             </div>
           </section>
-          
-          {/* 1. ACADEMY DASHBOARD VIEW */}
-          {activeTab === "dashboard" && (
-            <div id="tab_dashboard" className="space-y-6">
 
               {/* 100% Offline Privacy Shield Warning Banner */}
               <div className="bg-gradient-to-r from-[#111] via-zinc-900 to-black border border-[#D4AF37]/30 p-6 rounded-3xl relative overflow-hidden shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
@@ -9154,463 +9332,757 @@ export default function App() {
             </div>
           )}
 
-          {/* 4. SCHOLASTIC CHAT & SESSIONS TRADING LOUNGES */}
+          {/* 4. COMMUNITY WHATSAPP GROUP CHAT ROOMS */}
           {activeTab === "chat" && (
-            <div id="tab_chat" className="space-y-6">
+            <div id="tab_chat" className="space-y-4 text-left">
               
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                
-                {/* 1. Left Sidebar Navigation: Session Rooms */}
-                <div className="lg:col-span-1 flex flex-col gap-3.5">
-                  <span className="text-[10px] text-zinc-500 font-mono block uppercase tracking-wider text-left pl-1">
-                    Select Trading Lounge Room:
-                  </span>
-
-                  {[
-                    {
-                      id: "asian",
-                      name: "Tokyo Session Lounge",
-                      hours: "00:00 - 09:00 UTC",
-                      pairs: "JPY & AUD focused",
-                      color: "border-[#D4AF37]/45 text-[#D4AF37]"
-                    },
-                    {
-                      id: "china",
-                      name: "China Session Lounge",
-                      hours: "01:00 - 10:00 UTC",
-                      pairs: "CNH & HSI focused",
-                      color: "border-rose-500/40 text-rose-450"
-                    },
-                    {
-                      id: "germany",
-                      name: "Germany Session Lounge",
-                      hours: "07:00 - 16:00 UTC",
-                      pairs: "DAX & EUR focused",
-                      color: "border-purple-500/40 text-purple-450"
-                    },
-                    {
-                      id: "london",
-                      name: "London Session Lounge",
-                      hours: "08:00 - 17:00 UTC",
-                      pairs: "GBP & EUR focused",
-                      color: "border-sky-500/40 text-sky-450"
-                    },
-                    {
-                      id: "southafrica",
-                      name: "South Africa Session Lounge",
-                      hours: "07:00 - 16:00 UTC",
-                      pairs: "ZAR & J200 focused",
-                      color: "border-emerald-500/40 text-emerald-450"
-                    },
-                    {
-                      id: "newyork",
-                      name: "New York Session Lounge",
-                      hours: "13:00 - 22:00 UTC",
-                      pairs: "XAU & USD focused",
-                      color: "border-rose-500/40 text-rose-450"
-                    }
-                  ].map(room => {
-                    const isSelected = activeChatRoom === room.id;
-                    const isPassedGate = (activeRole !== Role.STUDENT) || unlockedChats[room.id];
-                    const localHours = systimeUtc.getUTCHours();
-                    let activeLive = false;
-                    
-                    if (room.id === "asian") activeLive = (localHours >= 0 && localHours < 9);
-                    else if (room.id === "china") activeLive = (localHours >= 1 && localHours < 10);
-                    else if (room.id === "germany") activeLive = (localHours >= 7 && localHours < 16);
-                    else if (room.id === "london") activeLive = (localHours >= 8 && localHours < 17);
-                    else if (room.id === "southafrica") activeLive = (localHours >= 7 && localHours < 16);
-                    else activeLive = (localHours >= 13 && localHours < 22);
-
-                    const simActive = simulatedTimeRemaining[room.id] !== null ? true : activeLive;
-
-                    return (
-                      <button
-                        key={room.id}
-                        onClick={() => setActiveChatRoom(room.id)}
-                        className={`w-full p-4 rounded-2xl border text-left transition-all ${isSelected ? "bg-zinc-950 border-[#D4AF37] shadow-[0_4px_20px_rgba(212,175,55,0.08)] text-white" : "bg-black/40 border-zinc-900 hover:border-zinc-800 text-zinc-400 hover:text-white"}`}
-                      >
-                        <div className="flex justify-between items-start mb-1">
-                          <span className="text-[9px] font-mono text-zinc-500 uppercase">{room.hours}</span>
-                          <span className={`text-[8px] font-mono px-1.5 py-0.2 rounded font-bold ${simActive ? "bg-emerald-500/10 text-emerald-400" : "bg-zinc-900 text-zinc-500"}`}>
-                            {simActive ? "● ONLINE" : "○ CLOSED"}
-                          </span>
-                        </div>
-                        <h5 className="text-xs font-bold truncate uppercase">{room.name}</h5>
-                        <p className="text-[10px] text-zinc-500 font-mono uppercase mt-1">Pairs: {room.pairs}</p>
-                        
-                        <div className="mt-3.5 pt-2 border-t border-zinc-900 flex justify-between items-center text-[9px]">
-                          <span className="text-zinc-500 font-mono">ACCESS LIMITS:</span>
-                          <span className={`font-mono font-bold flex items-center gap-1 ${isPassedGate ? "text-emerald-400" : "text-amber-500 animate-pulse"}`}>
-                            {isPassedGate ? "🔓 UNLOCKED" : "🔒 KEY REQUIRED"}
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
-
-                  <div className="bg-[#0b0b0b] border border-zinc-900 p-4 rounded-2xl text-[10px] text-zinc-500 leading-normal text-left mt-2 space-y-2">
-                    <p className="font-bold text-zinc-400 uppercase font-mono">📢 PURGE MANDATE RULES:</p>
-                    <p>Chats automatically close and clear logs at session end to ensure 100% offline security. Make sure to download transcripts before close!</p>
+              {/* WhatsApp Community Banner */}
+              <div className="bg-[#111b21] border border-[#202c33] p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#25d366]/15 border border-[#25d366]/40 flex items-center justify-center text-[#25d366] font-bold text-lg">
+                    💬
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] bg-[#25d366]/20 text-[#25d366] border border-[#25d366]/40 px-2 py-0.5 rounded font-mono font-bold uppercase tracking-widest">
+                        🟢 WHATSAPP COMMUNITY GROUP
+                      </span>
+                      <span className="text-[10px] text-zinc-400 font-mono">
+                        186 Active Members Online
+                      </span>
+                    </div>
+                    <h3 className="text-base font-serif font-bold text-white uppercase tracking-wide mt-0.5">
+                      IMALI NGESIZULU SCHOLAR COMMUNITY CHAT
+                    </h3>
                   </div>
                 </div>
 
-                {/* 2. Middle Column: Chat / Gate Panel */}
-                <div className="lg:col-span-2">
-                  {(() => {
-                    const isPassedGate = (activeRole !== Role.STUDENT) || unlockedChats[activeChatRoom];
-                    const activeName = activeRole === Role.STUDENT ? studentDetails.name : activeRole === Role.INSTRUCTOR ? instructorDetails.name : adminDetails.name;
-                    const hasProfileFilled = activeName.trim() !== "";
-                    
-                    // IF student has not filled name OR has locked chats, enforce the SECURE AUTHORIZATION GATE
-                    if (!isPassedGate || !hasProfileFilled) {
-                      return (
-                        <div className="bg-[#0a0a0a] border-2 border-[#D4AF37] rounded-3xl p-6 text-left space-y-6 min-h-[520px] shadow-[0_12px_36px_rgba(0,0,0,0.8)] flex flex-col justify-between">
-                          <div className="space-y-4">
-                            <div className="border-b border-zinc-850 pb-3 flex items-center justify-between">
-                              <div>
-                                <span className="text-[9px] bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/35 px-2.5 py-0.5 rounded font-mono font-bold uppercase tracking-widest inline-block animate-pulse">
-                                  🔐 SECURE ACCESS GATE
-                                </span>
-                                <h4 className="text-base font-serif font-light text-white uppercase mt-1 tracking-wide animate-in fade-in">
-                                  {activeChatRoom.toUpperCase()} SECURITY VALIDATION
-                                </h4>
-                              </div>
-                              <div className="w-8 h-8 rounded-full bg-[#D4AF37]/5 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37]">
-                                🔒
-                              </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowGroupInfoModal(!showGroupInfoModal)}
+                    className="px-3 py-1.5 bg-[#202c33] hover:bg-[#2a3942] text-zinc-200 border border-zinc-700 rounded-xl text-xs font-mono flex items-center gap-1.5 transition cursor-pointer"
+                  >
+                    <Info className="w-3.5 h-3.5 text-[#25d366]" />
+                    Group Info
+                  </button>
+                  <button
+                    onClick={() => {
+                      const roomMsgs = chatSessions[activeChatRoom] || [];
+                      const transcriptText = roomMsgs.map(m => `[${m.timestamp}] ${m.senderName} (${m.senderRole}): ${m.content}`).join("\n");
+                      const blob = new Blob([
+                        `===================================================\n`,
+                        `IMALI WHATSAPP GROUP CHAT TRANSCRIPT\n`,
+                        `Group: ${activeChatRoom.toUpperCase()}\n`,
+                        `Downloaded: ${new Date().toLocaleString()}\n`,
+                        `===================================================\n\n`,
+                        transcriptText || "No message logs recorded yet.\n"
+                      ], { type: "text/plain;charset=utf-8" });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = `IMALI_WhatsApp_Group_${activeChatRoom}.txt`;
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                      URL.revokeObjectURL(url);
+                    }}
+                    className="px-3 py-1.5 bg-[#25d366]/20 hover:bg-[#25d366]/30 text-[#25d366] border border-[#25d366]/40 rounded-xl text-xs font-mono flex items-center gap-1.5 transition cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Download Transcripts
+                  </button>
+                </div>
+              </div>
+
+              {/* Main WhatsApp Grid Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-[600px] lg:h-[650px]">
+                
+                {/* 1. WhatsApp Groups Sidebar (3 cols) */}
+                <div className="lg:col-span-4 bg-[#111b21] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl ring-1 ring-white/10 h-[380px] lg:h-full">
+                  
+                  {/* WhatsApp Sidebar Header */}
+                  <div className="p-3.5 bg-[#202c33] border-b border-[#2a3942] flex justify-between items-center">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-[#25d366] text-black font-black flex items-center justify-center text-xs shadow-md">
+                        WA
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white uppercase tracking-wider">COMMUNITY GROUPS</h4>
+                        <span className="text-[9px] text-[#25d366] font-mono flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#25d366] animate-pulse"></span>
+                          Live Sync Active
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <button 
+                        onClick={() => {
+                          setCreateGroupError("");
+                          setNewGroupPasscode(activeRole !== Role.STUDENT ? (instructorDetails.classCode || "FOREX101") : "");
+                          setShowCreateGroupModal(true);
+                        }}
+                        className="px-2.5 py-1 bg-[#25d366] hover:bg-[#20bd5a] text-black font-bold rounded-lg text-[10px] font-mono flex items-center gap-1 transition shadow cursor-pointer"
+                        title="Create New Community Group & Security Credentials"
+                      >
+                        <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                        <span>New Group</span>
+                      </button>
+
+                      <div className="relative">
+                        <button 
+                          onClick={() => setShowGroupOptionsMenu(!showGroupOptionsMenu)}
+                          className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition cursor-pointer"
+                          title="Group Options Menu"
+                        >
+                          <MoreVertical className="w-4 h-4" />
+                        </button>
+
+                        {showGroupOptionsMenu && (
+                          <div className="absolute right-0 top-full mt-2 w-56 bg-[#111b21] border border-[#202c33] rounded-2xl p-2 shadow-2xl z-50 animate-in fade-in zoom-in-95 space-y-1 text-left">
+                            <div className="px-2.5 py-1.5 text-[9px] font-mono text-zinc-400 uppercase font-bold border-b border-[#202c33] flex justify-between items-center">
+                              <span>⚙️ COMMUNITY OPTIONS</span>
+                              <button onClick={() => setShowGroupOptionsMenu(false)} className="text-zinc-500 hover:text-white">✕</button>
                             </div>
 
-                            <p className="text-xs text-zinc-400 leading-relaxed">
-                              You are attempting to connect to the <strong className="text-white uppercase">{activeChatRoom} core discussion channel</strong>. Before joining audio rooms or chat lounges under study guidelines, students must fill their profile details and input the custom pass-code provided by the admin or instructor.
-                            </p>
-
-                            <div className="space-y-4 pt-2">
-                              {/* Requirement 1: Complete profile name */}
-                              <div className="space-y-1">
-                                <label className="text-[10px] text-[#D4AF37] font-mono uppercase tracking-wider block font-bold">
-                                  1. Student Display Name (Real Ledger Identity):
-                                </label>
-                                <input
-                                  type="text"
-                                  value={studentDetails.name}
-                                  onChange={e => {
-                                    const next = { ...studentDetails, name: e.target.value };
-                                    setStudentDetails(next);
-                                    localStorage.setItem("imali_student_profile", JSON.stringify(next));
-                                  }}
-                                  placeholder="Type your real student profile name..."
-                                  className="w-full bg-zinc-950 border border-zinc-900 p-3 text-xs text-white rounded-xl outline-none focus:border-[#D4AF37]"
-                                />
-                                <span className="text-[9px] text-zinc-500 block leading-none">
-                                  This binds your name into volatile messages. Local browser cache only.
-                                </span>
-                              </div>
-
-                              {/* Requirement 2: Security class Code */}
-                              <div className="space-y-1">
-                                <label className="text-[10px] text-[#D4AF37] font-mono uppercase tracking-wider block font-bold">
-                                  2. Instructor Authorization Passcode:
-                                </label>
-                                <input
-                                  type="text"
-                                  value={enteredChatPasscode[activeChatRoom] || ""}
-                                  onChange={e => setEnteredChatPasscode({
-                                    ...enteredChatPasscode,
-                                    [activeChatRoom]: e.target.value
-                                  })}
-                                  placeholder="Type special passcode (e.g. FOREX101)..."
-                                  className="w-full bg-zinc-950 border border-zinc-900 p-3 text-xs text-white rounded-xl outline-none focus:border-[#D4AF37]"
-                                />
-                                {chatPasscodeError[activeChatRoom] && (
-                                  <p className="text-[10px] text-red-500 font-mono mt-0.5 animate-bounce">
-                                    ✕ {chatPasscodeError[activeChatRoom]}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="pt-4 border-t border-zinc-900">
                             <button
                               onClick={() => {
-                                if (!studentDetails.name.trim()) {
-                                  setChatPasscodeError({
-                                    ...chatPasscodeError,
-                                    [activeChatRoom]: "Profile Name required. Perfect display identity must be filled."
-                                  });
-                                  return;
-                                }
-
-                                const codeTyped = enteredChatPasscode[activeChatRoom] || "";
-                                if (codeTyped.trim().toUpperCase() !== instructorDetails.classCode.toUpperCase()) {
-                                  setChatPasscodeError({
-                                    ...chatPasscodeError,
-                                    [activeChatRoom]: `Passcode Mismatch. Contact Instructor (${instructorDetails.name}) for the active passcode.`
-                                  });
-                                  return;
-                                }
-
-                                // Open Gate
-                                setUnlockedChats({
-                                  ...unlockedChats,
-                                  [activeChatRoom]: true
-                                });
-                                setChatPasscodeError({
-                                  ...chatPasscodeError,
-                                  [activeChatRoom]: ""
-                                });
+                                setShowGroupOptionsMenu(false);
+                                setCreateGroupError("");
+                                setNewGroupPasscode(activeRole !== Role.STUDENT ? (instructorDetails.classCode || "FOREX101") : "");
+                                setShowCreateGroupModal(true);
                               }}
-                              className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#b08e27] text-black font-black uppercase text-xs tracking-widest rounded-xl transition hover:brightness-110 flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                              className="w-full px-3 py-2 hover:bg-[#202c33] rounded-xl text-xs text-white flex items-center gap-2.5 transition text-left font-sans cursor-pointer"
                             >
-                              🔓 Authorize & Unlock Volatile Chat
+                              <Plus className="w-4 h-4 text-[#25d366]" />
+                              <span>Create New Room</span>
                             </button>
-                            <span className="text-[8px] text-center text-zinc-650 block mt-2 font-mono uppercase">
-                              Zero external DB storage. Security certified under luxury sandboxing rules.
-                            </span>
+
+                            <button
+                              onClick={() => {
+                                setShowGroupOptionsMenu(false);
+                                setShowGroupInfoModal(true);
+                              }}
+                              className="w-full px-3 py-2 hover:bg-[#202c33] rounded-xl text-xs text-white flex items-center gap-2.5 transition text-left font-sans cursor-pointer"
+                            >
+                              <Info className="w-4 h-4 text-[#25d366]" />
+                              <span>Group Info & Members</span>
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                setShowGroupOptionsMenu(false);
+                                alert(`🔒 SECURITY CREDENTIALS STATUS\n\nRoom: ${activeChatRoom.toUpperCase()}\nActive Passcode: ${instructorDetails.classCode || "FOREX101"}\nUser Role: ${activeRole}\nEncryption: Local Sandbox Vault`);
+                              }}
+                              className="w-full px-3 py-2 hover:bg-[#202c33] rounded-xl text-xs text-white flex items-center gap-2.5 transition text-left font-sans cursor-pointer"
+                            >
+                              <Lock className="w-4 h-4 text-[#D4AF37]" />
+                              <span>Security & Credentials</span>
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                setShowGroupOptionsMenu(false);
+                                if (confirm(`Are you sure you want to clear local chat messages for ${activeChatRoom.toUpperCase()}?`)) {
+                                  setChatSessions(prev => ({
+                                    ...prev,
+                                    [activeChatRoom]: []
+                                  }));
+                                }
+                              }}
+                              className="w-full px-3 py-2 hover:bg-rose-500/20 rounded-xl text-xs text-rose-300 flex items-center gap-2.5 transition text-left font-sans cursor-pointer"
+                            >
+                              <Trash className="w-4 h-4 text-rose-400" />
+                              <span>Clear Room Messages</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Search Groups Input */}
+                  <div className="p-2.5 bg-[#111b21] border-b border-[#2a3942]">
+                    <div className="relative">
+                      <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
+                      <input
+                        type="text"
+                        value={chatSearchQuery}
+                        onChange={e => setChatSearchQuery(e.target.value)}
+                        placeholder="Search community groups..."
+                        className="w-full bg-[#202c33] border border-zinc-700/80 text-xs text-white pl-8 pr-3 py-1.5 rounded-xl outline-none focus:border-[#25d366] placeholder:text-zinc-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Groups List */}
+                  <div className="flex-1 overflow-y-auto divide-y divide-[#2a3942]/60">
+                    {communityGroups
+                    .filter(g => g.name.toLowerCase().includes(chatSearchQuery.toLowerCase()) || g.desc.toLowerCase().includes(chatSearchQuery.toLowerCase()))
+                    .map(group => {
+                      const isSelected = activeChatRoom === group.id;
+                      const roomMsgs = chatSessions[group.id] || [];
+                      const lastMsg = roomMsgs[roomMsgs.length - 1];
+
+                      return (
+                        <button
+                          key={group.id}
+                          onClick={() => {
+                            setActiveChatRoom(group.id);
+                            setShowEmojiPicker(false);
+                            setShowAttachMenu(false);
+                          }}
+                          className={`w-full p-3 text-left transition-all flex items-start gap-3 hover:bg-[#202c33]/70 ${isSelected ? "bg-[#202c33] border-l-4 border-[#25d366]" : ""}`}
+                        >
+                          <div className="relative">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-900 border border-zinc-700 flex items-center justify-center text-base shrink-0 shadow-inner">
+                              {group.name.substring(0, 2)}
+                            </div>
+                            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#25d366] border-2 border-[#111b21]"></span>
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-center mb-0.5">
+                              <h5 className="text-xs font-bold text-white truncate">{group.name}</h5>
+                              <span className="text-[9px] font-mono text-zinc-500">{lastMsg ? lastMsg.timestamp : "Live"}</span>
+                            </div>
+
+                            <p className="text-[10px] text-zinc-400 truncate">
+                              {lastMsg ? `${lastMsg.senderName}: ${lastMsg.content}` : group.desc}
+                            </p>
+
+                            <div className="flex justify-between items-center mt-1">
+                              <span className="text-[8px] font-mono text-zinc-500 uppercase">{group.members}</span>
+                              <span className="text-[8px] bg-[#25d366]/10 text-[#25d366] font-mono font-bold px-1.5 py-0.2 rounded border border-[#25d366]/20">
+                                {group.tag}
+                              </span>
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Security footer */}
+                  <div className="p-2.5 bg-[#0b141a] border-t border-[#2a3942] text-[9px] text-zinc-400 font-mono text-center flex items-center justify-center gap-1">
+                    <Lock className="w-3 h-3 text-[#25d366]" />
+                    <span>End-to-end local sandbox encryption</span>
+                  </div>
+                </div>
+
+                {/* 2. WhatsApp Main Chat Container (8 or 12 cols depending on Info Drawer) */}
+                <div className={`${showGroupInfoModal ? "lg:col-span-5" : "lg:col-span-8"} bg-[#0b141a] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300 ring-1 ring-white/10 min-h-[500px] lg:min-h-0`}>
+                  
+                  {/* WhatsApp Chat Header */}
+                  <div className="p-3.5 bg-[#202c33] border-b border-[#2a3942] flex justify-between items-center z-10 shadow-md">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-[#25d366]/20 border border-[#25d366]/50 flex items-center justify-center text-[#25d366] font-bold text-sm">
+                        💬
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                          {activeChatRoom === "southafrica" && "🇿🇦 USD/ZAR & SA Community Group"}
+                          {activeChatRoom === "asian" && "🟢 IMALI Global WhatsApp Group"}
+                          {activeChatRoom === "newyork" && "📈 Gold & XAU/USD Syndicate"}
+                          {activeChatRoom === "london" && "🇬🇧 London Breakout Squad"}
+                          {activeChatRoom === "germany" && "🇩🇪 Frankfurt & DAX Lounge"}
+                          {activeChatRoom === "china" && "🎓 Imali Academy Student Forum"}
+                        </h4>
+                        <p className="text-[10px] text-[#25d366] font-mono flex items-center gap-1">
+                          <span>Sipho, Audrey, Nomalanga, Thabo, Thabiso Khumalo, +182 others...</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          const msg = prompt("Enter text to search in current chat:");
+                          if (msg) setChatSearchQuery(msg);
+                        }}
+                        className="p-1.5 text-zinc-300 hover:text-white rounded-lg hover:bg-zinc-800 transition"
+                        title="Search messages"
+                      >
+                        <Search className="w-4 h-4" />
+                      </button>
+
+                      <button
+                        onClick={() => setShowGroupInfoModal(!showGroupInfoModal)}
+                        className="p-1.5 text-zinc-300 hover:text-white rounded-lg hover:bg-zinc-800 transition"
+                        title="Group Info"
+                      >
+                        <Info className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* WhatsApp Wallpaper Chat Area */}
+                  <div 
+                    className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#0b141a] relative"
+                    style={{
+                      backgroundImage: `radial-gradient(rgba(37, 211, 102, 0.03) 1px, transparent 1px)`,
+                      backgroundSize: '20px 20px'
+                    }}
+                  >
+                    {/* Date Divider */}
+                    <div className="flex justify-center my-2">
+                      <span className="bg-[#182229] border border-zinc-800 text-zinc-400 text-[9px] font-mono uppercase px-3 py-1 rounded-full shadow-sm">
+                        TODAY • WHATSAPP SECURE GROUP
+                      </span>
+                    </div>
+
+                    {/* Messages List */}
+                    {(chatSessions[activeChatRoom] || []).map(m => {
+                      const isCurrentUser = m.senderName === currentUser.name;
+                      const isInstructor = m.senderRole === Role.INSTRUCTOR || m.senderName.includes("Thabiso") || m.senderName.includes("Audrey");
+                      const isAdmin = m.senderRole === Role.ADMIN;
+
+                      return (
+                        <div key={m.id} className={`flex flex-col group ${isCurrentUser ? "items-end" : "items-start"}`}>
+                          
+                          {/* Chat Bubble */}
+                          <div 
+                            className={`relative max-w-[85%] sm:max-w-[75%] p-3 rounded-2xl shadow-md transition-all ${
+                              isCurrentUser 
+                                ? "bg-[#005c4b] text-white rounded-tr-none border border-[#026855]" 
+                                : "bg-[#202c33] text-zinc-100 rounded-tl-none border border-[#2a3942]"
+                            }`}
+                          >
+                            {/* Sender Info header for incoming messages */}
+                            {!isCurrentUser && (
+                              <div className="flex items-center gap-1.5 mb-1 text-[10px] font-bold">
+                                <span className={isInstructor ? "text-[#D4AF37]" : isAdmin ? "text-purple-400" : "text-[#25d366]"}>
+                                  {m.senderName}
+                                </span>
+                                <span className={`text-[8px] font-mono px-1 py-0.2 rounded ${isInstructor ? "bg-[#D4AF37]/20 text-[#D4AF37]" : isAdmin ? "bg-purple-500/20 text-purple-300" : "bg-zinc-800 text-zinc-400"}`}>
+                                  {isInstructor ? "👨‍🏫 Instructor" : isAdmin ? "🛡️ Admin" : "🎓 Scholar"}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* Voice Note Media */}
+                            {m.mediaType === "voice" && (
+                              <div className="flex items-center gap-3 bg-black/30 p-2.5 rounded-xl border border-white/10 my-1 min-w-[200px]">
+                                <button
+                                  onClick={() => setPlayingVoiceId(playingVoiceId === m.id ? null : m.id)}
+                                  className="w-8 h-8 rounded-full bg-[#25d366] text-black flex items-center justify-center shrink-0 hover:scale-105 transition"
+                                >
+                                  {playingVoiceId === m.id ? <Pause className="w-4 h-4 fill-black" /> : <Play className="w-4 h-4 fill-black ml-0.5" />}
+                                </button>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-1 h-4">
+                                    {[30, 60, 40, 80, 50, 90, 30, 70, 100, 40, 60, 80, 50, 30].map((h, idx) => (
+                                      <span
+                                        key={idx}
+                                        className={`w-1 rounded-full transition-all ${playingVoiceId === m.id ? "bg-[#25d366] animate-pulse" : "bg-zinc-500"}`}
+                                        style={{ height: `${h}%` }}
+                                      ></span>
+                                    ))}
+                                  </div>
+                                  <span className="text-[9px] font-mono text-zinc-400 block mt-1">
+                                    Voice Note • {m.voiceDuration || "0:05"}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Image Media */}
+                            {m.mediaType === "image" && (
+                              <div className="my-1 rounded-xl overflow-hidden border border-white/10 bg-black/40">
+                                <img 
+                                  src={m.mediaUrl || "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"} 
+                                  alt="Setup Chart"
+                                  className="w-full max-h-48 object-cover" 
+                                />
+                                <div className="p-2 text-[10px] text-zinc-300 font-mono flex justify-between items-center bg-black/60">
+                                  <span>📈 XAU/USD Breakout Setup</span>
+                                  <button onClick={() => alert("Image opened in high resolution viewer")} className="text-[#25d366] underline">View</button>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Main Text Content */}
+                            <p className="text-xs leading-relaxed whitespace-pre-wrap break-words">
+                              {m.content}
+                            </p>
+
+                            {/* Reactions display if any */}
+                            {m.reactions && Object.keys(m.reactions).length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-1.5 pt-1 border-t border-white/10">
+                                {Object.entries(m.reactions).map(([emoji, count]) => (
+                                  <span key={emoji} className="bg-black/40 border border-white/10 text-[10px] px-1.5 py-0.5 rounded-full font-mono flex items-center gap-1">
+                                    <span>{emoji}</span>
+                                    <span className="text-zinc-300 text-[8px]">{count}</span>
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Timestamp & Read Receipts */}
+                            <div className="flex items-center justify-end gap-1 text-[8px] font-mono text-zinc-300 mt-1">
+                              <span>{m.timestamp}</span>
+                              {isCurrentUser && (
+                                <CheckCheck className="w-3 h-3 text-sky-400" />
+                              )}
+                            </div>
+
+                            {/* Quick Hover Reactions Bar */}
+                            <div className={`absolute top-0 ${isCurrentUser ? "-left-28" : "-right-28"} hidden group-hover:flex items-center gap-1 bg-[#182229] border border-zinc-700 p-1 rounded-full shadow-lg z-20`}>
+                              {["👍", "❤️", "🔥", "📈", "👏"].map(emoji => (
+                                <button
+                                  key={emoji}
+                                  onClick={() => handleMessageReaction(m.id, emoji)}
+                                  className="hover:scale-125 transition text-xs p-1"
+                                >
+                                  {emoji}
+                                </button>
+                              ))}
+                            </div>
+
                           </div>
                         </div>
                       );
-                    }
+                    })}
 
-                    // ELSE, Render active chat room
-                    const roomMessages = chatSessions[activeChatRoom] || [];
+                    <div ref={chatEndRef} />
+                  </div>
 
-                    return (
-                      <div className="bg-black/60 border border-zinc-800 rounded-3xl flex flex-col h-[520px] overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.8)]">
-                        
-                        {/* Chat room header area */}
-                        <div className="p-4 bg-zinc-950 border-b border-zinc-850 flex justify-between items-center text-left">
-                          <div>
-                            <span className="text-[8px] bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/35 px-1.5 py-0.2 rounded font-mono font-bold uppercase tracking-wider inline-block">
-                              SECURED LOUNGE : {activeChatRoom.toUpperCase()} ACTIVE
-                            </span>
-                            <h4 className="text-sm font-serif font-bold text-white uppercase tracking-wider mt-0.5">
-                              {activeChatRoom.toUpperCase()} SESSION REAL CHAT
-                            </h4>
-                          </div>
+                  {/* WhatsApp Floating Emoji Picker Tray */}
+                  {showEmojiPicker && (
+                    <div className="p-2.5 bg-[#182229] border-t border-[#2a3942] flex flex-wrap gap-2 animate-in slide-in-from-bottom-2 z-20">
+                      {["📈", "📉", "💰", "🔥", "👍", "🚀", "📊", "💡", "🇿🇦", "💵", "🎯", "🎓", "🔒", "👏", "❤️", "💯"].map(emoji => (
+                        <button
+                          key={emoji}
+                          onClick={() => {
+                            setInputMessage(prev => prev + emoji);
+                            setShowEmojiPicker(false);
+                          }}
+                          className="p-2 hover:bg-[#202c33] rounded-xl text-base transition hover:scale-110"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
-                          {/* Quick Export Transcripts Button */}
-                          <button
-                            onClick={() => {
-                              const transcriptText = roomMessages.map(m => `[${m.timestamp}] ${m.senderName} (${m.senderRole}): ${m.content}`).join("\n");
-                              const blob = new Blob([
-                                [
-                                  `===================================================\n`,
-                                  `IMALI NGESIZULU STUDY LEDGER CHAT HISTORY\n`,
-                                  `===================================================\n`,
-                                  `Zone Session: ${activeChatRoom.toUpperCase()}\n`,
-                                  `User Member: ${currentUser.name}\n`,
-                                  `Data Hash: Client-Local Vaulted Cache\n\n`,
-                                  `CHAT HISTORY TRANSCRIPT:\n`,
-                                  `---------------------------------------------------\n`,
-                                  transcriptText || "No chat history logged inside this active cache yet.\n",
-                                  `---------------------------------------------------\n\n`,
-                                  `Confidential Study files validated successfully.\n`
-                                ].join("")
-                              ], { type: "text/plain;charset=utf-8" });
-                              
-                              const url = URL.createObjectURL(blob);
-                              const a = document.createElement("a");
-                              a.href = url;
-                              a.download = `IMALI_STUDY_NOTES_${activeChatRoom.toUpperCase()}.txt`;
-                              document.body.appendChild(a);
-                              a.click();
-                              document.body.removeChild(a);
-                              URL.revokeObjectURL(url);
-                            }}
-                            className="bg-zinc-900 hover:bg-zinc-850 text-xs text-zinc-300 px-3 py-1.5 rounded-lg border border-zinc-805 font-mono flex items-center gap-1.5 transition cursor-pointer"
-                          >
-                            📥 Export txt
-                          </button>
+                  {/* WhatsApp Floating Attachment Menu */}
+                  {showAttachMenu && (
+                    <div className="p-3 bg-[#182229] border-t border-[#2a3942] grid grid-cols-3 gap-2 animate-in slide-in-from-bottom-2 z-20">
+                      <button
+                        onClick={() => handleSendMediaMessage("image", "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop", "📈 Gold XAU/USD Retest Chart Setup")}
+                        className="p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200"
+                      >
+                        <ImageIcon className="w-5 h-5 text-emerald-400" />
+                        <span>Chart Setup</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleSendMediaMessage("document", "", "📄 Liquidity Sweep PDF Guide.pdf")}
+                        className="p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200"
+                      >
+                        <FileText className="w-5 h-5 text-sky-400" />
+                        <span>Study Notes</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setIsRecordingVoice(true);
+                          setShowAttachMenu(false);
+                        }}
+                        className="p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200"
+                      >
+                        <Mic className="w-5 h-5 text-rose-400" />
+                        <span>Voice Note</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* WhatsApp Voice Recording Active Bar */}
+                  {isRecordingVoice && (
+                    <div className="p-3 bg-[#182229] border-t border-[#2a3942] flex items-center justify-between gap-3 animate-in fade-in z-20">
+                      <div className="flex items-center gap-2 text-rose-500 font-mono text-xs animate-pulse">
+                        <span className="w-3 h-3 rounded-full bg-rose-500"></span>
+                        <span>Recording Voice Note ({voiceRecordTime}s)...</span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            setIsRecordingVoice(false);
+                            setVoiceRecordTime(0);
+                          }}
+                          className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-xs font-mono"
+                        >
+                          Cancel
+                        </button>
+
+                        <button
+                          onClick={handleSendVoiceNote}
+                          className="px-4 py-1.5 bg-[#25d366] text-black font-bold rounded-xl text-xs font-mono flex items-center gap-1 shadow-lg hover:brightness-110 transition"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                          Send Voice Note
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* WhatsApp Message Input Control Bar */}
+                  {!isRecordingVoice && (
+                    <div className="p-3 bg-[#202c33] border-t border-[#2a3942] flex items-center gap-2 z-10">
+                      <button
+                        onClick={() => {
+                          setShowEmojiPicker(!showEmojiPicker);
+                          setShowAttachMenu(false);
+                        }}
+                        className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition"
+                        title="Emoji Picker"
+                      >
+                        <Smile className="w-5 h-5" />
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setShowAttachMenu(!showAttachMenu);
+                          setShowEmojiPicker(false);
+                        }}
+                        className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition"
+                        title="Attach File / Voice"
+                      >
+                        <Paperclip className="w-5 h-5" />
+                      </button>
+
+                      <input
+                        type="text"
+                        value={inputMessage}
+                        onChange={e => setInputMessage(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && handleSendMessage()}
+                        placeholder="Type a message in WhatsApp community group..."
+                        className="flex-1 bg-[#2a3942] border border-zinc-700 text-xs text-white rounded-2xl px-4 py-2.5 outline-none placeholder:text-zinc-500 focus:border-[#25d366]"
+                      />
+
+                      {inputMessage.trim() ? (
+                        <button
+                          onClick={handleSendMessage}
+                          className="w-10 h-10 bg-[#25d366] hover:bg-[#20bd5a] text-black rounded-full flex items-center justify-center shadow-lg transition transform hover:scale-105 shrink-0"
+                          title="Send Message"
+                        >
+                          <Send className="w-4 h-4 fill-black ml-0.5" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setIsRecordingVoice(true)}
+                          className="w-10 h-10 bg-[#25d366]/20 hover:bg-[#25d366]/30 text-[#25d366] rounded-full border border-[#25d366]/40 flex items-center justify-center transition shrink-0"
+                          title="Hold/Click to record voice note"
+                        >
+                          <Mic className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                </div>
+
+                {/* 3. WhatsApp Group Info Modal / Sidebar Drawer */}
+                {showGroupInfoModal && (
+                  <div className="lg:col-span-3 bg-[#111b21] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl p-4 flex flex-col justify-between space-y-4 shadow-2xl text-left animate-in slide-in-from-right-2 ring-1 ring-white/10">
+                    <div>
+                      <div className="flex justify-between items-center border-b border-[#2a3942] pb-3 mb-3">
+                        <h4 className="text-xs font-bold text-[#25d366] font-mono uppercase tracking-wider">
+                          GROUP DETAILS
+                        </h4>
+                        <button
+                          onClick={() => setShowGroupInfoModal(false)}
+                          className="text-zinc-500 hover:text-white p-1"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* Avatar & Title */}
+                      <div className="text-center space-y-2 py-2">
+                        <div className="w-16 h-16 rounded-full bg-[#25d366]/20 border-2 border-[#25d366] flex items-center justify-center text-2xl mx-auto text-[#25d366]">
+                          💬
                         </div>
+                        <h5 className="text-xs font-bold text-white uppercase">
+                          {activeChatRoom === "southafrica" && "🇿🇦 USD/ZAR Community"}
+                          {activeChatRoom === "asian" && "🟢 IMALI Global WhatsApp Group"}
+                          {activeChatRoom === "newyork" && "📈 Gold & XAU/USD Syndicate"}
+                          {activeChatRoom === "london" && "🇬🇧 London Breakout Squad"}
+                          {activeChatRoom === "germany" && "🇩🇪 Frankfurt & DAX Lounge"}
+                          {activeChatRoom === "china" && "🎓 Imali Academy Student Forum"}
+                        </h5>
+                        <p className="text-[9px] text-zinc-400 font-mono">186 Members • Created by Instructor Thabiso</p>
+                      </div>
 
-                        {/* Message body view content area */}
-                        <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-zinc-950/20 text-left">
-                          {roomMessages.map(m => {
-                            const isCurrentUser = m.senderName === currentUser.name;
-                            return (
-                              <div key={m.id} className={`flex flex-col max-w-[80%] ${isCurrentUser ? "ml-auto items-end" : "mr-auto items-start"}`}>
-                                <div className="flex items-center gap-1.5 text-[9px] font-mono text-zinc-500 uppercase mb-1">
-                                  <span className="font-bold text-[#D4AF37]">{m.senderName}</span>
-                                  <span>({m.senderRole})</span>
-                                  <span>•</span>
-                                  <span>{m.timestamp}</span>
-                                </div>
-                                
-                                <div className={`p-4 rounded-xl text-xs leading-relaxed ${isCurrentUser ? "bg-gradient-to-r from-[#AA771C]/90 to-[#996515]/90 text-black font-bold shadow-[0_2px_10px_rgba(212,175,55,0.1)]" : "bg-zinc-900 text-zinc-100 border border-zinc-850"}`}>
-                                  {m.content}
-                                </div>
-                              </div>
-                            );
-                          })}
+                      {/* Group Description */}
+                      <div className="bg-[#202c33] p-3 rounded-2xl border border-zinc-800 space-y-1.5 my-3">
+                        <span className="text-[9px] text-[#25d366] font-mono uppercase font-bold block">
+                          Group Description:
+                        </span>
+                        <p className="text-[10px] text-zinc-300 leading-relaxed">
+                          Official IMALI Ngesizulu Trading & Learning Community. Share trade setups, ask technical questions, discuss Market Structure Shifts (MSS), and collaborate live with fellow scholars.
+                        </p>
+                      </div>
 
-                          {isAiThinking && (
-                            <div className="mr-auto items-start max-w-[80%] flex flex-col space-y-1 animate-in fade-in">
-                              <span className="text-[9px] font-mono text-zinc-500 uppercase">
-                                Typings...
-                              </span>
-                              <div className="p-4 bg-zinc-900 border border-zinc-850 rounded-xl animate-pulse text-zinc-550 text-xs tracking-wider">
-                                Classmate is active and typing a response formula...
+                      {/* Group Members List */}
+                      <div className="space-y-2 pt-1">
+                        <span className="text-[9px] text-zinc-500 font-mono uppercase font-bold block">
+                          Group Members (Online):
+                        </span>
+                        <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                          {[
+                            { name: "Thabiso Khumalo", role: "Group Admin / Instructor", status: "Online", color: "text-[#D4AF37]" },
+                            { name: "Audrey Mguni", role: "Instructor", status: "Online", color: "text-[#D4AF37]" },
+                            { name: "Sipho Dlamini", role: "Senior Scholar", status: "Online", color: "text-[#25d366]" },
+                            { name: "Nomalanga Ndlovu", role: "Scholar", status: "Online", color: "text-[#25d366]" },
+                            { name: "Thabo Mokoena", role: "Scholar", status: "Online", color: "text-[#25d366]" }
+                          ].map(mem => (
+                            <div key={mem.name} className="flex justify-between items-center p-2 bg-[#202c33]/50 rounded-xl border border-zinc-800 text-[10px]">
+                              <div>
+                                <span className={`font-bold block ${mem.color}`}>{mem.name}</span>
+                                <span className="text-[8px] text-zinc-400 font-mono">{mem.role}</span>
                               </div>
+                              <span className="text-[8px] text-[#25d366] font-mono font-bold">● {mem.status}</span>
                             </div>
-                          )}
-                          <div ref={chatEndRef} />
-                        </div>
-
-                        {/* Send panel controls */}
-                        <div className="p-4 bg-zinc-950 border-t border-zinc-85">
-                          <div className="flex gap-2">
-                            <input 
-                              type="text" 
-                              value={inputMessage}
-                              onChange={e => setInputMessage(e.target.value)}
-                              onKeyDown={e => e.key === "Enter" && handleSendMessage()}
-                              placeholder={`Type secure message in ${activeChatRoom.toUpperCase()} chatroom lounges...`}
-                              className="flex-1 bg-zinc-900 border border-zinc-850 text-xs text-white rounded-xl px-4 outline-none placeholder:text-zinc-600 focus:border-[#D4AF37] h-12"
-                            />
-                            <button 
-                              onClick={handleSendMessage}
-                              className="px-5 bg-gradient-to-r from-[#D4AF37] to-[#b08e27] text-black rounded-xl text-xs font-bold uppercase tracking-widest hover:brightness-110 flex items-center gap-1.5 transition cursor-pointer"
-                            >
-                              <Send className="w-3.5 h-3.5" />
-                              SEND
-                            </button>
-                          </div>
-                        </div>
-
-                      </div>
-                    );
-                  })()}
-                </div>
-
-                {/* 3. Right Sidebar Panel: Session Live Spread Rates */}
-                <div className="lg:col-span-1 bg-zinc-950 border border-zinc-800 p-5 rounded-3xl space-y-4 text-left">
-                  <h4 className="text-xs font-serif font-bold text-[#D4AF37] uppercase tracking-widest border-b border-zinc-850 pb-2 flex items-center gap-1.5">
-                    <Activity className="w-4 h-4 text-[#D4AF37]" />
-                    {activeChatRoom.toUpperCase()} PAIRS METRICS
-                  </h4>
-                  
-                  <p className="text-[10px] text-zinc-400 leading-relaxed">
-                    Live raw spread rates synchronizing locally from institutional liquidity feeds for {activeChatRoom.toUpperCase()} trading hours:
-                  </p>
-
-                  <div className="space-y-3.5 pt-1.5">
-                    {activeChatRoom === "asian" && [
-                      { pair: "AUD/JPY", ask: "105.412", bid: "105.408", spread: "0.4 pips", color: "text-emerald-400 bg-emerald-500/10" },
-                      { pair: "USD/JPY", ask: "156.240", bid: "156.237", spread: "0.3 pips", color: "text-emerald-400 bg-emerald-500/10" },
-                      { pair: "NZD/USD", ask: "0.61204", bid: "0.61198", spread: "0.6 pips", color: "text-emerald-400 bg-emerald-500/10" }
-                    ].map(item => (
-                      <div key={item.pair} className="bg-black/50 border border-zinc-900 rounded-xl p-3 space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-bold text-white">{item.pair}</span>
-                          <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${item.color}`}>{item.spread}</span>
-                        </div>
-                        <div className="flex justify-between font-mono text-[9px] text-zinc-500 pt-1">
-                          <span>BID: {item.bid}</span>
-                          <span>ASK: {item.ask}</span>
+                          ))}
                         </div>
                       </div>
-                    ))}
+                    </div>
 
-                    {activeChatRoom === "china" && [
-                      { pair: "USD/CNH", ask: "7.2450", bid: "7.2442", spread: "0.8 pips", color: "text-rose-400 bg-rose-500/10" },
-                      { pair: "HKD/USD", ask: "0.12812", bid: "0.12810", spread: "0.2 pips", color: "text-rose-400 bg-rose-500/10" },
-                      { pair: "AUD/CNH", ask: "4.8512", bid: "4.8502", spread: "1.0 pips", color: "text-rose-400 bg-rose-500/10" }
-                    ].map(item => (
-                      <div key={item.pair} className="bg-black/50 border border-zinc-900 rounded-xl p-3 space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-bold text-white">{item.pair}</span>
-                          <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${item.color}`}>{item.spread}</span>
-                        </div>
-                        <div className="flex justify-between font-mono text-[9px] text-zinc-500 pt-1">
-                          <span>BID: {item.bid}</span>
-                          <span>ASK: {item.ask}</span>
-                        </div>
-                      </div>
-                    ))}
-
-                    {activeChatRoom === "germany" && [
-                      { pair: "DAX40", ask: "18650.5", bid: "18649.5", spread: "1.0 pts", color: "text-purple-400 bg-purple-500/10" },
-                      { pair: "EUR/GBP", ask: "0.85121", bid: "0.85116", spread: "0.5 pips", color: "text-purple-400 bg-purple-500/10" },
-                      { pair: "EUR/CHF", ask: "0.98124", bid: "0.98118", spread: "0.6 pips", color: "text-purple-400 bg-purple-500/10" }
-                    ].map(item => (
-                      <div key={item.pair} className="bg-black/50 border border-zinc-900 rounded-xl p-3 space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-bold text-white">{item.pair}</span>
-                          <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${item.color}`}>{item.spread}</span>
-                        </div>
-                        <div className="flex justify-between font-mono text-[9px] text-zinc-500 pt-1">
-                          <span>BID: {item.bid}</span>
-                          <span>ASK: {item.ask}</span>
-                        </div>
-                      </div>
-                    ))}
-
-                    {activeChatRoom === "london" && [
-                      { pair: "GBP/USD", ask: "1.27415", bid: "1.27413", spread: "0.2 pips", color: "text-sky-400 bg-sky-500/10" },
-                      { pair: "EUR/USD", ask: "1.08502", bid: "1.08500", spread: "0.2 pips", color: "text-sky-400 bg-sky-500/10" },
-                      { pair: "EUR/GBP", ask: "0.85121", bid: "0.85116", spread: "0.5 pips", color: "text-sky-400 bg-sky-500/10" }
-                    ].map(item => (
-                      <div key={item.pair} className="bg-black/50 border border-zinc-900 rounded-xl p-3 space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-bold text-white">{item.pair}</span>
-                          <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${item.color}`}>{item.spread}</span>
-                        </div>
-                        <div className="flex justify-between font-mono text-[9px] text-zinc-500 pt-1">
-                          <span>BID: {item.bid}</span>
-                          <span>ASK: {item.ask}</span>
-                        </div>
-                      </div>
-                    ))}
-
-                    {activeChatRoom === "southafrica" && [
-                      { pair: "USD/ZAR", ask: "18.4150", bid: "18.4020", spread: "13.0 pips", color: "text-emerald-400 bg-emerald-500/10" },
-                      { pair: "EUR/ZAR", ask: "20.0120", bid: "19.9980", spread: "14.0 pips", color: "text-emerald-400 bg-emerald-500/10" },
-                      { pair: "GBP/ZAR", ask: "23.5180", bid: "23.5010", spread: "17.0 pips", color: "text-emerald-400 bg-emerald-500/10" }
-                    ].map(item => (
-                      <div key={item.pair} className="bg-black/50 border border-zinc-900 rounded-xl p-3 space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-bold text-white">{item.pair}</span>
-                          <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${item.color}`}>{item.spread}</span>
-                        </div>
-                        <div className="flex justify-between font-mono text-[9px] text-zinc-500 pt-1">
-                          <span>BID: {item.bid}</span>
-                          <span>ASK: {item.ask}</span>
-                        </div>
-                      </div>
-                    ))}
-
-                    {activeChatRoom === "newyork" && [
-                      { pair: "XAU/USD", ask: "2354.12", bid: "2354.02", spread: "10.0 pips", color: "text-amber-450 bg-amber-500/10" },
-                      { pair: "SPX500", ask: "5304.50", bid: "5304.25", spread: "0.25 pts", color: "text-amber-455 bg-amber-500/10" },
-                      { pair: "USDCAD", ask: "1.36502", bid: "1.36498", spread: "0.4 pips", color: "text-amber-450 bg-amber-500/10" }
-                    ].map(item => (
-                      <div key={item.pair} className="bg-black/50 border border-zinc-900 rounded-xl p-3 space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-bold text-white">{item.pair}</span>
-                          <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${item.color}`}>{item.spread}</span>
-                        </div>
-                        <div className="flex justify-between font-mono text-[9px] text-zinc-500 pt-1">
-                          <span>BID: {item.bid}</span>
-                          <span>ASK: {item.ask}</span>
-                        </div>
-                      </div>
-                    ))}
+                    <div className="pt-3 border-t border-[#202c33] text-center">
+                      <span className="text-[8px] text-zinc-500 font-mono uppercase block">
+                        IMALI NGESIZULU WHATSAPP NETWORK
+                      </span>
+                    </div>
                   </div>
-
-                  {/* Cryptographic safety badge */}
-                  <div className="pt-3 border-t border-zinc-900 text-center">
-                    <span className="text-[8px] text-emerald-400 font-mono tracking-widest uppercase font-bold block">
-                      🔒 CRYPTO SANDBOX SECURE
-                    </span>
-                    <p className="text-[8px] text-zinc-650 leading-relaxed font-mono uppercase mt-0.5">
-                      Session key validation ensures zero-persistence. Logs cleared locally.
-                    </p>
-                  </div>
-                </div>
+                )}
 
               </div>
+
+              {/* Create Community Group Modal (Admin / Instructor / Student) */}
+              {showCreateGroupModal && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                  <div className="bg-[#111b21] border border-[#202c33] w-full max-w-md rounded-3xl p-6 space-y-5 text-left shadow-2xl animate-in zoom-in-95">
+                    <div className="flex justify-between items-center border-b border-[#202c33] pb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-[#25d366]/20 border border-[#25d366]/40 flex items-center justify-center text-[#25d366] font-bold text-sm">
+                          <Plus className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+                            Create Community Group
+                          </h4>
+                          <span className="text-[9px] text-[#25d366] font-mono">
+                            Credentials Auth: {activeRole === Role.ADMIN ? "🛡️ Admin Access" : activeRole === Role.INSTRUCTOR ? "👨‍🏫 Instructor Access" : "🔐 Passcode Authorization"}
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setShowCreateGroupModal(false)}
+                        className="p-1 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+
+                    <p className="text-xs text-zinc-400 leading-relaxed">
+                      {activeRole === Role.STUDENT ? (
+                        <>Enter the group details and your <strong className="text-[#25d366]">Instructor Passcode</strong> (e.g. <code className="text-[#25d366] bg-[#202c33] px-1 py-0.5 rounded">FOREX101</code>) to authorize creating a new group room.</>
+                      ) : (
+                        <>Create a new WhatsApp community group for students and traders on the network.</>
+                      )}
+                    </p>
+
+                    {createGroupError && (
+                      <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-xs text-rose-400 font-mono flex items-center gap-2">
+                        <XSquare className="w-4 h-4 shrink-0" />
+                        <span>{createGroupError}</span>
+                      </div>
+                    )}
+
+                    <div className="space-y-3.5">
+                      <div>
+                        <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1 font-bold">
+                          Group Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={newGroupName}
+                          onChange={e => setNewGroupName(e.target.value)}
+                          placeholder="e.g. 🚀 Crypto & BTC Market Analysis"
+                          className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1 font-bold">
+                          Group Description
+                        </label>
+                        <textarea
+                          value={newGroupDesc}
+                          onChange={e => setNewGroupDesc(e.target.value)}
+                          placeholder="Brief summary of what this community group covers..."
+                          rows={2}
+                          className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366] resize-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1 font-bold">
+                          Group Tag / Badge
+                        </label>
+                        <select
+                          value={newGroupTag}
+                          onChange={e => setNewGroupTag(e.target.value)}
+                          className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
+                        >
+                          <option value="COMMUNITY">COMMUNITY</option>
+                          <option value="XAU">GOLD / XAU</option>
+                          <option value="FOREX">FOREX</option>
+                          <option value="INDICES">INDICES / DAX</option>
+                          <option value="CRYPTO">CRYPTO</option>
+                          <option value="STUDY">STUDY & LESSONS</option>
+                          <option value="VIP">VIP SIGNALS</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-mono uppercase text-[#25d366] block mb-1 font-bold flex items-center gap-1">
+                          <Lock className="w-3 h-3 text-[#25d366]" />
+                          <span>Security Credentials / Passcode *</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={newGroupPasscode}
+                          onChange={e => setNewGroupPasscode(e.target.value)}
+                          placeholder={activeRole === Role.STUDENT ? "Enter Instructor Passcode (Default: FOREX101)..." : "Authorization pre-validated"}
+                          className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
+                        />
+                        <span className="text-[9px] text-zinc-500 block mt-1 font-mono">
+                          {activeRole === Role.STUDENT ? "Contact your instructor if you need the active passcode." : "Validated automatically for active instructors/admins."}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 flex justify-end gap-2">
+                      <button
+                        onClick={() => setShowCreateGroupModal(false)}
+                        className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-xs font-mono transition"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleCreateCommunityGroup}
+                        className="px-5 py-2 bg-[#25d366] hover:bg-[#20bd5a] text-black font-bold rounded-xl text-xs font-mono transition flex items-center gap-1.5 shadow-lg cursor-pointer"
+                      >
+                        <Plus className="w-4 h-4 stroke-[3]" />
+                        Create Group Room
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             </div>
           )}
