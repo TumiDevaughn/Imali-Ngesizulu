@@ -4338,10 +4338,10 @@ export default function App() {
     }
   ]);
 
-  // Academic Lounge Chat State - Split into Tokyo, China, Germany, London, South Africa, and New York channels
-  const [activeChatRoom, setActiveChatRoom] = useState<string>("asian");
+  // Academic Lounge & Community Chat State
+  const [activeChatRoom, setActiveChatRoom] = useState<string>("");
   const [chatSessions, setChatSessions] = useState<{ [room: string]: ChatMessage[] }>(() => {
-    const local = localStorage.getItem("imali_chat_sessions_v2");
+    const local = localStorage.getItem("imali_chat_sessions_v3");
     if (local) {
       try {
         return JSON.parse(local);
@@ -4349,73 +4349,12 @@ export default function App() {
         // Fallback
       }
     }
-    return {
-      asian: [
-        {
-          id: "msg_as_1",
-          senderName: "IMALI System Notification",
-          senderRole: Role.ADMIN,
-          content: "Welcome to the Tokyo Session Chat. Tokyo and Sydney markets are currently driving JPY and AUD liquidity pools. Share your real-time insights.",
-          timestamp: "02:00 UTC",
-          language: "en"
-        }
-      ],
-      china: [
-        {
-          id: "msg_ch_1",
-          senderName: "IMALI System Notification",
-          senderRole: Role.ADMIN,
-          content: "Welcome to the China Session Chat. Hong Kong and Shanghai are actively driving CNH liquidity corridors. This log is empty & ready for live student setups.",
-          timestamp: "03:00 UTC",
-          language: "en"
-        }
-      ],
-      germany: [
-        {
-          id: "msg_ge_1",
-          senderName: "IMALI System Notification",
-          senderRole: Role.ADMIN,
-          content: "Frankfurt Session is active. German DAX index and Euro pairs are monitored here. Post your technical pair correlations below.",
-          timestamp: "07:00 UTC",
-          language: "en"
-        }
-      ],
-      london: [
-        {
-          id: "msg_lo_1",
-          senderName: "IMALI System Notification",
-          senderRole: Role.ADMIN,
-          content: "Welcome to the active London Session chat. Track GBP/USD interbank orders and Euro morning movements here with other scholars.",
-          timestamp: "08:00 UTC",
-          language: "en"
-        }
-      ],
-      southafrica: [
-        {
-          id: "msg_sa_1",
-          senderName: "IMALI System Notification",
-          senderRole: Role.ADMIN,
-          content: "Siyakwamukela kwi-South Africa Session Chat! Track USD/ZAR carry trends and Rand interest rates in real time.",
-          timestamp: "09:00 UTC",
-          language: "zu"
-        }
-      ],
-      newyork: [
-        {
-          id: "msg_ny_1",
-          senderName: "IMALI System Notification",
-          senderRole: Role.ADMIN,
-          content: "New York Session chat room is live. High-volatility scalpings expected during US morning core hours. Please practice proper risk parameters.",
-          timestamp: "13:00 UTC",
-          language: "en"
-        }
-      ]
-    };
+    return {};
   });
 
   // Safe persist for session chats
   useEffect(() => {
-    localStorage.setItem("imali_chat_sessions_v2", JSON.stringify(chatSessions));
+    localStorage.setItem("imali_chat_sessions_v3", JSON.stringify(chatSessions));
   }, [chatSessions]);
 
   // Gatekeeper state to check if students have filled profiles and entered the special passwords
@@ -4638,37 +4577,74 @@ export default function App() {
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
 
   // Community Group creation states
-  const [communityGroups, setCommunityGroups] = useState<Array<{ id: string; name: string; desc: string; members: string; tag: string }>>(() => {
+  const [communityGroups, setCommunityGroups] = useState<Array<{ id: string; name: string; desc: string; members: string; tag: string; isPrivate?: boolean; passcode?: string; createdBy?: string }>>(() => {
     try {
-      const saved = localStorage.getItem("imali_community_groups_v2");
+      const saved = localStorage.getItem("imali_community_groups_v3");
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch (e) {
       console.error(e);
     }
-    return [
-      { id: "southafrica", name: "🇿🇦 USD/ZAR & SA Community", desc: "Rand carries, local news & setups", members: "112 members", tag: "POPULAR" },
-      { id: "asian", name: "🟢 IMALI Global Community", desc: "Main WhatsApp discussion lounge", members: "186 members", tag: "ACTIVE" },
-      { id: "newyork", name: "📈 Gold & XAU/USD Syndicate", desc: "High liquidity gold scalping", members: "94 members", tag: "XAU" },
-      { id: "london", name: "🇬🇧 London Breakout Squad", desc: "GBP/USD & EUR volatility setups", members: "142 members", tag: "GBP" },
-      { id: "germany", name: "🇩🇪 Frankfurt & DAX Lounge", desc: "European indices & DAX trading", members: "88 members", tag: "DAX" },
-      { id: "china", name: "🎓 Imali Academy Student Forum", desc: "Homework help, Q&A & study guides", members: "210 members", tag: "STUDY" }
-    ];
+    return [];
   });
 
   useEffect(() => {
     try {
-      localStorage.setItem("imali_community_groups_v2", JSON.stringify(communityGroups));
+      localStorage.setItem("imali_community_groups_v3", JSON.stringify(communityGroups));
     } catch (e) {
       console.error(e);
     }
   }, [communityGroups]);
+
+  // Keep activeChatRoom synced if communityGroups exist
+  useEffect(() => {
+    if (!activeChatRoom && communityGroups.length > 0) {
+      setActiveChatRoom(communityGroups[0].id);
+    }
+  }, [communityGroups, activeChatRoom]);
+
+  // Student Access Registration State for Private Invite-Only Groups
+  const [studentRoomAccessMap, setStudentRoomAccessMap] = useState<{
+    [roomId: string]: {
+      fullName: string;
+      contact: string;
+      tradingId: string;
+      registeredAt: string;
+    }
+  }>(() => {
+    try {
+      const saved = localStorage.getItem("imali_student_room_access_v3");
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return {};
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("imali_student_room_access_v3", JSON.stringify(studentRoomAccessMap));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [studentRoomAccessMap]);
+
+  const [showRoomAccessModal, setShowRoomAccessModal] = useState(false);
+  const [selectedAccessGroup, setSelectedAccessGroup] = useState<any | null>(null);
+  const [studentAccessName, setStudentAccessName] = useState("");
+  const [studentAccessContact, setStudentAccessContact] = useState("");
+  const [studentAccessTradingId, setStudentAccessTradingId] = useState("");
+  const [studentAccessPasscode, setStudentAccessPasscode] = useState("");
+  const [studentAccessError, setStudentAccessError] = useState("");
+
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDesc, setNewGroupDesc] = useState("");
-  const [newGroupTag, setNewGroupTag] = useState("COMMUNITY");
+  const [newGroupTag, setNewGroupTag] = useState("INVITE ONLY");
   const [newGroupPasscode, setNewGroupPasscode] = useState("");
   const [showGroupOptionsMenu, setShowGroupOptionsMenu] = useState(false);
   const [createGroupError, setCreateGroupError] = useState("");
@@ -4686,7 +4662,7 @@ export default function App() {
         return;
       }
       if (newGroupPasscode.trim().toUpperCase() !== activePasscodeRequired.toUpperCase()) {
-        setCreateGroupError(`Invalid Passcode! Contact Instructor (${instructorDetails.name || 'Admin'}) for the active passcode.`);
+        setCreateGroupError(`Invalid Passcode! Contact Admin for the active passcode.`);
         return;
       }
     }
@@ -4695,9 +4671,12 @@ export default function App() {
     const newGroup = {
       id: newGroupId,
       name: newGroupName.trim(),
-      desc: newGroupDesc.trim() || `Created by ${currentUser.name || activeRole}`,
+      desc: newGroupDesc.trim() || `Private Invite-Only Community Group`,
       members: "1 member",
-      tag: newGroupTag.trim().toUpperCase() || "NEW"
+      tag: newGroupTag.trim().toUpperCase() || "INVITE ONLY",
+      isPrivate: true,
+      passcode: newGroupPasscode.trim() || activePasscodeRequired,
+      createdBy: activeRole === Role.ADMIN ? "Admin" : (currentUser.name || activeRole)
     };
 
     setCommunityGroups(prev => [newGroup, ...prev]);
@@ -4706,7 +4685,7 @@ export default function App() {
       id: "msg_welcome_" + Date.now(),
       senderName: "Admin",
       senderRole: Role.ADMIN,
-      content: `🎉 Group "${newGroup.name}" was created by the Admin. Welcome everyone to the group!`,
+      content: `🔒 Private Group "${newGroup.name}" was created by the Admin (Invite Only). Welcome scholars to the group!`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       language: language,
       readStatus: true
@@ -4727,11 +4706,69 @@ export default function App() {
     setNewGroupName("");
     setNewGroupDesc("");
     setNewGroupPasscode("");
-    setNewGroupTag("COMMUNITY");
+    setNewGroupTag("INVITE ONLY");
     setCreateGroupError("");
 
     setTimeout(() => {
-      const chatPanel = document.getElementById("whatsapp_chat_panel");
+      const chatPanel = document.getElementById("community_chat_panel");
+      if (chatPanel) {
+        chatPanel.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
+
+  const handleRegisterStudentRoomAccess = () => {
+    if (!selectedAccessGroup) return;
+
+    if (!studentAccessName.trim() || !studentAccessContact.trim() || !studentAccessTradingId.trim()) {
+      setStudentAccessError("Please fill in your Full Name, Contact Details, and Trading ID.");
+      return;
+    }
+
+    const expectedPasscode = selectedAccessGroup.passcode || instructorDetails.classCode || "IMALI-7294018365";
+    if (studentAccessPasscode.trim().toUpperCase() !== expectedPasscode.trim().toUpperCase()) {
+      setStudentAccessError("Invalid Security Passcode! Contact Admin for your private room invite passcode.");
+      return;
+    }
+
+    const newRecord = {
+      fullName: studentAccessName.trim(),
+      contact: studentAccessContact.trim(),
+      tradingId: studentAccessTradingId.trim(),
+      registeredAt: new Date().toLocaleString()
+    };
+
+    const updated = {
+      ...studentRoomAccessMap,
+      [selectedAccessGroup.id]: newRecord
+    };
+    setStudentRoomAccessMap(updated);
+
+    const joinMsg: ChatMessage = {
+      id: "msg_join_" + Date.now(),
+      senderName: "Admin",
+      senderRole: Role.ADMIN,
+      content: `🎓 Scholar "${newRecord.fullName}" (Trading ID: ${newRecord.tradingId}) has verified credentials and joined the room.`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      language: language,
+      readStatus: true
+    };
+
+    setChatSessions(prev => ({
+      ...prev,
+      [selectedAccessGroup.id]: [...(prev[selectedAccessGroup.id] || []), joinMsg]
+    }));
+
+    setActiveChatRoom(selectedAccessGroup.id);
+    setShowRoomAccessModal(false);
+    setStudentAccessName("");
+    setStudentAccessContact("");
+    setStudentAccessTradingId("");
+    setStudentAccessPasscode("");
+    setStudentAccessError("");
+
+    setTimeout(() => {
+      const chatPanel = document.getElementById("community_chat_panel");
       if (chatPanel) {
         chatPanel.scrollIntoView({ behavior: "smooth" });
       }
@@ -8566,7 +8603,7 @@ export default function App() {
                                             rel="noopener noreferrer"
                                             className="py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-[10px] uppercase font-bold tracking-wider rounded-xl text-center transition flex items-center justify-center gap-1.5 cursor-pointer"
                                           >
-                                            💬 WhatsApp Admin
+                                            💬 Direct Message Admin
                                           </a>
                                           <button
                                             onClick={copyToClipboard}
@@ -9359,11 +9396,11 @@ export default function App() {
             </div>
           )}
 
-          {/* 4. COMMUNITY WHATSAPP GROUP CHAT ROOMS */}
+          {/* 4. COMMUNITY GROUP CHAT ROOMS */}
           {activeTab === "chat" && (
             <div id="tab_chat" className="space-y-4 text-left">
               
-              {/* WhatsApp Community Banner */}
+              {/* Community Banner */}
               <div className="bg-[#111b21] border border-[#202c33] p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#25d366]/15 border border-[#25d366]/40 flex items-center justify-center text-[#25d366] font-bold text-lg">
@@ -9372,10 +9409,10 @@ export default function App() {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] bg-[#25d366]/20 text-[#25d366] border border-[#25d366]/40 px-2 py-0.5 rounded font-mono font-bold uppercase tracking-widest">
-                        🟢 WHATSAPP COMMUNITY GROUP
+                        🟢 PRIVATE COMMUNITY NETWORK
                       </span>
                       <span className="text-[10px] text-zinc-400 font-mono">
-                        186 Active Members Online
+                        Active Invite-Only Groups
                       </span>
                     </div>
                     <h3 className="text-base font-serif font-bold text-white uppercase tracking-wide mt-0.5">
@@ -9398,7 +9435,7 @@ export default function App() {
                       const transcriptText = roomMsgs.map(m => `[${m.timestamp}] ${m.senderName} (${m.senderRole}): ${m.content}`).join("\n");
                       const blob = new Blob([
                         `===================================================\n`,
-                        `IMALI WHATSAPP GROUP CHAT TRANSCRIPT\n`,
+                        `IMALI COMMUNITY GROUP CHAT TRANSCRIPT\n`,
                         `Group: ${activeChatRoom.toUpperCase()}\n`,
                         `Downloaded: ${new Date().toLocaleString()}\n`,
                         `===================================================\n\n`,
@@ -9407,7 +9444,7 @@ export default function App() {
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement("a");
                       a.href = url;
-                      a.download = `IMALI_WhatsApp_Group_${activeChatRoom}.txt`;
+                      a.download = `IMALI_Community_Group_${activeChatRoom}.txt`;
                       document.body.appendChild(a);
                       a.click();
                       document.body.removeChild(a);
@@ -9421,17 +9458,17 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Main WhatsApp Grid Layout */}
+              {/* Main Community Groups Grid Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-[600px] lg:h-[650px]">
                 
-                {/* 1. WhatsApp Groups Sidebar (3 cols) */}
-                <div id="whatsapp_groups_sidebar" className="lg:col-span-4 bg-[#111b21] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl ring-1 ring-white/10 h-[380px] lg:h-full">
+                {/* 1. Community Groups Sidebar (3 cols) */}
+                <div id="community_groups_sidebar" className="lg:col-span-4 bg-[#111b21] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl ring-1 ring-white/10 h-[380px] lg:h-full">
                   
-                  {/* WhatsApp Sidebar Header */}
+                  {/* Community Sidebar Header */}
                   <div className="p-3.5 bg-[#202c33] border-b border-[#2a3942] flex justify-between items-center">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-full bg-[#25d366] text-black font-black flex items-center justify-center text-xs shadow-md">
-                        WA
+                        CG
                       </div>
                       <div>
                         <h4 className="text-xs font-bold text-white uppercase tracking-wider">COMMUNITY GROUPS</h4>
@@ -9446,11 +9483,11 @@ export default function App() {
                       <button 
                         onClick={() => {
                           setCreateGroupError("");
-                          setNewGroupPasscode(activeRole !== Role.STUDENT ? (instructorDetails.classCode || "IMALI-7294018365") : "");
+                          setNewGroupPasscode(activeRole === Role.ADMIN ? (instructorDetails.classCode || "IMALI-7294018365") : "");
                           setShowCreateGroupModal(true);
                         }}
                         className="px-2.5 py-1 bg-[#25d366] hover:bg-[#20bd5a] text-black font-bold rounded-lg text-[10px] font-mono flex items-center gap-1 transition shadow cursor-pointer"
-                        title="Create New Community Group & Security Credentials"
+                        title="Create New Community Group"
                       >
                         <Plus className="w-3.5 h-3.5 stroke-[3]" />
                         <span>New Group</span>
@@ -9476,7 +9513,7 @@ export default function App() {
                               onClick={() => {
                                 setShowGroupOptionsMenu(false);
                                 setCreateGroupError("");
-                                setNewGroupPasscode(activeRole !== Role.STUDENT ? (instructorDetails.classCode || "IMALI-7294018365") : "");
+                                setNewGroupPasscode(activeRole === Role.ADMIN ? (instructorDetails.classCode || "IMALI-7294018365") : "");
                                 setShowCreateGroupModal(true);
                               }}
                               className="w-full px-3 py-2 hover:bg-[#202c33] rounded-xl text-xs text-white flex items-center gap-2.5 transition text-left font-sans cursor-pointer"
@@ -9499,7 +9536,11 @@ export default function App() {
                             <button
                               onClick={() => {
                                 setShowGroupOptionsMenu(false);
-                                alert(`🔒 SECURITY CREDENTIALS STATUS\n\nRoom: ${activeChatRoom.toUpperCase()}\nActive Passcode: ${instructorDetails.classCode || "FOREX101"}\nUser Role: ${activeRole}\nEncryption: Local Sandbox Vault`);
+                                if (activeRole === Role.ADMIN) {
+                                  alert(`🔒 SECURITY CREDENTIALS STATUS (ADMIN VIEW)\n\nActive Security Passcode: ${instructorDetails.classCode || "IMALI-7294018365"}\nUser Role: ADMIN\nEncryption: Private Sandbox Vault`);
+                                } else {
+                                  alert(`🔒 SECURITY CREDENTIALS STATUS\n\nActive Credentials: •••••••••• (Protected - Admin Only)\nUser Role: ${activeRole}\nAccess: Private & Invite Only`);
+                                }
                               }}
                               className="w-full px-3 py-2 hover:bg-[#202c33] rounded-xl text-xs text-white flex items-center gap-2.5 transition text-left font-sans cursor-pointer"
                             >
@@ -9544,74 +9585,92 @@ export default function App() {
 
                   {/* Groups List */}
                   <div className="flex-1 overflow-y-auto divide-y divide-[#2a3942]/60">
-                    {communityGroups
-                    .filter(g => g.name.toLowerCase().includes(chatSearchQuery.toLowerCase()) || g.desc.toLowerCase().includes(chatSearchQuery.toLowerCase()))
-                    .map(group => {
-                      const isSelected = activeChatRoom === group.id;
-                      const roomMsgs = chatSessions[group.id] || [];
-                      const lastMsg = roomMsgs[roomMsgs.length - 1];
+                    {communityGroups.length === 0 ? (
+                      <div className="p-6 text-center space-y-3">
+                        <div className="w-12 h-12 rounded-full bg-[#25d366]/10 border border-[#25d366]/30 flex items-center justify-center text-[#25d366] mx-auto text-lg">
+                          🔒
+                        </div>
+                        <h5 className="text-xs font-bold text-white uppercase tracking-wider">No Groups Created Yet</h5>
+                        <p className="text-[10px] text-zinc-400 leading-relaxed">
+                          Community groups created by the Admin are <strong className="text-[#25d366]">Private & Invite-Only</strong>. Click <span className="text-white font-bold">"+ New Group"</span> above to create your group.
+                        </p>
+                      </div>
+                    ) : (
+                      communityGroups
+                        .filter(g => g.name.toLowerCase().includes(chatSearchQuery.toLowerCase()) || g.desc.toLowerCase().includes(chatSearchQuery.toLowerCase()))
+                        .map(group => {
+                          const isSelected = activeChatRoom === group.id;
+                          const roomMsgs = chatSessions[group.id] || [];
+                          const lastMsg = roomMsgs[roomMsgs.length - 1];
 
-                      return (
-                        <button
-                          key={group.id}
-                          onClick={() => {
-                            setActiveChatRoom(group.id);
-                            setShowEmojiPicker(false);
-                            setShowAttachMenu(false);
-                            setTimeout(() => {
-                              const chatPanel = document.getElementById("whatsapp_chat_panel");
-                              if (chatPanel) {
-                                chatPanel.scrollIntoView({ behavior: "smooth" });
-                              }
-                            }, 100);
-                          }}
-                          className={`w-full p-3 text-left transition-all flex items-start gap-3 hover:bg-[#202c33]/70 ${isSelected ? "bg-[#202c33] border-l-4 border-[#25d366]" : ""}`}
-                        >
-                          <div className="relative">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-900 border border-zinc-700 flex items-center justify-center text-base shrink-0 shadow-inner">
-                              {group.name.substring(0, 2)}
-                            </div>
-                            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#25d366] border-2 border-[#111b21]"></span>
-                          </div>
+                          return (
+                            <button
+                              key={group.id}
+                              onClick={() => {
+                                if (activeRole === Role.STUDENT && !studentRoomAccessMap[group.id]) {
+                                  setSelectedAccessGroup(group);
+                                  setStudentAccessError("");
+                                  setShowRoomAccessModal(true);
+                                  return;
+                                }
+                                setActiveChatRoom(group.id);
+                                setShowEmojiPicker(false);
+                                setShowAttachMenu(false);
+                                setTimeout(() => {
+                                  const chatPanel = document.getElementById("community_chat_panel");
+                                  if (chatPanel) {
+                                    chatPanel.scrollIntoView({ behavior: "smooth" });
+                                  }
+                                }, 100);
+                              }}
+                              className={`w-full p-3 text-left transition-all flex items-start gap-3 hover:bg-[#202c33]/70 ${isSelected ? "bg-[#202c33] border-l-4 border-[#25d366]" : ""}`}
+                            >
+                              <div className="relative">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-900 border border-zinc-700 flex items-center justify-center text-base shrink-0 shadow-inner text-white font-bold">
+                                  🔒
+                                </div>
+                                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#25d366] border-2 border-[#111b21]"></span>
+                              </div>
 
-                          <div className="flex-1 min-w-0">
-                            <div className="flex justify-between items-center mb-0.5">
-                              <h5 className="text-xs font-bold text-white truncate">{group.name}</h5>
-                              <span className="text-[9px] font-mono text-zinc-500">{lastMsg ? lastMsg.timestamp : "Live"}</span>
-                            </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-center mb-0.5">
+                                  <h5 className="text-xs font-bold text-white truncate">{group.name}</h5>
+                                  <span className="text-[9px] font-mono text-zinc-500">{lastMsg ? lastMsg.timestamp : "Private"}</span>
+                                </div>
 
-                            <p className="text-[10px] text-zinc-400 truncate">
-                              {lastMsg ? `${lastMsg.senderName}: ${lastMsg.content}` : group.desc}
-                            </p>
+                                <p className="text-[10px] text-zinc-400 truncate">
+                                  {lastMsg ? `${lastMsg.senderName}: ${lastMsg.content}` : group.desc}
+                                </p>
 
-                            <div className="flex justify-between items-center mt-1">
-                              <span className="text-[8px] font-mono text-zinc-500 uppercase">{group.members}</span>
-                              <span className="text-[8px] bg-[#25d366]/10 text-[#25d366] font-mono font-bold px-1.5 py-0.2 rounded border border-[#25d366]/20">
-                                {group.tag}
-                              </span>
-                            </div>
-                          </div>
-                        </button>
-                      );
-                    })}
+                                <div className="flex justify-between items-center mt-1">
+                                  <span className="text-[8px] font-mono text-zinc-500 uppercase">{group.members}</span>
+                                  <span className="text-[8px] bg-[#25d366]/10 text-[#25d366] font-mono font-bold px-1.5 py-0.2 rounded border border-[#25d366]/20">
+                                    {group.tag || "INVITE ONLY"}
+                                  </span>
+                                </div>
+                              </div>
+                            </button>
+                          );
+                        })
+                    )}
                   </div>
 
                   {/* Security footer */}
                   <div className="p-2.5 bg-[#0b141a] border-t border-[#2a3942] text-[9px] text-zinc-400 font-mono text-center flex items-center justify-center gap-1">
                     <Lock className="w-3 h-3 text-[#25d366]" />
-                    <span>End-to-end local sandbox encryption</span>
+                    <span>Private & Invite-Only Group Security</span>
                   </div>
                 </div>
 
-                {/* 2. WhatsApp Main Chat Container (8 or 12 cols depending on Info Drawer) */}
-                <div id="whatsapp_chat_panel" className={`${showGroupInfoModal ? "lg:col-span-5" : "lg:col-span-8"} bg-[#0b141a] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300 ring-1 ring-white/10 min-h-[500px] lg:min-h-0`}>
+                {/* 2. Main Community Chat Container */}
+                <div id="community_chat_panel" className={`${showGroupInfoModal ? "lg:col-span-5" : "lg:col-span-8"} bg-[#0b141a] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300 ring-1 ring-white/10 min-h-[500px] lg:min-h-0`}>
                   
-                  {/* WhatsApp Chat Header */}
+                  {/* Chat Header */}
                   <div className="p-3.5 bg-[#202c33] border-b border-[#2a3942] flex justify-between items-center z-10 shadow-md">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <button
                         onClick={() => {
-                          const groupsList = document.getElementById("whatsapp_groups_sidebar");
+                          const groupsList = document.getElementById("community_groups_sidebar");
                           if (groupsList) {
                             groupsList.scrollIntoView({ behavior: "smooth" });
                           }
@@ -9627,10 +9686,10 @@ export default function App() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <h4 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5 truncate">
-                          {communityGroups.find(g => g.id === activeChatRoom)?.name || "💬 WhatsApp Community Group"}
+                          {communityGroups.find(g => g.id === activeChatRoom)?.name || (communityGroups.length > 0 ? "Select Private Group" : "No Active Group")}
                         </h4>
                         <p className="text-[10px] text-[#25d366] font-mono flex items-center gap-1 truncate">
-                          <span>{communityGroups.find(g => g.id === activeChatRoom)?.desc || "Active WhatsApp Community"} • {communityGroups.find(g => g.id === activeChatRoom)?.members || "Online"}</span>
+                          <span>{communityGroups.find(g => g.id === activeChatRoom)?.desc || "Private Invite-Only Room"}</span>
                         </p>
                       </div>
                     </div>
@@ -9668,7 +9727,7 @@ export default function App() {
                     {/* Date Divider */}
                     <div className="flex justify-center my-2">
                       <span className="bg-[#182229] border border-zinc-800 text-zinc-400 text-[9px] font-mono uppercase px-3 py-1 rounded-full shadow-sm">
-                        TODAY • WHATSAPP SECURE GROUP
+                        TODAY • SECURE COMMUNITY GROUP
                       </span>
                     </div>
 
@@ -9814,7 +9873,7 @@ export default function App() {
                     <div ref={chatEndRef} />
                   </div>
 
-                  {/* WhatsApp Floating Emoji Picker Tray */}
+                  {/* Floating Emoji Picker Tray */}
                   {showEmojiPicker && (
                     <div className="p-2.5 bg-[#182229] border-t border-[#2a3942] flex flex-wrap gap-2 animate-in slide-in-from-bottom-2 z-20">
                       {["📈", "📉", "💰", "🔥", "👍", "🚀", "📊", "💡", "🇿🇦", "💵", "🎯", "🎓", "🔒", "👏", "❤️", "💯"].map(emoji => (
@@ -9832,7 +9891,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* WhatsApp Floating Attachment Menu */}
+                  {/* Floating Attachment Menu */}
                   {showAttachMenu && (
                     <div className="p-3 bg-[#182229] border-t border-[#2a3942] flex items-center gap-3 animate-in slide-in-from-bottom-2 z-20">
                       <label className="flex-1 p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200 cursor-pointer">
@@ -9875,7 +9934,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* WhatsApp Voice Recording Active Bar */}
+                  {/* Voice Recording Active Bar */}
                   {isRecordingVoice && (
                     <div className="p-2.5 bg-[#182229] border-t border-[#2a3942] flex items-center justify-between gap-2.5 animate-in fade-in z-20">
                       <div className="flex items-center gap-2 text-rose-500 font-mono text-xs animate-pulse">
@@ -9905,7 +9964,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* WhatsApp Message Input Control Bar */}
+                  {/* Message Input Control Bar */}
                   {!isRecordingVoice && (
                     <div className="p-2.5 sm:p-3 bg-[#202c33] border-t border-[#2a3942] flex items-center gap-2 z-10">
                       <button
@@ -9936,7 +9995,7 @@ export default function App() {
                           value={inputMessage}
                           onChange={e => setInputMessage(e.target.value)}
                           onKeyDown={e => e.key === "Enter" && handleSendMessage()}
-                          placeholder="Type a message in WhatsApp group..."
+                          placeholder={activeChatRoom ? "Type a message in community group..." : "Select or create a private group to chat..."}
                           className="w-full bg-[#2a3942] border border-[#3b4a54] text-xs sm:text-sm text-white rounded-2xl px-3.5 sm:px-4 py-2 outline-none placeholder:text-zinc-400 focus:border-[#25d366] focus:ring-1 focus:ring-[#25d366] transition shadow-inner"
                         />
                       </div>
@@ -9963,76 +10022,96 @@ export default function App() {
 
                 </div>
 
-                {/* 3. WhatsApp Group Info Modal / Sidebar Drawer */}
+                {/* 3. Group Info Modal / Sidebar Drawer */}
                 {showGroupInfoModal && (
                   <div className="lg:col-span-3 bg-[#111b21] border border-[#2a3942] sm:border-zinc-700/80 rounded-3xl p-4 flex flex-col justify-between space-y-4 shadow-2xl text-left animate-in slide-in-from-right-2 ring-1 ring-white/10">
-                    <div>
-                      <div className="flex justify-between items-center border-b border-[#2a3942] pb-3 mb-3">
-                        <h4 className="text-xs font-bold text-[#25d366] font-mono uppercase tracking-wider">
-                          GROUP DETAILS
-                        </h4>
-                        <button
-                          onClick={() => setShowGroupInfoModal(false)}
-                          className="text-zinc-500 hover:text-white p-1"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
+                    {(() => {
+                      const activeGroupObj = communityGroups.find(g => g.id === activeChatRoom);
+                      const roomAccess = studentRoomAccessMap[activeChatRoom];
 
-                      {/* Avatar & Title */}
-                      <div className="text-center space-y-2 py-2">
-                        <div className="w-16 h-16 rounded-full bg-[#25d366]/20 border-2 border-[#25d366] flex items-center justify-center text-2xl mx-auto text-[#25d366]">
-                          💬
-                        </div>
-                        <h5 className="text-xs font-bold text-white uppercase">
-                          {activeChatRoom === "southafrica" && "🇿🇦 USD/ZAR Community"}
-                          {activeChatRoom === "asian" && "🟢 IMALI Global WhatsApp Group"}
-                          {activeChatRoom === "newyork" && "📈 Gold & XAU/USD Syndicate"}
-                          {activeChatRoom === "london" && "🇬🇧 London Breakout Squad"}
-                          {activeChatRoom === "germany" && "🇩🇪 Frankfurt & DAX Lounge"}
-                          {activeChatRoom === "china" && "🎓 Imali Academy Student Forum"}
-                        </h5>
-                        <p className="text-[9px] text-zinc-400 font-mono">186 Members • Created by Instructor Thabiso</p>
-                      </div>
+                      return (
+                        <div>
+                          <div className="flex justify-between items-center border-b border-[#2a3942] pb-3 mb-3">
+                            <h4 className="text-xs font-bold text-[#25d366] font-mono uppercase tracking-wider">
+                              GROUP DETAILS
+                            </h4>
+                            <button
+                              onClick={() => setShowGroupInfoModal(false)}
+                              className="text-zinc-500 hover:text-white p-1"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
 
-                      {/* Group Description */}
-                      <div className="bg-[#202c33] p-3 rounded-2xl border border-zinc-800 space-y-1.5 my-3">
-                        <span className="text-[9px] text-[#25d366] font-mono uppercase font-bold block">
-                          Group Description:
-                        </span>
-                        <p className="text-[10px] text-zinc-300 leading-relaxed">
-                          Official IMALI Ngesizulu Trading & Learning Community. Share trade setups, ask technical questions, discuss Market Structure Shifts (MSS), and collaborate live with fellow scholars.
-                        </p>
-                      </div>
-
-                      {/* Group Members List */}
-                      <div className="space-y-2 pt-1">
-                        <span className="text-[9px] text-zinc-500 font-mono uppercase font-bold block">
-                          Group Members (Online):
-                        </span>
-                        <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                          {[
-                            { name: "Thabiso Khumalo", role: "Group Admin / Instructor", status: "Online", color: "text-[#D4AF37]" },
-                            { name: "Audrey Mguni", role: "Instructor", status: "Online", color: "text-[#D4AF37]" },
-                            { name: "Sipho Dlamini", role: "Senior Scholar", status: "Online", color: "text-[#25d366]" },
-                            { name: "Nomalanga Ndlovu", role: "Scholar", status: "Online", color: "text-[#25d366]" },
-                            { name: "Thabo Mokoena", role: "Scholar", status: "Online", color: "text-[#25d366]" }
-                          ].map(mem => (
-                            <div key={mem.name} className="flex justify-between items-center p-2 bg-[#202c33]/50 rounded-xl border border-zinc-800 text-[10px]">
-                              <div>
-                                <span className={`font-bold block ${mem.color}`}>{mem.name}</span>
-                                <span className="text-[8px] text-zinc-400 font-mono">{mem.role}</span>
-                              </div>
-                              <span className="text-[8px] text-[#25d366] font-mono font-bold">● {mem.status}</span>
+                          {/* Avatar & Title */}
+                          <div className="text-center space-y-2 py-2">
+                            <div className="w-16 h-16 rounded-full bg-[#25d366]/20 border-2 border-[#25d366] flex items-center justify-center text-2xl mx-auto text-[#25d366]">
+                              🔒
                             </div>
-                          ))}
+                            <h5 className="text-xs font-bold text-white uppercase">
+                              {activeGroupObj?.name || "Private Community Group"}
+                            </h5>
+                            <div className="flex items-center justify-center gap-2 mt-1">
+                              <span className="text-[9px] bg-[#25d366]/10 text-[#25d366] border border-[#25d366]/30 px-2 py-0.5 rounded font-mono font-bold">
+                                🔒 PRIVATE / INVITE ONLY
+                              </span>
+                            </div>
+                            <p className="text-[9px] text-zinc-400 font-mono">
+                              Created by {activeGroupObj?.createdBy || "Admin"}
+                            </p>
+                          </div>
+
+                          {/* Group Description */}
+                          <div className="bg-[#202c33] p-3 rounded-2xl border border-zinc-800 space-y-1.5 my-3">
+                            <span className="text-[9px] text-[#25d366] font-mono uppercase font-bold block">
+                              Group Description:
+                            </span>
+                            <p className="text-[10px] text-zinc-300 leading-relaxed">
+                              {activeGroupObj?.desc || "Private community group created by Admin."}
+                            </p>
+                          </div>
+
+                          {/* Registered Members List */}
+                          <div className="space-y-2 pt-1">
+                            <span className="text-[9px] text-zinc-500 font-mono uppercase font-bold block">
+                              Verified Group Members:
+                            </span>
+                            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                              <div className="p-2 bg-[#202c33]/70 rounded-xl border border-zinc-800 text-[10px] flex justify-between items-center">
+                                <div>
+                                  <span className="font-bold text-[#D4AF37] block">Group Admin</span>
+                                  <span className="text-[8px] text-zinc-400 font-mono">Administrator</span>
+                                </div>
+                                <span className="text-[8px] text-[#25d366] font-mono font-bold">● Active</span>
+                              </div>
+
+                              {roomAccess ? (
+                                <div className="p-2.5 bg-[#202c33]/50 rounded-xl border border-[#25d366]/30 text-[10px] space-y-1">
+                                  <div className="flex justify-between items-center">
+                                    <span className="font-bold text-white">{roomAccess.fullName}</span>
+                                    <span className="text-[8px] text-[#25d366] font-mono font-bold">● Registered</span>
+                                  </div>
+                                  <div className="text-[8.5px] font-mono text-zinc-400">
+                                    <span>Trading ID: <strong className="text-sky-400">{roomAccess.tradingId}</strong></span>
+                                    {activeRole === Role.ADMIN && (
+                                      <span className="block text-zinc-500">Contact: {roomAccess.contact}</span>
+                                    )}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="p-2 text-center text-zinc-500 text-[9px] font-mono border border-zinc-800 rounded-xl">
+                                  <span>Private Invite-Only Room</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      );
+                    })()}
 
                     <div className="pt-3 border-t border-[#202c33] text-center">
                       <span className="text-[8px] text-zinc-500 font-mono uppercase block">
-                        IMALI NGESIZULU WHATSAPP NETWORK
+                        IMALI PRIVATE COMMUNITY NETWORK
                       </span>
                     </div>
                   </div>
@@ -10040,7 +10119,7 @@ export default function App() {
 
               </div>
 
-              {/* Create Community Group Modal (Admin / Instructor / Student) */}
+              {/* Create Community Group Modal */}
               {showCreateGroupModal && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                   <div className="bg-[#111b21] border border-[#202c33] w-full max-w-md rounded-3xl p-6 space-y-5 text-left shadow-2xl animate-in zoom-in-95">
@@ -10051,10 +10130,10 @@ export default function App() {
                         </div>
                         <div>
                           <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-                            Create Community Group
+                            Create Private Group
                           </h4>
                           <span className="text-[9px] text-[#25d366] font-mono">
-                            Credentials Auth: {activeRole === Role.ADMIN ? "🛡️ Admin Access" : activeRole === Role.INSTRUCTOR ? "👨‍🏫 Instructor Access" : "🔐 Passcode Authorization"}
+                            Credentials Auth: {activeRole === Role.ADMIN ? "🛡️ Admin Access" : "🔐 Security Passcode Required"}
                           </span>
                         </div>
                       </div>
@@ -10068,9 +10147,9 @@ export default function App() {
 
                     <p className="text-xs text-zinc-400 leading-relaxed">
                       {activeRole === Role.STUDENT ? (
-                        <>Enter the group details and your <strong className="text-[#25d366]">Instructor Passcode</strong> to authorize creating a new group room.</>
+                        <>Enter the group details and your <strong className="text-[#25d366]">Security Passcode</strong> to authorize creating a private group room.</>
                       ) : (
-                        <>Create a new WhatsApp community group for students and traders on the network.</>
+                        <>Create a new private invite-only community group room for students and traders.</>
                       )}
                     </p>
 
@@ -10090,7 +10169,7 @@ export default function App() {
                           type="text"
                           value={newGroupName}
                           onChange={e => setNewGroupName(e.target.value)}
-                          placeholder="e.g. 🚀 Crypto & BTC Market Analysis"
+                          placeholder="e.g. 🚀 Gold & BTC Trading Room"
                           className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
                         />
                       </div>
@@ -10102,7 +10181,7 @@ export default function App() {
                         <textarea
                           value={newGroupDesc}
                           onChange={e => setNewGroupDesc(e.target.value)}
-                          placeholder="Brief summary of what this community group covers..."
+                          placeholder="Brief summary of what this private room covers..."
                           rows={2}
                           className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366] resize-none"
                         />
@@ -10117,13 +10196,13 @@ export default function App() {
                           onChange={e => setNewGroupTag(e.target.value)}
                           className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
                         >
-                          <option value="COMMUNITY">COMMUNITY</option>
+                          <option value="INVITE ONLY">INVITE ONLY</option>
+                          <option value="PRIVATE">PRIVATE ROOM</option>
                           <option value="XAU">GOLD / XAU</option>
                           <option value="FOREX">FOREX</option>
                           <option value="INDICES">INDICES / DAX</option>
                           <option value="CRYPTO">CRYPTO</option>
                           <option value="STUDY">STUDY & LESSONS</option>
-                          <option value="VIP">VIP SIGNALS</option>
                         </select>
                       </div>
 
@@ -10133,14 +10212,14 @@ export default function App() {
                           <span>Security Credentials / Passcode *</span>
                         </label>
                         <input
-                          type="text"
+                          type="password"
                           value={newGroupPasscode}
                           onChange={e => setNewGroupPasscode(e.target.value)}
-                          placeholder={activeRole === Role.STUDENT ? "Enter Instructor Passcode..." : "Authorization pre-validated"}
+                          placeholder={activeRole === Role.STUDENT ? "Enter Passcode..." : "Validated for Admin"}
                           className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
                         />
                         <span className="text-[9px] text-zinc-500 block mt-1 font-mono">
-                          {activeRole === Role.STUDENT ? "Contact your instructor if you need the active passcode." : "Validated automatically for active instructors/admins."}
+                          {activeRole === Role.STUDENT ? "Security passcode issued by Admin." : "Validated automatically for active Admin."}
                         </span>
                       </div>
                     </div>
@@ -10158,6 +10237,120 @@ export default function App() {
                       >
                         <Plus className="w-4 h-4 stroke-[3]" />
                         Create Group Room
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Student Room Access & Registration Modal */}
+              {showRoomAccessModal && selectedAccessGroup && (
+                <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                  <div className="bg-[#111b21] border border-[#202c33] w-full max-w-md rounded-3xl p-6 space-y-5 text-left shadow-2xl animate-in zoom-in-95">
+                    <div className="flex justify-between items-center border-b border-[#202c33] pb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-full bg-[#25d366]/20 border border-[#25d366]/40 flex items-center justify-center text-[#25d366] font-bold text-sm">
+                          🔒
+                        </div>
+                        <div>
+                          <h4 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider truncate">
+                            Private Group Access: {selectedAccessGroup.name}
+                          </h4>
+                          <span className="text-[9px] bg-[#25d366]/10 text-[#25d366] border border-[#25d366]/30 px-1.5 py-0.2 rounded font-mono font-bold">
+                            INVITE ONLY
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setShowRoomAccessModal(false)}
+                        className="p-1 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+
+                    <p className="text-xs text-zinc-300 leading-relaxed">
+                      This group created by the Admin is <strong className="text-[#25d366]">Private & Invite-Only</strong>. Please enter your Full Name, Contact Details, Trading ID, and Security Passcode below to verify authorization and access the room.
+                    </p>
+
+                    {studentAccessError && (
+                      <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-xs text-rose-400 font-mono flex items-center gap-2">
+                        <XSquare className="w-4 h-4 shrink-0" />
+                        <span>{studentAccessError}</span>
+                      </div>
+                    )}
+
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1 font-bold">
+                          Full Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={studentAccessName}
+                          onChange={e => setStudentAccessName(e.target.value)}
+                          placeholder="e.g. Sipho Dlamini"
+                          className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1 font-bold">
+                          Contact Number or Email *
+                        </label>
+                        <input
+                          type="text"
+                          value={studentAccessContact}
+                          onChange={e => setStudentAccessContact(e.target.value)}
+                          placeholder="e.g. +27 82 123 4567 / sipho@example.com"
+                          className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1 font-bold">
+                          Trading ID / Account Number *
+                        </label>
+                        <input
+                          type="text"
+                          value={studentAccessTradingId}
+                          onChange={e => setStudentAccessTradingId(e.target.value)}
+                          placeholder="e.g. TRD-884920"
+                          className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-mono uppercase text-[#25d366] block mb-1 font-bold flex items-center gap-1">
+                          <Lock className="w-3 h-3 text-[#25d366]" />
+                          <span>Private Security Passcode / Invite Code *</span>
+                        </label>
+                        <input
+                          type="password"
+                          value={studentAccessPasscode}
+                          onChange={e => setStudentAccessPasscode(e.target.value)}
+                          placeholder="Enter invite passcode..."
+                          className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
+                        />
+                        <span className="text-[9px] text-zinc-500 block mt-1 font-mono">
+                          Only scholars with valid credentials issued by the Admin can access this room.
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 flex justify-end gap-2">
+                      <button
+                        onClick={() => setShowRoomAccessModal(false)}
+                        className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-xs font-mono transition"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleRegisterStudentRoomAccess}
+                        className="px-5 py-2 bg-[#25d366] hover:bg-[#20bd5a] text-black font-bold rounded-xl text-xs font-mono transition flex items-center gap-1.5 shadow-lg cursor-pointer"
+                      >
+                        <Lock className="w-3.5 h-3.5" />
+                        Verify & Join Room
                       </button>
                     </div>
                   </div>
@@ -12086,7 +12279,7 @@ export default function App() {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-mono text-[#D4AF37] uppercase tracking-wider">
-                      {language === "zu" ? "Ucingo / Whatsapp" : "Contact Phone"}
+                      {language === "zu" ? "Ucingo / Ukuxhumana" : "Contact Phone"}
                     </label>
                     <input
                       type="tel"
