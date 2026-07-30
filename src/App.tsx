@@ -51,6 +51,7 @@ import {
   CheckCheck,
   Info,
   ChevronLeft,
+  Clock,
   X
 } from "lucide-react";
 import { Role, User, Course, Lesson, Language, ChatMessage } from "./types";
@@ -61,6 +62,16 @@ import ImaliLogo from "./components/ImaliLogo";
 import PatternScreener from "./components/PatternScreener";
 import { EliteMatrixRenderer } from "./components/EliteMatrixRenderer";
 import ImaliMeetings from "./components/ImaliMeetings";
+import { 
+  subscribeCommunityGroups, 
+  saveCommunityGroupToCloud, 
+  deleteCommunityGroupFromCloud,
+  subscribeGroupMessages, 
+  saveMessageToCloud, 
+  subscribeStudentRoomAccess, 
+  saveStudentRoomAccessToCloud,
+  isMessageExpired
+} from "./lib/firebase";
 
 
 export interface RadioStation {
@@ -4344,7 +4355,12 @@ export default function App() {
     const local = localStorage.getItem("imali_chat_sessions_v3");
     if (local) {
       try {
-        return JSON.parse(local);
+        const parsed: Record<string, ChatMessage[]> = JSON.parse(local);
+        const filtered: Record<string, ChatMessage[]> = {};
+        Object.keys(parsed).forEach(room => {
+          filtered[room] = (parsed[room] || []).filter(m => !isMessageExpired(m as any));
+        });
+        return filtered;
       } catch (e) {
         // Fallback
       }
@@ -4356,6 +4372,25 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("imali_chat_sessions_v3", JSON.stringify(chatSessions));
   }, [chatSessions]);
+
+  // Periodic scrubber effect: Auto-expire messages older than 24 hours
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChatSessions(prev => {
+        let changed = false;
+        const next: Record<string, ChatMessage[]> = {};
+        Object.keys(prev).forEach(room => {
+          const valid = (prev[room] || []).filter(m => !isMessageExpired(m as any));
+          if (valid.length !== (prev[room] || []).length) {
+            changed = true;
+          }
+          next[room] = valid;
+        });
+        return changed ? next : prev;
+      });
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Gatekeeper state to check if students have filled profiles and entered the special passwords
   const [unlockedChats, setUnlockedChats] = useState<{ [room: string]: boolean }>({
@@ -4598,6 +4633,39 @@ export default function App() {
     }
   }, [communityGroups]);
 
+  // Firestore Real-Time Subscriptions across all users & devices
+  useEffect(() => {
+    const unsubscribeGroups = subscribeCommunityGroups((cloudGroups) => {
+      if (cloudGroups && cloudGroups.length > 0) {
+        setCommunityGroups(cloudGroups);
+      }
+    });
+
+    const unsubscribeMessages = subscribeGroupMessages((cloudMessagesByGroup) => {
+      if (cloudMessagesByGroup && Object.keys(cloudMessagesByGroup).length > 0) {
+        setChatSessions(prev => ({
+          ...prev,
+          ...cloudMessagesByGroup
+        }));
+      }
+    });
+
+    const unsubscribeAccess = subscribeStudentRoomAccess((cloudAccessMap) => {
+      if (cloudAccessMap && Object.keys(cloudAccessMap).length > 0) {
+        setStudentRoomAccessMap(prev => ({
+          ...prev,
+          ...cloudAccessMap
+        }));
+      }
+    });
+
+    return () => {
+      unsubscribeGroups();
+      unsubscribeMessages();
+      unsubscribeAccess();
+    };
+  }, []);
+
   // Keep activeChatRoom synced if communityGroups exist
   useEffect(() => {
     if (!activeChatRoom && communityGroups.length > 0) {
@@ -4680,9 +4748,11 @@ export default function App() {
     };
 
     setCommunityGroups(prev => [newGroup, ...prev]);
+    saveCommunityGroupToCloud(newGroup);
 
     const welcomeMsg: ChatMessage = {
       id: "msg_welcome_" + Date.now(),
+      groupId: newGroupId,
       senderName: "Admin",
       senderRole: Role.ADMIN,
       content: `🔒 Private Group "${newGroup.name}" was created by the Admin (Invite Only). Welcome scholars to the group!`,
@@ -4695,6 +4765,7 @@ export default function App() {
       ...prev,
       [newGroupId]: [welcomeMsg]
     }));
+    saveMessageToCloud(welcomeMsg);
 
     setUnlockedChats(prev => ({
       ...prev,
@@ -4732,6 +4803,7 @@ export default function App() {
     }
 
     const newRecord = {
+      roomId: selectedAccessGroup.id,
       fullName: studentAccessName.trim(),
       contact: studentAccessContact.trim(),
       tradingId: studentAccessTradingId.trim(),
@@ -4743,9 +4815,11 @@ export default function App() {
       [selectedAccessGroup.id]: newRecord
     };
     setStudentRoomAccessMap(updated);
+    saveStudentRoomAccessToCloud(newRecord);
 
     const joinMsg: ChatMessage = {
       id: "msg_join_" + Date.now(),
+      groupId: selectedAccessGroup.id,
       senderName: "Admin",
       senderRole: Role.ADMIN,
       content: `🎓 Scholar "${newRecord.fullName}" (Trading ID: ${newRecord.tradingId}) has verified credentials and joined the room.`,
@@ -4758,6 +4832,7 @@ export default function App() {
       ...prev,
       [selectedAccessGroup.id]: [...(prev[selectedAccessGroup.id] || []), joinMsg]
     }));
+    saveMessageToCloud(joinMsg);
 
     setActiveChatRoom(selectedAccessGroup.id);
     setShowRoomAccessModal(false);
@@ -4867,9 +4942,10 @@ export default function App() {
   };
 
   const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || !activeChatRoom) return;
     const userMsg: ChatMessage = {
       id: "msg_" + Date.now(),
+      groupId: activeChatRoom,
       senderName: currentUser.name || (currentUser.role === Role.STUDENT ? "New Student" : currentUser.role === Role.INSTRUCTOR ? "Instructor" : "Administrator"),
       senderRole: currentUser.role,
       content: inputMessage,
@@ -4885,10 +4961,12 @@ export default function App() {
       };
     });
 
+    saveMessageToCloud(userMsg);
     setInputMessage("");
   };
 
   const handleSendVoiceNote = () => {
+    if (!activeChatRoom) return;
     const secs = voiceRecordTime || 4;
     const minsStr = Math.floor(secs / 60);
     const secsStr = (secs % 60).toString().padStart(2, "0");
@@ -4896,6 +4974,7 @@ export default function App() {
 
     const voiceMsg: ChatMessage = {
       id: "msg_voice_" + Date.now(),
+      groupId: activeChatRoom,
       senderName: currentUser.name || "Student",
       senderRole: currentUser.role,
       content: `🎤 Voice Message (${formattedDuration})`,
@@ -4911,13 +4990,16 @@ export default function App() {
       [activeChatRoom]: [...(prev[activeChatRoom] || []), voiceMsg]
     }));
 
+    saveMessageToCloud(voiceMsg);
     setIsRecordingVoice(false);
     setVoiceRecordTime(0);
   };
 
   const handleSendMediaMessage = (type: "image" | "document", url: string, caption?: string) => {
+    if (!activeChatRoom) return;
     const mediaMsg: ChatMessage = {
       id: "msg_media_" + Date.now(),
+      groupId: activeChatRoom,
       senderName: currentUser.name || "Student",
       senderRole: currentUser.role,
       content: caption || (type === "image" ? "📷 Shared Trade Setup Chart" : "📄 Shared Document Notes"),
@@ -4933,6 +5015,7 @@ export default function App() {
       [activeChatRoom]: [...(prev[activeChatRoom] || []), mediaMsg]
     }));
 
+    saveMessageToCloud(mediaMsg);
     setShowAttachMenu(false);
   };
 
@@ -9726,8 +9809,9 @@ export default function App() {
                   >
                     {/* Date Divider */}
                     <div className="flex justify-center my-2">
-                      <span className="bg-[#182229] border border-zinc-800 text-zinc-400 text-[9px] font-mono uppercase px-3 py-1 rounded-full shadow-sm">
-                        TODAY • SECURE COMMUNITY GROUP
+                      <span className="bg-[#182229] border border-[#25d366]/30 text-[#25d366] text-[9px] font-mono uppercase px-3.5 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+                        <Clock className="w-3 h-3 text-[#25d366]" />
+                        <span>DISAPPEARING MESSAGES • EXPIRES AUTOMATICALLY AFTER 24 HOURS</span>
                       </span>
                     </div>
 

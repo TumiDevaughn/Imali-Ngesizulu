@@ -90,6 +90,7 @@ export interface Course {
 
 export interface ChatMessage {
   id: string;
+  groupId?: string;
   senderName: string;
   senderRole: Role;
   content: string;

@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "CommunityGroup": {
+      "title": "CommunityGroup",
+      "description": "Private community group created by admin or verified users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "desc": { "type": "string", "maxLength": 500 },
+        "members": { "type": "string", "maxLength": 50 },
+        "tag": { "type": "string", "maxLength": 30 },
+        "isPrivate": { "type": "boolean" },
+        "passcode": { "type": "string", "maxLength": 50 },
+        "createdBy": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "desc"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Chat message sent inside a community group room",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "groupId": { "type": "string" },
+        "senderName": { "type": "string", "maxLength": 100 },
+        "senderRole": { "type": "string", "maxLength": 30 },
+        "content": { "type": "string", "maxLength": 5000 },
+        "timestamp": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "language": { "type": "string" },
+        "readStatus": { "type": "boolean" }
+      },
+      "required": ["id", "groupId", "content"]
+    },
+    "StudentRoomAccess": {
+      "title": "StudentRoomAccess",
+      "description": "Registration record for student room access",
+      "type": "object",
+      "properties": {
+        "roomId": { "type": "string" },
+        "fullName": { "type": "string", "maxLength": 100 },
+        "contact": { "type": "string", "maxLength": 100 },
+        "tradingId": { "type": "string", "maxLength": 50 },
+        "registeredAt": { "type": "string" }
+      },
+      "required": ["roomId", "fullName", "tradingId"]
+    }
+  },
+  "firestore": {
+    "/community_groups/{groupId}": {
+      "schema": "CommunityGroup",
+      "description": "Collection of community groups"
+    },
+    "/group_messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Collection of group chat messages"
+    },
+    "/student_room_access/{accessId}": {
+      "schema": "StudentRoomAccess",
+      "description": "Collection of student group registrations"
+    }
+  }
+}
