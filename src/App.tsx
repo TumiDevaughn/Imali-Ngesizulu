@@ -9799,29 +9799,29 @@ export default function App() {
 
                   {/* WhatsApp Voice Recording Active Bar */}
                   {isRecordingVoice && (
-                    <div className="p-3 bg-[#182229] border-t border-[#2a3942] flex items-center justify-between gap-3 animate-in fade-in z-20">
+                    <div className="p-2.5 bg-[#182229] border-t border-[#2a3942] flex items-center justify-between gap-2.5 animate-in fade-in z-20">
                       <div className="flex items-center gap-2 text-rose-500 font-mono text-xs animate-pulse">
-                        <span className="w-3 h-3 rounded-full bg-rose-500"></span>
-                        <span>Recording Voice Note ({voiceRecordTime}s)...</span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                        <span>Recording Voice ({voiceRecordTime}s)...</span>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => {
                             setIsRecordingVoice(false);
                             setVoiceRecordTime(0);
                           }}
-                          className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-xs font-mono"
+                          className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs font-mono transition"
                         >
                           Cancel
                         </button>
 
                         <button
                           onClick={handleSendVoiceNote}
-                          className="px-4 py-1.5 bg-[#25d366] text-black font-bold rounded-xl text-xs font-mono flex items-center gap-1 shadow-lg hover:brightness-110 transition"
+                          className="px-3 py-1 bg-[#25d366] hover:bg-[#20bd5a] text-black font-bold rounded-lg text-xs font-mono flex items-center gap-1 shadow transition cursor-pointer"
                         >
-                          <Send className="w-3.5 h-3.5" />
-                          Send Voice Note
+                          <Send className="w-3 h-3" />
+                          <span>Send Voice</span>
                         </button>
                       </div>
                     </div>
@@ -9829,16 +9829,16 @@ export default function App() {
 
                   {/* WhatsApp Message Input Control Bar */}
                   {!isRecordingVoice && (
-                    <div className="p-3 bg-[#202c33] border-t border-[#2a3942] flex items-center gap-2 z-10">
+                    <div className="p-2.5 sm:p-3 bg-[#202c33] border-t border-[#2a3942] flex items-center gap-2 z-10">
                       <button
                         onClick={() => {
                           setShowEmojiPicker(!showEmojiPicker);
                           setShowAttachMenu(false);
                         }}
-                        className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition"
+                        className="p-1.5 text-zinc-400 hover:text-white rounded-full hover:bg-[#2a3942] transition shrink-0"
                         title="Emoji Picker"
                       >
-                        <Smile className="w-5 h-5" />
+                        <Smile className="w-5 h-5 text-zinc-300" />
                       </button>
 
                       <button
@@ -9846,36 +9846,38 @@ export default function App() {
                           setShowAttachMenu(!showAttachMenu);
                           setShowEmojiPicker(false);
                         }}
-                        className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition"
+                        className="p-1.5 text-zinc-400 hover:text-white rounded-full hover:bg-[#2a3942] transition shrink-0"
                         title="Attach File / Voice"
                       >
-                        <Paperclip className="w-5 h-5" />
+                        <Paperclip className="w-5 h-5 text-zinc-300" />
                       </button>
 
-                      <input
-                        type="text"
-                        value={inputMessage}
-                        onChange={e => setInputMessage(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && handleSendMessage()}
-                        placeholder="Type a message in WhatsApp community group..."
-                        className="flex-1 bg-[#2a3942] border border-zinc-700 text-xs text-white rounded-2xl px-4 py-2.5 outline-none placeholder:text-zinc-500 focus:border-[#25d366]"
-                      />
+                      <div className="flex-1 min-w-0 relative flex items-center">
+                        <input
+                          type="text"
+                          value={inputMessage}
+                          onChange={e => setInputMessage(e.target.value)}
+                          onKeyDown={e => e.key === "Enter" && handleSendMessage()}
+                          placeholder="Type a message in WhatsApp group..."
+                          className="w-full bg-[#2a3942] border border-[#3b4a54] text-xs sm:text-sm text-white rounded-2xl px-3.5 sm:px-4 py-2 outline-none placeholder:text-zinc-400 focus:border-[#25d366] focus:ring-1 focus:ring-[#25d366] transition shadow-inner"
+                        />
+                      </div>
 
                       {inputMessage.trim() ? (
                         <button
                           onClick={handleSendMessage}
-                          className="w-10 h-10 bg-[#25d366] hover:bg-[#20bd5a] text-black rounded-full flex items-center justify-center shadow-lg transition transform hover:scale-105 shrink-0"
+                          className="w-8.5 h-8.5 bg-[#25d366] hover:bg-[#20bd5a] text-black rounded-full flex items-center justify-center shadow transition transform active:scale-95 shrink-0 cursor-pointer"
                           title="Send Message"
                         >
-                          <Send className="w-4 h-4 fill-black ml-0.5" />
+                          <Send className="w-3.5 h-3.5 fill-black ml-0.5" />
                         </button>
                       ) : (
                         <button
                           onClick={() => setIsRecordingVoice(true)}
-                          className="w-10 h-10 bg-[#25d366]/20 hover:bg-[#25d366]/30 text-[#25d366] rounded-full border border-[#25d366]/40 flex items-center justify-center transition shrink-0"
-                          title="Hold/Click to record voice note"
+                          className="w-8.5 h-8.5 bg-[#25d366]/20 hover:bg-[#25d366]/30 text-[#25d366] rounded-full border border-[#25d366]/40 flex items-center justify-center transition active:scale-95 shrink-0 cursor-pointer"
+                          title="Record Voice Note"
                         >
-                          <Mic className="w-4 h-4" />
+                          <Mic className="w-3.5 h-3.5" />
                         </button>
                       )}
                     </div>
