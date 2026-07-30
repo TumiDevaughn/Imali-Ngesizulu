@@ -2959,7 +2959,7 @@ export default function App() {
           lowerName.includes("mthembu") ||
           avatar.includes("unsplash.com")
         ) {
-          return { name: "", avatar: "", specialty: "", experience: "", bio: "", classCode: "FOREX101", email: "info@imalingesizulu.com" };
+          return { name: "", avatar: "", specialty: "", experience: "", bio: "", classCode: "IMALI-7294018365", email: "info@imalingesizulu.com" };
         }
         return {
           name,
@@ -2967,11 +2967,11 @@ export default function App() {
           specialty: parsed.specialty || "",
           experience: parsed.experience || "",
           bio: parsed.bio || "",
-          classCode: parsed.classCode || "FOREX101",
+          classCode: parsed.classCode && parsed.classCode !== "FOREX101" && !parsed.classCode.startsWith("IMALI-984") ? parsed.classCode : "IMALI-7294018365",
           email: parsed.email || "info@imalingesizulu.com"
         };
       } catch (e) {
-        return { name: "", avatar: "", specialty: "", experience: "", bio: "", classCode: "FOREX101", email: "info@imalingesizulu.com" };
+        return { name: "", avatar: "", specialty: "", experience: "", bio: "", classCode: "IMALI-7294018365", email: "info@imalingesizulu.com" };
       }
     }
     return {
@@ -2980,7 +2980,7 @@ export default function App() {
       specialty: "",
       experience: "",
       bio: "",
-      classCode: "FOREX101",
+      classCode: "IMALI-7294018365",
       email: "info@imalingesizulu.com"
     };
   });
@@ -4659,10 +4659,10 @@ export default function App() {
       return;
     }
 
-    const activePasscodeRequired = instructorDetails.classCode || "FOREX101";
+    const activePasscodeRequired = instructorDetails.classCode || "IMALI-7294018365";
     if (activeRole === Role.STUDENT) {
       if (!newGroupPasscode.trim()) {
-        setCreateGroupError("Security Credentials required: Please enter the Instructor Passcode (e.g. FOREX101).");
+        setCreateGroupError("Security Credentials required: Please enter the Instructor Passcode (e.g. IMALI-7294018365).");
         return;
       }
       if (newGroupPasscode.trim().toUpperCase() !== activePasscodeRequired.toUpperCase()) {
@@ -9419,7 +9419,7 @@ export default function App() {
                       <button 
                         onClick={() => {
                           setCreateGroupError("");
-                          setNewGroupPasscode(activeRole !== Role.STUDENT ? (instructorDetails.classCode || "FOREX101") : "");
+                          setNewGroupPasscode(activeRole !== Role.STUDENT ? (instructorDetails.classCode || "IMALI-7294018365") : "");
                           setShowCreateGroupModal(true);
                         }}
                         className="px-2.5 py-1 bg-[#25d366] hover:bg-[#20bd5a] text-black font-bold rounded-lg text-[10px] font-mono flex items-center gap-1 transition shadow cursor-pointer"
@@ -9449,7 +9449,7 @@ export default function App() {
                               onClick={() => {
                                 setShowGroupOptionsMenu(false);
                                 setCreateGroupError("");
-                                setNewGroupPasscode(activeRole !== Role.STUDENT ? (instructorDetails.classCode || "FOREX101") : "");
+                                setNewGroupPasscode(activeRole !== Role.STUDENT ? (instructorDetails.classCode || "IMALI-7294018365") : "");
                                 setShowCreateGroupModal(true);
                               }}
                               className="w-full px-3 py-2 hover:bg-[#202c33] rounded-xl text-xs text-white flex items-center gap-2.5 transition text-left font-sans cursor-pointer"
@@ -9686,17 +9686,43 @@ export default function App() {
                               </div>
                             )}
 
+                            {/* Document Media */}
+                            {m.mediaType === "document" && (
+                              <div className="my-1.5 p-2.5 rounded-xl bg-black/40 border border-white/10 flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-lg bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center shrink-0 font-bold">
+                                  <FileText className="w-5 h-5 text-sky-400" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-semibold text-white truncate">{m.content || "Document"}</p>
+                                  <span className="text-[9px] text-zinc-400 font-mono block">Document File</span>
+                                </div>
+                                {m.mediaUrl && (
+                                  <a
+                                    href={m.mediaUrl}
+                                    download
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[10px] text-[#25d366] underline font-mono hover:text-[#20bd5a]"
+                                  >
+                                    Open
+                                  </a>
+                                )}
+                              </div>
+                            )}
+
                             {/* Image Media */}
                             {m.mediaType === "image" && (
                               <div className="my-1 rounded-xl overflow-hidden border border-white/10 bg-black/40">
                                 <img 
                                   src={m.mediaUrl || "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"} 
-                                  alt="Setup Chart"
-                                  className="w-full max-h-48 object-cover" 
+                                  alt="Shared Attachment"
+                                  className="w-full max-h-56 object-cover" 
                                 />
                                 <div className="p-2 text-[10px] text-zinc-300 font-mono flex justify-between items-center bg-black/60">
-                                  <span>📈 XAU/USD Breakout Setup</span>
-                                  <button onClick={() => alert("Image opened in high resolution viewer")} className="text-[#25d366] underline">View</button>
+                                  <span className="truncate">{m.content || "Photo Attachment"}</span>
+                                  {m.mediaUrl && (
+                                    <a href={m.mediaUrl} target="_blank" rel="noopener noreferrer" className="text-[#25d366] underline shrink-0">View</a>
+                                  )}
                                 </div>
                               </div>
                             )}
@@ -9767,33 +9793,44 @@ export default function App() {
 
                   {/* WhatsApp Floating Attachment Menu */}
                   {showAttachMenu && (
-                    <div className="p-3 bg-[#182229] border-t border-[#2a3942] grid grid-cols-3 gap-2 animate-in slide-in-from-bottom-2 z-20">
-                      <button
-                        onClick={() => handleSendMediaMessage("image", "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop", "📈 Gold XAU/USD Retest Chart Setup")}
-                        className="p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200"
-                      >
-                        <ImageIcon className="w-5 h-5 text-emerald-400" />
-                        <span>Chart Setup</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleSendMediaMessage("document", "", "📄 Liquidity Sweep PDF Guide.pdf")}
-                        className="p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200"
-                      >
+                    <div className="p-3 bg-[#182229] border-t border-[#2a3942] flex items-center gap-3 animate-in slide-in-from-bottom-2 z-20">
+                      <label className="flex-1 p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200 cursor-pointer">
                         <FileText className="w-5 h-5 text-sky-400" />
-                        <span>Study Notes</span>
-                      </button>
+                        <span>Document</span>
+                        <input
+                          type="file"
+                          accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const url = URL.createObjectURL(file);
+                              handleSendMediaMessage("document", url, `📄 ${file.name}`);
+                            }
+                          }}
+                        />
+                      </label>
 
-                      <button
-                        onClick={() => {
-                          setIsRecordingVoice(true);
-                          setShowAttachMenu(false);
-                        }}
-                        className="p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200"
-                      >
-                        <Mic className="w-5 h-5 text-rose-400" />
-                        <span>Voice Note</span>
-                      </button>
+                      <label className="flex-1 p-3 bg-[#202c33] hover:bg-[#2a3942] rounded-2xl border border-zinc-700 flex flex-col items-center gap-1.5 transition text-xs font-mono text-zinc-200 cursor-pointer">
+                        <ImageIcon className="w-5 h-5 text-emerald-400" />
+                        <span>Photos & Videos</span>
+                        <input
+                          type="file"
+                          accept="image/*,video/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onload = (event) => {
+                                const url = event.target?.result as string || URL.createObjectURL(file);
+                                handleSendMediaMessage("image", url, `📷 ${file.name}`);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                        />
+                      </label>
                     </div>
                   )}
 
@@ -9990,7 +10027,7 @@ export default function App() {
 
                     <p className="text-xs text-zinc-400 leading-relaxed">
                       {activeRole === Role.STUDENT ? (
-                        <>Enter the group details and your <strong className="text-[#25d366]">Instructor Passcode</strong> (e.g. <code className="text-[#25d366] bg-[#202c33] px-1 py-0.5 rounded">FOREX101</code>) to authorize creating a new group room.</>
+                        <>Enter the group details and your <strong className="text-[#25d366]">Instructor Passcode</strong> (e.g. <code className="text-[#25d366] bg-[#202c33] px-1 py-0.5 rounded">IMALI-7294018365</code>) to authorize creating a new group room.</>
                       ) : (
                         <>Create a new WhatsApp community group for students and traders on the network.</>
                       )}
@@ -10058,7 +10095,7 @@ export default function App() {
                           type="text"
                           value={newGroupPasscode}
                           onChange={e => setNewGroupPasscode(e.target.value)}
-                          placeholder={activeRole === Role.STUDENT ? "Enter Instructor Passcode (Default: FOREX101)..." : "Authorization pre-validated"}
+                          placeholder={activeRole === Role.STUDENT ? "Enter Instructor Passcode (e.g. IMALI-7294018365)..." : "Authorization pre-validated"}
                           className="w-full bg-[#202c33] border border-zinc-700 text-xs text-white px-3.5 py-2.5 rounded-xl outline-none focus:border-[#25d366]"
                         />
                         <span className="text-[9px] text-zinc-500 block mt-1 font-mono">
