@@ -18,7 +18,16 @@ import firebaseConfig from "../../firebase-applet-config.json";
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-import { ChatMessage } from "../types";
+import { ChatMessage, IndicatorAccessConfig, IndicatorAccessRequest, IndicatorAuditLog } from "../types";
+
+export const DEFAULT_INDICATOR_CONFIG: IndicatorAccessConfig = {
+  xmBannerUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
+  xmReferralUrl: "https://clicks.pipaffiliates.com/c?c=913735&l=en&p=1",
+  xmPartnerCode: "UMAGAYI",
+  indicatorName: "UMAGAYI WE MALI INDICATOR V1",
+  indicatorVersion: "V1",
+  tradingViewUrl: ""
+};
 
 export interface CommunityGroupData {
   id: string;
@@ -183,5 +192,108 @@ export async function saveStudentRoomAccessToCloud(access: StudentRoomAccessData
     await setDoc(accessDocRef, access, { merge: true });
   } catch (err) {
     console.error("Error saving room access to cloud:", err);
+  }
+}
+
+// 8. Subscribe to Indicator Access Global Configuration
+export function subscribeIndicatorConfig(onConfigUpdate: (config: IndicatorAccessConfig) => void) {
+  const configDocRef = doc(db, "indicator_system", "global_config");
+  
+  return onSnapshot(configDocRef, (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data() as IndicatorAccessConfig;
+      onConfigUpdate({
+        ...DEFAULT_INDICATOR_CONFIG,
+        ...data
+      });
+    } else {
+      onConfigUpdate(DEFAULT_INDICATOR_CONFIG);
+    }
+  }, (error) => {
+    console.warn("Firestore Indicator Config sync issue:", error);
+    onConfigUpdate(DEFAULT_INDICATOR_CONFIG);
+  });
+}
+
+// 9. Save/Update Indicator Access Global Configuration
+export async function saveIndicatorConfigToCloud(config: Partial<IndicatorAccessConfig>) {
+  try {
+    const configDocRef = doc(db, "indicator_system", "global_config");
+    await setDoc(configDocRef, {
+      ...config,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+  } catch (err) {
+    console.error("Error saving indicator config to cloud:", err);
+    throw err;
+  }
+}
+
+// 10. Subscribe to All Indicator Access Requests (Real-time for Users & Admins)
+export function subscribeIndicatorRequests(onRequestsUpdate: (requests: IndicatorAccessRequest[]) => void) {
+  const requestsColRef = collection(db, "indicator_access_requests");
+
+  return onSnapshot(requestsColRef, (snapshot) => {
+    const requests: IndicatorAccessRequest[] = [];
+    snapshot.forEach((docSnap) => {
+      requests.push(docSnap.data() as IndicatorAccessRequest);
+    });
+
+    // Sort by latest submission or update
+    requests.sort((a, b) => {
+      const timeA = new Date(a.lastUpdatedAt || a.submittedAt || 0).getTime();
+      const timeB = new Date(b.lastUpdatedAt || b.submittedAt || 0).getTime();
+      return timeB - timeA;
+    });
+
+    onRequestsUpdate(requests);
+  }, (error) => {
+    console.warn("Firestore Indicator Requests sync issue:", error);
+  });
+}
+
+// 11. Save or Update Indicator Access Request
+export async function saveIndicatorRequestToCloud(request: IndicatorAccessRequest) {
+  try {
+    const requestDocRef = doc(db, "indicator_access_requests", request.id);
+    await setDoc(requestDocRef, {
+      ...request,
+      lastUpdatedAt: new Date().toISOString()
+    }, { merge: true });
+  } catch (err) {
+    console.error("Error saving indicator request to cloud:", err);
+    throw err;
+  }
+}
+
+// 12. Subscribe to Indicator Audit Logs
+export function subscribeIndicatorAuditLogs(onLogsUpdate: (logs: IndicatorAuditLog[]) => void) {
+  const logsColRef = collection(db, "indicator_audit_logs");
+
+  return onSnapshot(logsColRef, (snapshot) => {
+    const logs: IndicatorAuditLog[] = [];
+    snapshot.forEach((docSnap) => {
+      logs.push(docSnap.data() as IndicatorAuditLog);
+    });
+
+    logs.sort((a, b) => {
+      const timeA = new Date(a.timestamp || 0).getTime();
+      const timeB = new Date(b.timestamp || 0).getTime();
+      return timeB - timeA;
+    });
+
+    onLogsUpdate(logs);
+  }, (error) => {
+    console.warn("Firestore Indicator Audit Logs sync issue:", error);
+  });
+}
+
+// 13. Save Indicator Audit Log Entry
+export async function saveIndicatorAuditLogToCloud(log: IndicatorAuditLog) {
+  try {
+    const logDocRef = doc(db, "indicator_audit_logs", log.id);
+    await setDoc(logDocRef, log);
+  } catch (err) {
+    console.error("Error saving audit log to cloud:", err);
   }
 }

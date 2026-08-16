@@ -52,9 +52,10 @@ import {
   Info,
   ChevronLeft,
   Clock,
-  X
+  X,
+  ShieldCheck
 } from "lucide-react";
-import { Role, User, Course, Lesson, Language, ChatMessage } from "./types";
+import { Role, User, Course, Lesson, Language, ChatMessage, IndicatorAccessConfig, IndicatorAccessRequest, IndicatorAuditLog } from "./types";
 import type { Notification as AppNotification } from "./types";
 import { coursesData } from "./data/courses";
 import { translateText } from "./data/translations";
@@ -62,6 +63,8 @@ import ImaliLogo from "./components/ImaliLogo";
 import PatternScreener from "./components/PatternScreener";
 import { EliteMatrixRenderer } from "./components/EliteMatrixRenderer";
 import ImaliMeetings from "./components/ImaliMeetings";
+import { IndicatorAccess } from "./components/IndicatorAccess";
+import { AdminIndicatorRequests } from "./components/AdminIndicatorRequests";
 import { 
   subscribeCommunityGroups, 
   saveCommunityGroupToCloud, 
@@ -70,6 +73,10 @@ import {
   saveMessageToCloud, 
   subscribeStudentRoomAccess, 
   saveStudentRoomAccessToCloud,
+  subscribeIndicatorConfig,
+  subscribeIndicatorRequests,
+  subscribeIndicatorAuditLogs,
+  DEFAULT_INDICATOR_CONFIG,
   isMessageExpired
 } from "./lib/firebase";
 
@@ -2391,6 +2398,7 @@ export default function App() {
   const [contactSending, setContactSending] = useState<boolean>(false);
   const [contactSuccess, setContactSuccess] = useState<boolean>(false);
   const [contactFormError, setContactFormError] = useState<string>("");
+  const [adminActiveSubSection, setAdminActiveSubSection] = useState<"indicator_requests" | "scholars">("indicator_requests");
 
   // Floating AI Support Support Chatbot State
   const [isSupportBotOpen, setIsSupportBotOpen] = useState<boolean>(false);
@@ -2884,6 +2892,16 @@ export default function App() {
     setContactSuccess(false);
     setContactFormError("");
     setIsContactModalOpen(false);
+  };
+
+  const handleOpenContactSupportWithContext = (contextStr?: string) => {
+    if (contextStr) {
+      setContactMessage(`[Indicator Access Inquiry]\nContext: ${contextStr}\n\n`);
+    }
+    if (studentDetails?.name && !contactName) {
+      setContactName(studentDetails.name);
+    }
+    setIsContactModalOpen(true);
   };
   
   // Courses & Student states
@@ -4659,12 +4677,85 @@ export default function App() {
       }
     });
 
+    const unsubscribeConfig = subscribeIndicatorConfig((cloudConfig) => {
+      if (cloudConfig) {
+        setIndicatorConfig(cloudConfig);
+      }
+    });
+
+    const unsubscribeRequests = subscribeIndicatorRequests((cloudRequests) => {
+      if (cloudRequests) {
+        setIndicatorRequests(cloudRequests);
+      }
+    });
+
+    const unsubscribeLogs = subscribeIndicatorAuditLogs((cloudLogs) => {
+      if (cloudLogs) {
+        setIndicatorAuditLogs(cloudLogs);
+      }
+    });
+
     return () => {
       unsubscribeGroups();
       unsubscribeMessages();
       unsubscribeAccess();
+      unsubscribeConfig();
+      unsubscribeRequests();
+      unsubscribeLogs();
     };
   }, []);
+
+  // --- INDICATOR ACCESS STATE ENGINE (FIREBASE CLOUD SYNC) ---
+  const [indicatorConfig, setIndicatorConfig] = useState<IndicatorAccessConfig>(() => {
+    try {
+      const local = localStorage.getItem("imali_indicator_config");
+      if (local) return { ...DEFAULT_INDICATOR_CONFIG, ...JSON.parse(local) };
+    } catch (e) {}
+    return DEFAULT_INDICATOR_CONFIG;
+  });
+
+  const [indicatorRequests, setIndicatorRequests] = useState<IndicatorAccessRequest[]>(() => {
+    try {
+      const local = localStorage.getItem("imali_indicator_requests");
+      if (local) return JSON.parse(local);
+    } catch (e) {}
+    return [];
+  });
+
+  const [indicatorAuditLogs, setIndicatorAuditLogs] = useState<IndicatorAuditLog[]>(() => {
+    try {
+      const local = localStorage.getItem("imali_indicator_audit_logs");
+      if (local) return JSON.parse(local);
+    } catch (e) {}
+    return [];
+  });
+
+  // Local caching effects for offline / fast responsiveness
+  useEffect(() => {
+    try {
+      localStorage.setItem("imali_indicator_config", JSON.stringify(indicatorConfig));
+    } catch (e) {}
+  }, [indicatorConfig]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("imali_indicator_requests", JSON.stringify(indicatorRequests));
+    } catch (e) {}
+  }, [indicatorRequests]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("imali_indicator_audit_logs", JSON.stringify(indicatorAuditLogs));
+    } catch (e) {}
+  }, [indicatorAuditLogs]);
+
+  // Derive current user's active indicator request
+  const currentUserIndicatorRequest = indicatorRequests.find(r => 
+    (currentUser && r.userId && r.userId === currentUser.id) ||
+    (currentUser && currentUser.email && r.userEmail && r.userEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
+    (currentUser && currentUser.name && r.userName && r.userName.toLowerCase() === currentUser.name.toLowerCase()) ||
+    (studentDetails?.email && r.userEmail && r.userEmail.toLowerCase() === studentDetails.email.toLowerCase())
+  ) || null;
 
   // Keep activeChatRoom synced if communityGroups exist
   useEffect(() => {
@@ -5651,6 +5742,23 @@ export default function App() {
               </button>
 
               <button
+                id="nav_indicator_access"
+                onClick={() => { setActiveTab("indicator_access"); setSelectedCourse(null); }}
+                className={`w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "indicator_access" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 group-hover:bg-[#D4AF37]/20 group-hover:border-[#D4AF37]/50 transition-all duration-300">
+                    <ShieldCheck className="w-4 h-4 text-[#D4AF37] group-hover:scale-110 transition-transform" />
+                    <div className="absolute inset-0 rounded-lg border border-[#D4AF37]/30 scale-100 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  </div>
+                  <span className="text-xs font-semibold tracking-wider uppercase font-serif">
+                    {language === "zu" ? "Inkomba (Indicator)" : "Indicator Access"}
+                  </span>
+                </div>
+                <span className="text-[9px] bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/25 px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-tight">V1</span>
+              </button>
+
+              <button
                 id="nav_community"
                 onClick={() => { setActiveTab("chat"); }}
                 className={`w-full flex items-center justify-between p-3 flex-row rounded-xl border transition-all text-left group ${activeTab === "chat" ? "bg-[#D4AF37]/10 border-[#D4AF37]/45 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.08)]" : "bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white"}`}
@@ -5799,6 +5907,7 @@ export default function App() {
               </p>
               <h1 className="text-3xl font-light tracking-tight mt-1 text-white uppercase font-serif">
                 {activeTab === "dashboard" && (language === "en" ? "Executive Academy Central Portal" : "Isikhungo Esiyisisekelo Sezemfundo")}
+                {activeTab === "indicator_access" && (language === "en" ? (indicatorConfig.indicatorName || "UMAGAYI WE MALI INDICATOR V1") : "Isicelo Sokungena Kwenkomba")}
                 {activeTab === "courses" && (language === "en" ? "Financial Education Curriculum" : "Uhlelo Lwezifundo Lwezezimali")}
                 {activeTab === "classroom" && translateText("interactive_lecture_suite", language)}
                 {activeTab === "chat" && (language === "en" ? "Academic Discussion Forum" : "Inkundla Yezoxhumano Nezemfundo")}
@@ -5807,7 +5916,11 @@ export default function App() {
                 {activeTab === "meetings" && (language === "en" ? "Imali Meetings Suite" : "Isayithi Lemihangano ye-Imali")}
               </h1>
               <p className="text-xs text-zinc-400 mt-1">
-                {language === "en" 
+                {activeTab === "indicator_access" ? (
+                  language === "en"
+                    ? "Official verification and activation pathway for the UMAGAYI WE MALI trading indicator suite."
+                    : "Umgudu osemthethweni wokuqinisekisa nokusebenzisa inkomba yokuhweba ye-UMAGAYI WE MALI."
+                ) : language === "en" 
                   ? "Premium training portal for certified learning and interactive financial education."
                   : "Uhlelo lwemfundo oluphezulu lokudlulisa ulwazi olunolaka le-Premium."}
               </p>
@@ -7852,6 +7965,29 @@ export default function App() {
               </div>
 
             </div>
+          )}
+
+          {/* INDICATOR ACCESS (UMAGAYI WE MALI INDICATOR V1) */}
+          {activeTab === "indicator_access" && (
+            <IndicatorAccess
+              currentUser={currentUser}
+              activeRole={activeRole}
+              language={language}
+              config={indicatorConfig}
+              userRequest={currentUserIndicatorRequest}
+              onOpenContactSupport={handleOpenContactSupportWithContext}
+              onAddNotification={(notif) => {
+                setNotifications(prev => [
+                  {
+                    id: "n_" + Date.now(),
+                    ...notif,
+                    time: "Just Now",
+                    unread: true
+                  },
+                  ...prev
+                ]);
+              }}
+            />
           )}
 
           {/* 2. THE IMPERIAL COURSE REPOSITORY & VIEWER */}
@@ -10886,7 +11022,37 @@ export default function App() {
                 )}
               
               {/* Dynamic Tabs inside admin view */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="flex flex-wrap items-center gap-3 border-b border-zinc-800 pb-3">
+                <button
+                  onClick={() => setAdminActiveSubSection("indicator_requests")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition cursor-pointer ${
+                    adminActiveSubSection === "indicator_requests"
+                      ? "bg-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+                      : "bg-zinc-900/80 text-zinc-400 hover:text-white border border-zinc-800"
+                  }`}
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Indicator Access Registry ({indicatorRequests.filter(r => r.status === "pending").length} Pending)</span>
+                </button>
+                <button
+                  onClick={() => setAdminActiveSubSection("scholars")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition cursor-pointer ${
+                    adminActiveSubSection === "scholars"
+                      ? "bg-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+                      : "bg-zinc-900/80 text-zinc-400 hover:text-white border border-zinc-800"
+                  }`}
+                >
+                  <Users className="w-4 h-4" />
+                  <span>Scholar Analytics & Users Ledger</span>
+                </button>
+              </div>
+
+              {adminActiveSubSection === "indicator_requests" ? (
+                <div className="animate-fade-in">
+                  <AdminIndicatorRequests currentUser={currentUser} />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
                 
                 {/* 2-Span Admin Forms & AI report generator */}
                 <div className="lg:col-span-2 space-y-6 animate-fade-in">
@@ -11541,6 +11707,7 @@ export default function App() {
                 </div>
 
               </div>
+              )}
 
             </div>
           );

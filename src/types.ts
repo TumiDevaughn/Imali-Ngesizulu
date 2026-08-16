@@ -121,3 +121,58 @@ export interface StudentProgress {
   progress: number;
   lastActive: string;
 }
+
+export type XMVerificationStatus = "NOT_STARTED" | "PENDING" | "VERIFIED" | "ACTION_REQUIRED" | "REJECTED";
+export type TradingViewStatus = "NOT_SUBMITTED" | "SUBMITTED" | "APPROVED" | "ACTION_REQUIRED";
+export type IndicatorAccessStatus = "LOCKED" | "PENDING" | "ACTIVE" | "SUSPENDED" | "REVOKED";
+
+export interface IndicatorAccessConfig {
+  xmBannerUrl: string;
+  xmReferralUrl: string;
+  xmPartnerCode: string;
+  indicatorName: string;
+  indicatorVersion: string;
+  tradingViewUrl: string;
+  updatedAt?: string;
+}
+
+export interface IndicatorAccessRequest {
+  id: string; // e.g. "IMA-84920"
+  userId: string;
+  userName: string;
+  userEmail: string;
+  xmEmail: string;
+  xmAccountNumber: string;
+  partnerCode: string;
+  tradingViewUsername: string;
+  xmVerificationStatus: XMVerificationStatus;
+  tradingViewStatus: TradingViewStatus;
+  indicatorAccessStatus: IndicatorAccessStatus;
+  submittedAt: string;
+  lastUpdatedAt: string;
+  adminNotes?: string;
+  actionRequiredReason?: string;
+  approvedAt?: string;
+}
+
+export interface IndicatorAuditLog {
+  id: string;
+  requestId: string;
+  userId: string;
+  action: 
+    | "REQUEST_SUBMITTED"
+    | "XM_VERIFIED"
+    | "XM_REJECTED"
+    | "INFORMATION_REQUESTED"
+    | "TRADINGVIEW_USERNAME_CHANGED"
+    | "ACCESS_APPROVED"
+    | "ACCESS_SUSPENDED"
+    | "ACCESS_REVOKED"
+    | "ACCESS_RESTORED"
+    | "ADMIN_NOTE_UPDATED";
+  previousStatus?: string;
+  newStatus?: string;
+  adminName?: string;
+  reason?: string;
+  timestamp: string;
+}
