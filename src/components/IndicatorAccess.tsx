@@ -16,7 +16,10 @@ import {
   Headphones, 
   RefreshCw,
   Eye,
-  Key
+  Key,
+  Gift,
+  Award,
+  Sparkles
 } from "lucide-react";
 import { 
   Role, 
@@ -656,46 +659,70 @@ export const IndicatorAccess: React.FC<IndicatorAccessProps> = ({
 
           {/* DEDICATED XM ONBOARDING BANNER CARD */}
           <div className="bg-[#0f0f0f] border border-[#D4AF37]/30 rounded-3xl overflow-hidden shadow-2xl text-left">
-            <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-black">
+            <div className="relative min-h-[180px] sm:min-h-[210px] w-full overflow-hidden bg-black p-6 sm:p-7 flex flex-col justify-between">
               <img 
                 src={currentBannerUrl} 
-                alt="XM Official Broker Onboarding" 
-                className="w-full h-full object-cover opacity-60"
+                alt="The Most Awarded Broker for a Reason" 
+                className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity scale-105 transition-transform duration-700 hover:scale-100"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-black/40"></div>
               
-              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
-                <div>
-                  <span className="bg-[#D4AF37] text-black font-mono text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                    Official Partner Broker
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold font-serif text-white mt-1">
-                    XM Trading Network
+              <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-5">
+                <div className="space-y-2 max-w-xl">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="bg-[#D4AF37] text-black font-mono text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+                      <Award className="w-3 h-3" /> Official Partner Broker
+                    </span>
+                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[9px] font-bold px-2.5 py-0.5 rounded uppercase tracking-wider flex items-center gap-1 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                      <Gift className="w-3 h-3 text-emerald-400" /> Get a 100% Bonus up to $100
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold font-serif text-white tracking-tight leading-snug">
+                    The Most Awarded Broker<br className="hidden sm:inline" /> for a Reason
                   </h3>
+                  
+                  <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed font-light">
+                    We offer a superior trading environment that puts traders in the best position to profit.
+                  </p>
                 </div>
 
-                {/* Partner Code Copy Box */}
-                <div className="bg-black/90 border border-[#D4AF37]/50 px-3.5 py-2 rounded-2xl flex items-center gap-3 shadow-xl backdrop-blur-md">
-                  <div>
-                    <p className="text-[9px] font-mono text-zinc-400 uppercase">Partner Code</p>
-                    <p className="text-sm font-mono font-bold text-[#D4AF37]">{currentPartnerCode}</p>
+                {/* Partner Code Copy Box & Instant Action */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0 w-full lg:w-auto">
+                  <div className="bg-black/90 border border-[#D4AF37]/50 px-4 py-2.5 rounded-2xl flex items-center justify-between gap-3 shadow-xl backdrop-blur-md">
+                    <div>
+                      <p className="text-[9px] font-mono text-zinc-400 uppercase">Partner Code</p>
+                      <p className="text-sm font-mono font-bold text-[#D4AF37]">{currentPartnerCode}</p>
+                    </div>
+                    <button
+                      onClick={handleCopyPartnerCode}
+                      className="px-2.5 py-1.5 bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 border border-[#D4AF37]/40 text-[#D4AF37] text-[10px] font-mono uppercase font-bold rounded-xl transition flex items-center gap-1 cursor-pointer"
+                    >
+                      {copiedPartnerCode ? (
+                        <>
+                          <Check className="w-3 h-3 text-emerald-400" />
+                          <span className="text-emerald-400">Copied ✓</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3 h-3" />
+                          <span>Copy Code</span>
+                        </>
+                      )}
+                    </button>
                   </div>
-                  <button
-                    onClick={handleCopyPartnerCode}
-                    className="px-2.5 py-1.5 bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 border border-[#D4AF37]/40 text-[#D4AF37] text-[10px] font-mono uppercase font-bold rounded-xl transition flex items-center gap-1 cursor-pointer"
+
+                  <a
+                    href={currentReferralUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    referrerPolicy="no-referrer"
+                    className="px-5 py-2.5 bg-[#D4AF37] hover:bg-amber-400 text-black font-mono text-xs uppercase font-bold tracking-wider rounded-2xl transition shadow-[0_0_15px_rgba(212,175,55,0.25)] flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
                   >
-                    {copiedPartnerCode ? (
-                      <>
-                        <Check className="w-3 h-3 text-emerald-400" />
-                        <span className="text-emerald-400">Copied ✓</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3" />
-                        <span>Copy Code</span>
-                      </>
-                    )}
-                  </button>
+                    <ExternalLink className="w-4 h-4" />
+                    <span>Claim 100% Bonus</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -727,10 +754,15 @@ export const IndicatorAccess: React.FC<IndicatorAccessProps> = ({
 
             <div className="p-4 bg-black/50 border border-zinc-800 rounded-2xl space-y-3 mb-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                <div>
-                  <p className="text-xs font-bold text-white">Official Imali Ngesizulu XM Link</p>
-                  <p className="text-[11px] text-zinc-400 mt-0.5">
-                    Important: Use the Imali Ngesizulu XM link so your registration can be identified correctly.
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-bold text-white">Official Imali Ngesizulu XM Link</p>
+                    <span className="text-[9px] font-mono font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.5 rounded">
+                      100% Bonus up to $100
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400">
+                    Important: Use the Imali Ngesizulu XM link so your registration qualifies for indicator access and the 100% deposit bonus.
                   </p>
                 </div>
 
